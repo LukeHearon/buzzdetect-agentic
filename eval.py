@@ -31,21 +31,13 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(
         description="Evaluate buzzdetect analysis on a test dataset (audio_eval) using GPU and record wall-clock time."
     )
-    parser.add_argument(
-        "--model",
-        required=True,
-        help="Model name to use (must correspond to a model available to buzzdetect).",
-    )
+
     parser.add_argument(
         "--test-name",
         default=None,
         help="Optional name of the test; defaults to the name of the audio directory.",
     )
-    parser.add_argument(
-        "--results-file",
-        default="eval_results.csv",
-        help="CSV file to append results to. Default: eval_results.csv",
-    )
+
     parser.add_argument(
         "--n-streamers",
         type=int,
@@ -76,48 +68,31 @@ def main(argv=None) -> int:
         default=0,
         help="Number of parallel CPU analyzer workers. Default: 0",
     )
+
     parser.add_argument(
         "--gpu",
         action=argparse.BooleanOptionalAction,
         default=True,
         help="Use GPU analyzer (default: True). Use --no-gpu to disable.",
     )
-    parser.add_argument(
-        "--verbosity",
-        default="ERROR",
-        choices=["PROGRESS", "INFO", "DEBUG", "WARNING", "ERROR"],
-        help="Verbosity level for console output/logs. Default: ERROR (quiet).",
-    )
-    parser.add_argument(
-        "--profile",
-        action=argparse.BooleanOptionalAction,
-        default=False,
-        help="Print a per-phase timing summary after analysis completes.",
-    )
+
 
     args = parser.parse_args(argv)
 
-    audio_dir = Path("audio_eval").resolve()
-    if not audio_dir.exists() or not audio_dir.is_dir():
-        print(f"Audio directory not found or not a directory: {audio_dir}", file=sys.stderr)
+    dir_audio = Path("audio_eval").resolve()
+    if not dir_audio.exists() or not dir_audio.is_dir():
+        print(f"Audio directory not found or not a directory: {dir_audio}", file=sys.stderr)
         return 2
 
-    test_name = args.test_name or audio_dir.name
+    test_name = args.test_name or dir_audio.name
     results_path = Path(args.results_file).resolve()
 
-    # Hard-coded output directory for analysis results (cleaned up after run)
-    dir_out = Path("eval_out").resolve()
+    dir_out = Path("eval_out", test_name).resolve()
     os.makedirs(dir_out, exist_ok=True)
-
-    # Ensure minimal console/log noise unless explicitly requested
-    verbosity_print = args.verbosity
-    verbosity_log = args.verbosity
 
     # Log selected options (exclude hard-coded paths/values)
     argval = {
-        "model": args.model,
         "test_name": test_name,
-        "framehop_prop": args.framehop_prop,
         "chunklength": args.chunklength,
         "n_streamers": args.n_streamers,
         "stream_buffer_depth": args.stream_buffer_depth,
@@ -134,48 +109,26 @@ def main(argv=None) -> int:
             modelname=args.model,
             classes_out="ins_buzz",
             precision=None,
-            framehop_prop=args.framehop_prop,
+            framehop_prop=1,
             chunklength=args.chunklength,
             analyzers_cpu=args.analyzers_cpu,
             analyzer_gpu=args.gpu,
             n_streamers=args.n_streamers,
             stream_buffer_depth=args.stream_buffer_depth,
-            dir_audio=str(audio_dir),
+            dir_audio=str(dir_audio),
             dir_out=str(dir_out),
-            verbosity_print=verbosity_print,
-            verbosity_log=verbosity_log,
+            verbosity_print='WARNING',
+            verbosity_log='WARNING',
             log_progress=False,
             q_gui=None,
             event_stopanalysis=None,
-            profile=args.profile,
+            profile=True,
         )
         success = True
+
     except Exception as e:
         print(f"Analysis failed: {e}", file=sys.stderr)
         success = False
-    finally:
-        duration_s = time.perf_counter() - start
-
-    # Append results
-    row = {
-        "timestamp": datetime.now().isoformat(timespec="seconds"),
-        "test_name": test_name,
-        "model": args.model,
-        "duration_seconds": f"{duration_s:.3f}",
-        "analyzers_cpu": args.analyzers_cpu,
-        "gpu": args.gpu,
-        "success": success,
-    }
-    fields = ["timestamp", "test_name", "model", "duration_seconds", "analyzers_cpu", "gpu", "success"]
-    _append_result(results_path, row, fields)
-
-    # Clean up outputs immediately (dir_out is hard-coded for eval)
-    try:
-        if dir_out.exists():
-            shutil.rmtree(dir_out, ignore_errors=True)
-    except Exception as e:
-        # Do not fail the evaluation if cleanup has issues
-        print(f"Warning: failed to clean outputs: {e}", file=sys.stderr)
 
     # Exit status: 0 on success, 1 on analysis failure, 2 on input error
     return 0 if success else 1
