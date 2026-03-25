@@ -2,6 +2,7 @@ import argparse
 import csv
 import json
 import os
+import shutil
 import sys
 import time
 from pathlib import Path
@@ -69,6 +70,46 @@ def _print_comparison(rows, overall_delta_s, overall_delta_pct):
         print(f"\nVERDICT: {direction}  ({overall_delta_s:+.3f}s vs baseline overall)")
 
 
+def _compare_results(current_files_dir: Path, baseline_files_dir: Path):
+    """Compare first 15 rows of each results CSV against baseline.
+
+    Returns a list of mismatch descriptions (empty = all match).
+    """
+    baseline_csvs = sorted(baseline_files_dir.rglob("*_buzzdetect.csv"))
+    if not baseline_csvs:
+        return []
+
+    mismatches = []
+    for b_csv in baseline_csvs:
+        rel = b_csv.relative_to(baseline_files_dir)
+        c_csv = current_files_dir / rel
+        if not c_csv.exists():
+            mismatches.append(f"  Missing result file: {rel}")
+            continue
+
+        def read_rows(p):
+            with p.open(newline="") as f:
+                reader = csv.DictReader(f)
+                return [row for _, row in zip(range(15), reader)]
+
+        b_rows = read_rows(b_csv)
+        c_rows = read_rows(c_csv)
+
+        for i, (b, c) in enumerate(zip(b_rows, c_rows)):
+            if b["start"] != c["start"] or b["activation_ins_buzz"] != c["activation_ins_buzz"]:
+                mismatches.append(
+                    f"  {rel} row {i+1}: baseline=({b['start']}, {b['activation_ins_buzz']})"
+                    f" current=({c['start']}, {c['activation_ins_buzz']})"
+                )
+
+        if len(c_rows) < len(b_rows):
+            mismatches.append(
+                f"  {rel}: baseline has {len(b_rows)} rows but current has only {len(c_rows)} (checked up to 15)"
+            )
+
+    return mismatches
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(
         description="Evaluate buzzdetect analysis on a test dataset (audio_eval) using GPU and record wall-clock time."
@@ -76,8 +117,8 @@ def main(argv=None) -> int:
 
     parser.add_argument(
         "--test-name",
-        default=None,
-        help="Optional name of the test; defaults to the name of the audio directory.",
+        required=True,
+        help="Name of the test; used as the output subdirectory under eval_out/.",
     )
     parser.add_argument(
         "--n-streamers",
@@ -123,7 +164,7 @@ def main(argv=None) -> int:
         print(f"Audio directory not found or not a directory: {dir_audio}", file=sys.stderr)
         return 2
 
-    test_name = args.test_name or dir_audio.name
+    test_name = args.test_name
     dir_out = Path("eval_out", test_name).resolve()
     os.makedirs(dir_out, exist_ok=True)
 
@@ -169,6 +210,27 @@ def main(argv=None) -> int:
 
     if not success:
         return 1
+
+    # Results correctness check (skipped when running as baseline)
+    baseline_files_dir = Path("eval_out/baseline/files")
+    current_files_dir = dir_out / "files"
+    if baseline_files_dir.exists() and test_name != "baseline":
+        mismatches = _compare_results(current_files_dir, baseline_files_dir)
+        if mismatches:
+            print("\n=== RESULTS MISMATCH (first 15 rows) ===", file=sys.stderr)
+            for m in mismatches:
+                print(m, file=sys.stderr)
+            print(
+                "\nERROR: Result CSVs differ from baseline. Fix the regression before proceeding.",
+                file=sys.stderr,
+            )
+            return 1
+        else:
+            print("Results check passed: first 15 rows of all CSVs match baseline.")
+
+        if current_files_dir.exists():
+            shutil.rmtree(current_files_dir)
+            print(f"Cleaned up results files: {current_files_dir}")
 
     # Baseline comparison (skipped when running as baseline or baseline doesn't exist yet)
     current_profile = dir_out / "profile.csv"
