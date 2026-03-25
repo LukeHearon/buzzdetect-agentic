@@ -88,7 +88,7 @@ def main():
 
     args = parser.parse_args()
 
-    from src.analysis.analyze import analyze
+    from src.analyze import analyze
 
     # Handle classes_out argument
     classes_out = args.classes_out
