@@ -52,7 +52,8 @@ class AnalysisSettings(ctk.CTk):
             'dir_out': ctk.StringVar(self, self.vars_analysis['dir_out']),
             'verbosity_print': ctk.StringVar(self, self.vars_analysis['verbosity_print']),
             'verbosity_log': ctk.StringVar(self, self.vars_analysis['verbosity_log']),
-            'log_progress': ctk.BooleanVar(self, self.vars_analysis['log_progress'])
+            'log_progress': ctk.BooleanVar(self, self.vars_analysis['log_progress']),
+            'profile': ctk.BooleanVar(self, self.vars_analysis['profile'])
         }
 
 
@@ -397,8 +398,13 @@ class AdvancedSettings(ctk.CTkToplevel):
             tooltip='Should progress statements (e.g., reports from analyzers)\nbe written to the log file?\nCan produce very large log files.'
         ).grid(row=5, column=0, padx=5, pady=5, sticky="ew")
 
+        ent.CheckBoxEntry(
+            self, label='Profile performance', var=self.vars_tkinter['profile'],
+            tooltip='Save a per-phase timing summary (mean, median, SD) to a CSV\nin the output directory after analysis completes.'
+        ).grid(row=6, column=0, padx=5, pady=5, sticky="ew")
+
         # Close
-        ctk.CTkButton(self, text="Close", command=self._close).grid(row=6, column=0, columnspan=2, pady=10)
+        ctk.CTkButton(self, text="Close", command=self._close).grid(row=7, column=0, columnspan=2, pady=10)
         self.protocol("WM_DELETE_WINDOW", self._close)
 
 

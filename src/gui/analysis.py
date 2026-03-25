@@ -7,9 +7,12 @@ import src.gui.config as cfg_gui
 from src.analyze import Analyzer
 from src.pipeline.assignments import AssignLog
 from src.pipeline.coordination import Coordinator
+from src.utils import Profiler
 
 
 def run_analysis(vars_analysis, q_gui, event_analysisdone, q_earlyexit):
+    profiler = Profiler(enabled=vars_analysis.get('profile', False))
+
     coordinator = Coordinator(
         analyzers_cpu=vars_analysis['analyzers_cpu'],
         analyzer_gpu=vars_analysis['analyzer_gpu'],
@@ -17,7 +20,8 @@ def run_analysis(vars_analysis, q_gui, event_analysisdone, q_earlyexit):
         depth=vars_analysis['stream_buffer_depth'],
         q_gui=q_gui,
         event_analysisdone=event_analysisdone,
-        q_earlyexit=q_earlyexit
+        q_earlyexit=q_earlyexit,
+        profiler=profiler,
     )
 
     analyzer = Analyzer(
