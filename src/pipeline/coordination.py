@@ -3,6 +3,7 @@ import threading
 from queue import Queue
 
 from src.pipeline.assignments import AssignFile, AssignChunk, AssignLog
+from src.utils import Profiler
 
 
 class ExitSignal:
@@ -23,7 +24,8 @@ class Coordinator:
                  depth: int=None,
                  q_gui: Queue[AssignLog]=None,
                  event_analysisdone: multiprocessing.Event=None,
-                 q_earlyexit: multiprocessing.Queue=None,):
+                 q_earlyexit: multiprocessing.Queue=None,
+                 profiler: Profiler=None,):
 
         self.analyzers_cpu = analyzers_cpu
         self.analyzer_gpu = analyzer_gpu
@@ -49,6 +51,7 @@ class Coordinator:
         self.q_earlyexit = q_earlyexit if q_earlyexit is not None else Queue()
 
         self.end_reason = None
+        self.profiler = profiler if profiler is not None else Profiler(enabled=False)
 
     def log(self, msg, level_str):
         self.q_log.put(AssignLog(message=f'coordinator: {msg}', level_str=level_str))

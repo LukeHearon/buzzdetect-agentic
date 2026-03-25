@@ -64,20 +64,21 @@ class WorkerWriter:
         self.coordinator.q_log.put(AssignLog(message=f'writer: {msg}', level_str=level_str))
 
     def write_results(self, a_chunk: AssignChunk):
-        output = self.format(
-            results=a_chunk.results.numpy(),
-            time_start=a_chunk.chunk[0]
-        )
+        with self.coordinator.profiler.phase('write_io'):
+            output = self.format(
+                results=a_chunk.results.numpy(),
+                time_start=a_chunk.chunk[0]
+            )
 
-        path_results_partial = a_chunk.file.path_results_partial
+            path_results_partial = a_chunk.file.path_results_partial
 
-        os.makedirs(os.path.dirname(path_results_partial), exist_ok=True)
+            os.makedirs(os.path.dirname(path_results_partial), exist_ok=True)
 
-        # Check if file exists to determine if we need to write headers
-        file_exists = os.path.exists(path_results_partial)
+            # Check if file exists to determine if we need to write headers
+            file_exists = os.path.exists(path_results_partial)
 
-        # Append to existing file or create new one with headers
-        output.to_csv(path_results_partial, mode='a', header=not file_exists, index=False)
+            # Append to existing file or create new one with headers
+            output.to_csv(path_results_partial, mode='a', header=not file_exists, index=False)
 
     def run(self):
         self.log('launching', 'INFO')

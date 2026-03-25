@@ -10,7 +10,7 @@ from src.pipeline.coordination import Coordinator
 from src.pipeline.logger import WorkerLogger
 from src.pipeline.assignments import AssignLog
 from src.stream.worker import WorkerStreamer
-from src.utils import Timer
+from src.utils import Timer, Profiler
 from src.write.thresholds import calculate_threshold
 from src.write.worker import WorkerWriter
 
@@ -252,7 +252,6 @@ class Analyzer:
         self._log_startup()
         self._launch_logger()
 
-
         checker = WorkerChecker(
             dir_audio=self.dir_audio,
             dir_results=self.dir_out,
@@ -261,7 +260,8 @@ class Analyzer:
             coordinator=self.coordinator
         )
 
-        checker.queue_assignments()
+        with self.coordinator.profiler.phase('file_checks'):
+            checker.queue_assignments()
 
         # checker can trigger an early exit based on the state of the files;
         # if this happens, don't even launch
@@ -289,6 +289,13 @@ class Analyzer:
         self.coordinator.q_log.put(AssignLog(message='', level_str='INFO', terminate=True))
         self.thread_logger.join()
 
+        if self.coordinator.profiler.enabled:
+            print(self.coordinator.profiler.summary())
+            timestamp = self.timer_total.time_start.strftime('%Y-%m-%d_%H%M%S')
+            path_profile = os.path.join(self.dir_out, f"{timestamp}_profile.csv")
+            self.coordinator.profiler.save_csv(path_profile)
+            print(f"Profiling data saved to: {path_profile}")
+
 
 
 def analyze(
@@ -308,6 +315,7 @@ def analyze(
         log_progress: bool = False,
         q_gui: multiprocessing.Queue = None,
         event_stopanalysis: multiprocessing.Event = None,
+        profile: bool = False,
 ):
     """Analyze audio files using a buzz detection model.
 
@@ -373,27 +381,32 @@ def analyze(
     analyzed audio chunk.
     """
 
-    coordinator = Coordinator(
-        analyzers_cpu=analyzers_cpu,
-        analyzer_gpu=analyzer_gpu,
-        streamers_total=n_streamers,
-        depth=stream_buffer_depth,
-        q_gui=q_gui,
-        event_analysisdone=event_stopanalysis
-    )
+    profiler = Profiler(enabled=profile)
 
-    analyzer = Analyzer(
-        modelname=modelname,
-        classes_out=classes_out,
-        precision=precision,
-        framehop_prop=framehop_prop,
-        chunklength=chunklength,
-        dir_audio=dir_audio,
-        dir_out=dir_out,
-        verbosity_print=verbosity_print,
-        verbosity_log=verbosity_log,
-        log_progress=log_progress,
-        coordinator=coordinator
-    )
+    with profiler.phase('overall'):
+        with profiler.phase('setup'):
+            coordinator = Coordinator(
+                analyzers_cpu=analyzers_cpu,
+                analyzer_gpu=analyzer_gpu,
+                streamers_total=n_streamers,
+                depth=stream_buffer_depth,
+                q_gui=q_gui,
+                event_analysisdone=event_stopanalysis,
+                profiler=profiler,
+            )
 
-    analyzer.run()
+            analyzer = Analyzer(
+                modelname=modelname,
+                classes_out=classes_out,
+                precision=precision,
+                framehop_prop=framehop_prop,
+                chunklength=chunklength,
+                dir_audio=dir_audio,
+                dir_out=dir_out,
+                verbosity_print=verbosity_print,
+                verbosity_log=verbosity_log,
+                log_progress=log_progress,
+                coordinator=coordinator
+            )
+
+        analyzer.run()

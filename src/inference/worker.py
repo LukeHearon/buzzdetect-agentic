@@ -70,14 +70,16 @@ class WorkerInferer:
         self.log(msg, 'DEBUG')
 
     def process_chunk(self, a_chunk: AssignChunk):
-        a_chunk.results = self.model.predict(a_chunk.samples)
+        with self.coordinator.profiler.phase('inference'):
+            a_chunk.results = self.model.predict(a_chunk.samples)
 
         self.coordinator.q_write.put(a_chunk)
         self.report_rate(a_chunk)
 
     def run(self):
         self.log('launching', 'INFO')
-        self.model.initialize()
+        with self.coordinator.profiler.phase('model_init'):
+            self.model.initialize()
 
         self.timer_bottleneck.restart()
         while not self.coordinator.event_exitanalysis.is_set():

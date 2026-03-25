@@ -88,6 +88,12 @@ def main(argv=None) -> int:
         choices=["PROGRESS", "INFO", "DEBUG", "WARNING", "ERROR"],
         help="Verbosity level for console output/logs. Default: ERROR (quiet).",
     )
+    parser.add_argument(
+        "--profile",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Print a per-phase timing summary after analysis completes.",
+    )
 
     args = parser.parse_args(argv)
 
@@ -141,6 +147,7 @@ def main(argv=None) -> int:
             log_progress=False,
             q_gui=None,
             event_stopanalysis=None,
+            profile=args.profile,
         )
         success = True
     except Exception as e:

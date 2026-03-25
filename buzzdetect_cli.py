@@ -78,8 +78,12 @@ def main():
                         required=False, default='DEBUG', type=str,
                         choices=['INFO', 'DEBUG', 'WARNING', 'ERROR'])
 
-    parser.add_argument('--log_progress', 
+    parser.add_argument('--log_progress',
                         help='Whether or not to log progress statements to file. For long analyses with small chunks, this can result in log files megabytes in size.',
+                        required=False, default=False, type=str2bool)
+
+    parser.add_argument('--profile',
+                        help='Print a per-phase timing summary after analysis completes.',
                         required=False, default=False, type=str2bool)
 
     args = parser.parse_args()
@@ -108,6 +112,7 @@ def main():
         verbosity_print=args.verbosity_print,
         verbosity_log=args.verbosity_log,
         log_progress=args.log_progress,
+        profile=args.profile,
     )
 
 if __name__ == "__main__":

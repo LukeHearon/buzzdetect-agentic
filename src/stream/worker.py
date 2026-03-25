@@ -59,21 +59,22 @@ class WorkerStreamer:
             sample_to = int(chunk[1] * samplerate_native)
             read_size = sample_to - sample_from
 
-            track.seek(sample_from)
-            samples = track.read(read_size, dtype=np.float32)
-            if track.channels > 1:
-                samples = np.mean(samples, axis=1)
+            with self.coordinator.profiler.phase('audio_io'):
+                track.seek(sample_from)
+                samples = track.read(read_size, dtype=np.float32)
+                if track.channels > 1:
+                    samples = np.mean(samples, axis=1)
 
-            n_samples = len(samples)
+                n_samples = len(samples)
 
-            if n_samples < read_size:
-                self.handle_bad_read(track, a_file)
-                chunk = (chunk[0], round(chunk[0] + (n_samples/track.samplerate), 1))
-                abort_stream = True
-            else:
-                abort_stream = False
+                if n_samples < read_size:
+                    self.handle_bad_read(track, a_file)
+                    chunk = (chunk[0], round(chunk[0] + (n_samples/track.samplerate), 1))
+                    abort_stream = True
+                else:
+                    abort_stream = False
 
-            samples = librosa.resample(y=samples, orig_sr=track.samplerate, target_sr=self.resample_rate)
+                samples = librosa.resample(y=samples, orig_sr=track.samplerate, target_sr=self.resample_rate)
 
             a_chunk = AssignChunk(file=a_file, chunk=chunk, samples=samples)
             while not self.coordinator.event_exitanalysis.is_set():
