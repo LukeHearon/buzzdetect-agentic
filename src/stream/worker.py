@@ -59,7 +59,7 @@ class WorkerStreamer:
             sample_to = int(chunk[1] * samplerate_native)
             read_size = sample_to - sample_from
 
-            with self.coordinator.profiler.phase('audio_io'):
+            with self.coordinator.profiler.phase('audio_io/reading'):
                 track.seek(sample_from)
                 samples = track.read(read_size, dtype=np.float32)
                 if track.channels > 1:
@@ -74,6 +74,7 @@ class WorkerStreamer:
                 else:
                     abort_stream = False
 
+            with self.coordinator.profiler.phase('audio_io/resampling'):
                 samples = librosa.resample(y=samples, orig_sr=track.samplerate, target_sr=self.resample_rate)
 
             a_chunk = AssignChunk(file=a_file, chunk=chunk, samples=samples)

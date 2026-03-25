@@ -64,12 +64,13 @@ class WorkerWriter:
         self.coordinator.q_log.put(AssignLog(message=f'writer: {msg}', level_str=level_str))
 
     def write_results(self, a_chunk: AssignChunk):
-        with self.coordinator.profiler.phase('write_io'):
+        with self.coordinator.profiler.phase('write_io/formatting'):
             output = self.format(
                 results=a_chunk.results.numpy(),
                 time_start=a_chunk.chunk[0]
             )
 
+        with self.coordinator.profiler.phase('write_io/writing'):
             path_results_partial = a_chunk.file.path_results_partial
 
             os.makedirs(os.path.dirname(path_results_partial), exist_ok=True)

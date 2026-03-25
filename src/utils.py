@@ -31,12 +31,18 @@ class Timer:
 class Profiler:
     """Thread-safe phase profiler. Accumulates named timing measurements across threads.
 
+    Supports subphases via slash notation (e.g. ``'audio_io/reading'``). Subphases
+    are displayed indented under their parent in the summary and sorted to appear
+    immediately after the parent phase.
+
     Usage::
 
         profiler = Profiler(enabled=True)
 
-        with profiler.phase('my_phase'):
-            do_work()
+        with profiler.phase('audio_io/reading'):
+            samples = track.read(...)
+        with profiler.phase('audio_io/resampling'):
+            samples = librosa.resample(...)
 
         print(profiler.summary())
         profiler.save_csv('/path/to/output/profile.csv')
@@ -99,8 +105,21 @@ class Profiler:
                 'sd_s': sd,
                 'pct_of_overall': pct,
             })
-        # 'overall' first, then descending by total time
-        rows.sort(key=lambda r: (r['phase'] != 'overall', -r['total_s']))
+        # Sort: 'overall' first, then top-level phases by descending total,
+        # with subphases (slash notation) grouped immediately after their parent.
+        phase_totals = {r['phase']: r['total_s'] for r in rows}
+
+        def _sort_key(r):
+            ph = r['phase']
+            if ph == 'overall':
+                return (0, 0.0, '', 0, 0.0)
+            if '/' in ph:
+                parent = ph.split('/')[0]
+                parent_total = phase_totals.get(parent, 0.0)
+                return (1, -parent_total, parent, 1, -r['total_s'])
+            return (1, -r['total_s'], ph, 0, 0.0)
+
+        rows.sort(key=_sort_key)
         return rows
 
     def summary(self) -> str:
@@ -110,16 +129,23 @@ class Profiler:
                 return "Profiler: no data recorded."
             rows = self._build_rows()
 
+        phase_names = {r['phase'] for r in rows}
         lines = ["\n=== PROFILING SUMMARY ==="]
         for r in rows:
             pct_str = f"  ({r['pct_of_overall']:.1f}%)" if r['pct_of_overall'] is not None else ""
+            if '/' in r['phase'] and r['phase'].split('/')[0] in phase_names:
+                label = '  ' + r['phase'].split('/', 1)[1]
+                width = 20
+            else:
+                label = r['phase']
+                width = 22
             if r['n'] == 1:
                 lines.append(
-                    f"  {r['phase']:<22} {r['total_s']:>8.3f}s{pct_str}"
+                    f"  {label:<{width}} {r['total_s']:>8.3f}s{pct_str}"
                 )
             else:
                 lines.append(
-                    f"  {r['phase']:<22} {r['total_s']:>8.3f}s  n={r['n']:<6}"
+                    f"  {label:<{width}} {r['total_s']:>8.3f}s  n={r['n']:<6}"
                     f"  mean={r['mean_s']:.4f}s  median={r['median_s']:.4f}s  sd={r['sd_s']:.4f}s{pct_str}"
                 )
         lines.append("=" * 45)
