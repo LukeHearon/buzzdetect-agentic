@@ -1,10 +1,9 @@
 import argparse
 import csv
+import json
 import os
-import shutil
 import sys
 import time
-from datetime import datetime
 from pathlib import Path
 
 # Reduce TensorFlow and other verbose logs where possible
@@ -16,15 +15,58 @@ except Exception as e:
     print(f"Failed to import analyze from src.analyze: {e}", file=sys.stderr)
     sys.exit(1)
 
+MODEL_NAME = "model_general_v3"
+BASELINE_PROFILE = Path("eval_out/baseline/profile.csv")
 
-def _append_result(row_path: Path, row: dict, fieldnames: list[str]) -> None:
-    row_path.parent.mkdir(parents=True, exist_ok=True)
-    write_header = not row_path.exists() or row_path.stat().st_size == 0
-    with row_path.open("a", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-        if write_header:
-            writer.writeheader()
-        writer.writerow(row)
+
+def _compare_profiles(current_path: Path, baseline_path: Path):
+    """Compare two profile CSVs. Returns (rows, overall_delta_s, overall_delta_pct)."""
+    def load(p):
+        with p.open(newline="") as f:
+            return {row["phase"]: row for row in csv.DictReader(f)}
+
+    baseline = load(baseline_path)
+    current = load(current_path)
+
+    rows = []
+    overall_delta_s = None
+    overall_delta_pct = None
+
+    for phase, b_row in baseline.items():
+        if phase not in current:
+            continue
+        b_s = float(b_row["total_s"])
+        c_s = float(current[phase]["total_s"])
+        delta_s = c_s - b_s
+        delta_pct = (delta_s / b_s * 100) if b_s != 0 else 0.0
+        row = {
+            "phase": phase,
+            "baseline_s": b_s,
+            "current_s": c_s,
+            "delta_s": delta_s,
+            "delta_pct": delta_pct,
+        }
+        rows.append(row)
+        if phase == "overall":
+            overall_delta_s = delta_s
+            overall_delta_pct = delta_pct
+
+    return rows, overall_delta_s, overall_delta_pct
+
+
+def _print_comparison(rows, overall_delta_s, overall_delta_pct):
+    print("\n=== BASELINE COMPARISON ===")
+    header = f"{'phase':<30} {'baseline_s':>12} {'current_s':>12} {'delta_s':>10} {'delta_%':>9}"
+    print(header)
+    print("-" * len(header))
+    for row in rows:
+        print(
+            f"{row['phase']:<30} {row['baseline_s']:>12.3f} {row['current_s']:>12.3f}"
+            f" {row['delta_s']:>+10.3f} {row['delta_pct']:>+8.1f}%"
+        )
+    if overall_delta_s is not None:
+        direction = "FASTER" if overall_delta_s < 0 else ("SLOWER" if overall_delta_s > 0 else "SAME")
+        print(f"\nVERDICT: {direction}  ({overall_delta_s:+.3f}s vs baseline overall)")
 
 
 def main(argv=None) -> int:
@@ -37,7 +79,6 @@ def main(argv=None) -> int:
         default=None,
         help="Optional name of the test; defaults to the name of the audio directory.",
     )
-
     parser.add_argument(
         "--n-streamers",
         type=int,
@@ -68,14 +109,12 @@ def main(argv=None) -> int:
         default=0,
         help="Number of parallel CPU analyzer workers. Default: 0",
     )
-
     parser.add_argument(
         "--gpu",
         action=argparse.BooleanOptionalAction,
         default=True,
         help="Use GPU analyzer (default: True). Use --no-gpu to disable.",
     )
-
 
     args = parser.parse_args(argv)
 
@@ -85,29 +124,26 @@ def main(argv=None) -> int:
         return 2
 
     test_name = args.test_name or dir_audio.name
-    results_path = Path(args.results_file).resolve()
-
     dir_out = Path("eval_out", test_name).resolve()
     os.makedirs(dir_out, exist_ok=True)
 
-    # Log selected options (exclude hard-coded paths/values)
     argval = {
         "test_name": test_name,
+        "model": MODEL_NAME,
         "chunklength": args.chunklength,
         "n_streamers": args.n_streamers,
         "stream_buffer_depth": args.stream_buffer_depth,
         "analyzers_cpu": args.analyzers_cpu,
         "gpu": args.gpu,
-        "verbosity": args.verbosity,
     }
     print("Eval args: " + ", ".join(f"{k}={v}" for k, v in argval.items()))
 
-    # Time the end-to-end analyze() call
-    start = time.perf_counter()
+    profile_path = str(dir_out / "profile.csv")
+
     try:
         analyze(
-            modelname=args.model,
-            classes_out="ins_buzz",
+            modelname=MODEL_NAME,
+            classes_out=["ins_buzz"],
             precision=None,
             framehop_prop=1,
             chunklength=args.chunklength,
@@ -123,6 +159,7 @@ def main(argv=None) -> int:
             q_gui=None,
             event_stopanalysis=None,
             profile=True,
+            profile_path=profile_path,
         )
         success = True
 
@@ -130,8 +167,38 @@ def main(argv=None) -> int:
         print(f"Analysis failed: {e}", file=sys.stderr)
         success = False
 
-    # Exit status: 0 on success, 1 on analysis failure, 2 on input error
-    return 0 if success else 1
+    if not success:
+        return 1
+
+    # Baseline comparison (skipped when running as baseline or baseline doesn't exist yet)
+    current_profile = dir_out / "profile.csv"
+    if BASELINE_PROFILE.exists() and current_profile.exists() and test_name != "baseline":
+        rows, overall_delta_s, overall_delta_pct = _compare_profiles(current_profile, BASELINE_PROFILE)
+        _print_comparison(rows, overall_delta_s, overall_delta_pct)
+
+        if overall_delta_s is not None:
+            threshold_pct = 1.0
+            if overall_delta_pct < -threshold_pct:
+                verdict = "faster"
+            elif overall_delta_pct > threshold_pct:
+                verdict = "slower"
+            else:
+                verdict = "same"
+        else:
+            verdict = "unknown"
+
+        comparison = {
+            "overall_delta_s": overall_delta_s,
+            "overall_delta_pct": overall_delta_pct,
+            "verdict": verdict,
+            "phases": rows,
+        }
+        comparison_path = dir_out / "comparison.json"
+        with comparison_path.open("w") as f:
+            json.dump(comparison, f, indent=2)
+        print(f"Comparison saved to: {comparison_path}")
+
+    return 0
 
 
 if __name__ == "__main__":

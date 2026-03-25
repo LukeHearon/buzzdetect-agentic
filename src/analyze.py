@@ -18,7 +18,6 @@ from src.write.worker import WorkerWriter
 def run_worker(workerclass, **kwargs):
     worker = workerclass(**kwargs)
     worker()
-    print(f"DEBUG, run_worker: {worker.__class__.__name__} finished.")
 
 
 class Analyzer:
@@ -309,6 +308,7 @@ def analyze(
         q_gui: multiprocessing.Queue = None,
         event_stopanalysis: multiprocessing.Event = None,
         profile: bool = False,
+        profile_path: str = None,
 ):
     """Analyze audio files using a buzz detection model.
 
@@ -407,6 +407,6 @@ def analyze(
     if profile:
         print(profiler.summary())
         timestamp = analyzer.timer_total.time_start.strftime('%Y-%m-%d_%H%M%S')
-        path_profile = os.path.join(analyzer.dir_out, f"{timestamp}_profile.csv")
+        path_profile = profile_path or os.path.join(analyzer.dir_out, f"{timestamp}_profile.csv")
         profiler.save_csv(path_profile)
         print(f"Profiling data saved to: {path_profile}")
