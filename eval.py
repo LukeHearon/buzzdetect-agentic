@@ -66,7 +66,12 @@ def _print_comparison(rows, overall_delta_s, overall_delta_pct):
             f" {row['delta_s']:>+10.3f} {row['delta_pct']:>+8.1f}%"
         )
     if overall_delta_s is not None:
-        direction = "FASTER" if overall_delta_s < 0 else ("SLOWER" if overall_delta_s > 0 else "SAME")
+        if overall_delta_pct is not None and overall_delta_pct < -5.0:
+            direction = "FASTER"
+        elif overall_delta_pct is not None and overall_delta_pct > 5.0:
+            direction = "SLOWER"
+        else:
+            direction = "NEUTRAL"
         print(f"\nVERDICT: {direction}  ({overall_delta_s:+.3f}s mean vs baseline overall)")
 
 
@@ -240,6 +245,7 @@ def main(argv=None) -> int:
     # Results correctness check (skipped when running as baseline)
     baseline_files_dir = Path("eval_out/baseline/files")
     current_files_dir = dir_out / "files"
+    results_bad = False
     if baseline_files_dir.exists() and test_name != "baseline":
         mismatches = _compare_results(current_files_dir, baseline_files_dir)
         if mismatches:
@@ -250,30 +256,30 @@ def main(argv=None) -> int:
                 "\nERROR: Result CSVs differ from baseline. Fix the regression before proceeding.",
                 file=sys.stderr,
             )
-            return 1
+            results_bad = True
         else:
             print("Results check passed: first 15 rows of all CSVs match baseline.")
 
-        if current_files_dir.exists():
+        if not results_bad and current_files_dir.exists():
             shutil.rmtree(current_files_dir)
             print(f"Cleaned up results files: {current_files_dir}")
 
     # Baseline comparison (skipped when running as baseline or baseline doesn't exist yet)
+    verdict = None
     current_profile = dir_out / "profile.csv"
     if BASELINE_PROFILE.exists() and current_profile.exists() and test_name != "baseline":
         rows, overall_delta_s, overall_delta_pct = _compare_profiles(current_profile, BASELINE_PROFILE)
         _print_comparison(rows, overall_delta_s, overall_delta_pct)
 
         if overall_delta_s is not None:
-            threshold_pct = 1.0
-            if overall_delta_pct < -threshold_pct:
-                verdict = "faster"
-            elif overall_delta_pct > threshold_pct:
-                verdict = "slower"
+            if overall_delta_pct < -5.0:
+                verdict = "FASTER"
+            elif overall_delta_pct > 5.0:
+                verdict = "SLOWER"
             else:
-                verdict = "same"
+                verdict = "NEUTRAL"
         else:
-            verdict = "unknown"
+            verdict = "UNKNOWN"
 
         comparison = {
             "overall_mean_delta_s": overall_delta_s,
@@ -285,6 +291,16 @@ def main(argv=None) -> int:
         with comparison_path.open("w") as f:
             json.dump(comparison, f, indent=2)
         print(f"Comparison saved to: {comparison_path}")
+
+    # Rename test directory with verdict prefix
+    if test_name != "baseline" and (verdict is not None or results_bad):
+        prefix = "BADRESULTS" if results_bad else verdict
+        new_dir = dir_out.parent / f"{prefix}_{test_name}"
+        dir_out.rename(new_dir)
+        print(f"Renamed output directory to: {new_dir}")
+
+    if results_bad:
+        return 1
 
     return 0
 
