@@ -289,13 +289,6 @@ class Analyzer:
         self.coordinator.q_log.put(AssignLog(message='', level_str='INFO', terminate=True))
         self.thread_logger.join()
 
-        if self.coordinator.profiler.enabled:
-            print(self.coordinator.profiler.summary())
-            timestamp = self.timer_total.time_start.strftime('%Y-%m-%d_%H%M%S')
-            path_profile = os.path.join(self.dir_out, f"{timestamp}_profile.csv")
-            self.coordinator.profiler.save_csv(path_profile)
-            print(f"Profiling data saved to: {path_profile}")
-
 
 
 def analyze(
@@ -410,3 +403,10 @@ def analyze(
             )
 
         analyzer.run()
+
+    if profile:
+        print(profiler.summary())
+        timestamp = analyzer.timer_total.time_start.strftime('%Y-%m-%d_%H%M%S')
+        path_profile = os.path.join(analyzer.dir_out, f"{timestamp}_profile.csv")
+        profiler.save_csv(path_profile)
+        print(f"Profiling data saved to: {path_profile}")

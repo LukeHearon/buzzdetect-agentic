@@ -1,5 +1,6 @@
 from _queue import Empty
 
+import numpy as np
 import tensorflow as tf
 
 from src.inference.models import load_model
@@ -76,10 +77,18 @@ class WorkerInferer:
         self.coordinator.q_write.put(a_chunk)
         self.report_rate(a_chunk)
 
+    def _prewarm_model(self):
+        """Run a dummy prediction to trigger TF graph compilation before timed inference."""
+        n_samples = int(self.model.embedder.framelength_s * self.model.embedder.samplerate)
+        dummy = np.zeros(n_samples, dtype=np.float32)
+        self.model.predict(dummy)
+
     def run(self):
         self.log('launching', 'INFO')
         with self.coordinator.profiler.phase('model_init'):
             self.model.initialize()
+        with self.coordinator.profiler.phase('prewarm_inference'):
+            self._prewarm_model()
 
         self.timer_bottleneck.restart()
         while not self.coordinator.event_exitanalysis.is_set():

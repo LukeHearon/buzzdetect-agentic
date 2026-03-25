@@ -97,8 +97,15 @@ class WorkerStreamer:
 
         return True
 
+    def _prewarm_resample(self):
+        """Trigger librosa's lazy backend import and filter computation before timed analysis."""
+        dummy = np.zeros(44100, dtype=np.float32)  # 1s at a common source rate
+        librosa.resample(y=dummy, orig_sr=44100, target_sr=self.resample_rate)
+
     def run(self):
         self.log('launching', 'INFO')
+        with self.coordinator.profiler.phase('prewarm_audio'):
+            self._prewarm_resample()
         a_stream = self.coordinator.q_stream.get()
         while a_stream is not None:
             self.log(f"buffering {a_stream.shortpath_audio}", 'INFO')
