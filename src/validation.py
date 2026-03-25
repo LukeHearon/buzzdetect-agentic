@@ -156,7 +156,7 @@ def validate_dir_out(dir_out: str):
 
 def validate_verbosity(verbosity_str: str):
     if verbosity_str not in loglevels.keys():
-        return ArgValid(False, f'must be one of: {', '.join(loglevels.keys())}')
+        return ArgValid(False, f"must be one of: {', '.join(loglevels.keys())}")
     return ArgValid(True, None)
 
 def validate_log_progress(log_progress: bool):
