@@ -6,13 +6,13 @@ import src.config as cfg
 from src.inference.models import BaseModel
 
 
-class ModelGeneralV3Onnx(BaseModel):
+class ModelGeneralV3(BaseModel):
     modelname = "model_general_v3_onnx"
     embeddername = 'yamnet_k2'
     digits_results = 2
 
     def initialize(self):
-        # Embedder is NOT initialized here — its class-level attributes
+        # Note: embedder is NOT initialized here — its class-level attributes
         # (samplerate, framelength_s, etc.) are sufficient. Inference is fully
         # handled by the combined ONNX session below, avoiding TF GPU init.
 
@@ -30,8 +30,7 @@ class ModelGeneralV3Onnx(BaseModel):
 
     def predict(self, audiosamples):
         """
-        Generate predictions for audio data using combined ONNX model
-        (yamnet_k2 embedder + model_general_v3 classifier, fused into one graph).
+        Generate predictions for audio data using combined ONNX model.
 
         Args:
             audiosamples: numpy array of audio samples at self.embedder.samplerate

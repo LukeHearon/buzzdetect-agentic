@@ -1,9 +1,0 @@
-{
-  "test_name": "onnx_sweep_200s_8str_buf6",
-  "model": "model_general_v3",
-  "chunklength": 200.0,
-  "n_streamers": 8,
-  "stream_buffer_depth": 6,
-  "analyzers_cpu": 0,
-  "gpu": true
-}

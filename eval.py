@@ -175,6 +175,11 @@ def main(argv=None) -> int:
             "Use --no-gpu to run CPU-only (requires --analyzers-cpu > 0 to do any inference). Default: True"
         ),
     )
+    parser.add_argument(
+        "--model",
+        default=MODEL_NAME,
+        help=f"Name of the model directory under models/ to use for inference. Default: {MODEL_NAME}",
+    )
 
     args = parser.parse_args(argv)
 
@@ -207,7 +212,7 @@ def main(argv=None) -> int:
 
     argval = {
         "test_name": test_name,
-        "model": MODEL_NAME,
+        "model": args.model,
         "chunklength": args.chunklength,
         "n_streamers": args.n_streamers,
         "stream_buffer_depth": args.stream_buffer_depth,
@@ -225,7 +230,7 @@ def main(argv=None) -> int:
 
     try:
         analyze(
-            modelname=MODEL_NAME,
+            modelname=args.model,
             classes_out=["ins_buzz"],
             framehop_prop=1,
             chunklength=args.chunklength,
