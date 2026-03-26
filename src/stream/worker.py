@@ -1,9 +1,9 @@
 import time
 from queue import Full
 
-import librosa
 import numpy as np
 import soundfile as sf
+import soxr
 
 from src import config as cfg
 from src.pipeline.assignments import AssignFile, AssignChunk, AssignLog
@@ -77,7 +77,7 @@ class WorkerStreamer:
                     abort_stream = False
 
             with self.coordinator.profiler.phase('audio_io/resampling'):
-                samples = librosa.resample(y=samples, orig_sr=track.samplerate, target_sr=self.resample_rate)
+                samples = soxr.resample(samples, samplerate_native, self.resample_rate, quality='HQ')
 
             a_chunk = AssignChunk(file=a_file, chunk=chunk, samples=samples)
             t_wait_start = time.perf_counter()
@@ -107,9 +107,9 @@ class WorkerStreamer:
         return True
 
     def _prewarm_resample(self):
-        """Trigger librosa's lazy backend import and filter computation before timed analysis."""
+        """Trigger soxr's filter computation before timed analysis."""
         dummy = np.zeros(44100, dtype=np.float32)  # 1s at a common source rate
-        librosa.resample(y=dummy, orig_sr=44100, target_sr=self.resample_rate)
+        soxr.resample(dummy, 44100, self.resample_rate, quality='HQ')
 
     def run(self):
         self.log('launching', 'INFO')
