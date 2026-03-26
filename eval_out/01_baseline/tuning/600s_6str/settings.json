@@ -1,5 +1,5 @@
 {
-  "model": "model_general_v3_onnx",
+  "model": "model_general_v3",
   "chunklength": 600,
   "n_streamers": 6,
   "analyzers_cpu": 0,

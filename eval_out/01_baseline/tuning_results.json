@@ -8,11 +8,11 @@
         "n_streamers": 6,
         "analyzers_cpu": 0,
         "gpu": true,
-        "model": "model_general_v3_onnx"
+        "model": "model_general_v3"
       },
       "success": true,
       "results_bad": false,
-      "overall_s": 22.303259,
+      "overall_s": 19.175066,
       "rank": 1
     },
     {
@@ -22,11 +22,11 @@
         "n_streamers": 6,
         "analyzers_cpu": 0,
         "gpu": true,
-        "model": "model_general_v3_onnx"
+        "model": "model_general_v3"
       },
       "success": true,
       "results_bad": false,
-      "overall_s": 22.682196,
+      "overall_s": 21.055476,
       "rank": 2
     },
     {
@@ -36,26 +36,12 @@
         "n_streamers": 6,
         "analyzers_cpu": 0,
         "gpu": true,
-        "model": "model_general_v3_onnx"
+        "model": "model_general_v3"
       },
       "success": true,
       "results_bad": false,
-      "overall_s": 23.117337,
+      "overall_s": 21.559665,
       "rank": 3
-    },
-    {
-      "name": "600s_3str",
-      "settings": {
-        "chunklength": 600,
-        "n_streamers": 3,
-        "analyzers_cpu": 0,
-        "gpu": true,
-        "model": "model_general_v3_onnx"
-      },
-      "success": true,
-      "results_bad": false,
-      "overall_s": 25.216407,
-      "rank": 4
     },
     {
       "name": "1200s_3str",
@@ -64,11 +50,25 @@
         "n_streamers": 3,
         "analyzers_cpu": 0,
         "gpu": true,
-        "model": "model_general_v3_onnx"
+        "model": "model_general_v3"
       },
       "success": true,
       "results_bad": false,
-      "overall_s": 25.719806,
+      "overall_s": 22.390084,
+      "rank": 4
+    },
+    {
+      "name": "600s_3str",
+      "settings": {
+        "chunklength": 600,
+        "n_streamers": 3,
+        "analyzers_cpu": 0,
+        "gpu": true,
+        "model": "model_general_v3"
+      },
+      "success": true,
+      "results_bad": false,
+      "overall_s": 22.940713,
       "rank": 5
     },
     {
@@ -78,11 +78,11 @@
         "n_streamers": 3,
         "analyzers_cpu": 0,
         "gpu": true,
-        "model": "model_general_v3_onnx"
+        "model": "model_general_v3"
       },
       "success": true,
       "results_bad": false,
-      "overall_s": 26.879871,
+      "overall_s": 25.544869,
       "rank": 6
     }
   ]
