@@ -1,0 +1,63 @@
+{
+  "overall_mean_delta_s": -10.162939000000001,
+  "overall_mean_delta_pct": -15.810831375934542,
+  "verdict": "FASTER",
+  "phases": [
+    {
+      "phase": "overall",
+      "baseline_s": 64.278334,
+      "current_s": 54.115395,
+      "delta_s": -10.162939000000001,
+      "delta_pct": -15.810831375934542
+    },
+    {
+      "phase": "inference",
+      "baseline_s": 0.076692,
+      "current_s": 0.067479,
+      "delta_s": -0.009212999999999999,
+      "delta_pct": -12.012987012987013
+    },
+    {
+      "phase": "file_checks",
+      "baseline_s": 0.002126,
+      "current_s": 0.002545,
+      "delta_s": 0.0004190000000000001,
+      "delta_pct": 19.708372530573854
+    },
+    {
+      "phase": "setup",
+      "baseline_s": 0.000565,
+      "current_s": 0.005901,
+      "delta_s": 0.0053360000000000005,
+      "delta_pct": 944.424778761062
+    },
+    {
+      "phase": "audio_io/reading",
+      "baseline_s": 0.132432,
+      "current_s": 0.183054,
+      "delta_s": 0.050622,
+      "delta_pct": 38.224900326205145
+    },
+    {
+      "phase": "audio_io/resampling",
+      "baseline_s": 0.092378,
+      "current_s": 0.117693,
+      "delta_s": 0.025315000000000004,
+      "delta_pct": 27.40371084024335
+    },
+    {
+      "phase": "write_io/formatting",
+      "baseline_s": 0.006928,
+      "current_s": 0.004491,
+      "delta_s": -0.002437,
+      "delta_pct": -35.17609699769053
+    },
+    {
+      "phase": "write_io/writing",
+      "baseline_s": 0.003656,
+      "current_s": 0.013718,
+      "delta_s": 0.010062,
+      "delta_pct": 275.218818380744
+    }
+  ]
+}
