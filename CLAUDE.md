@@ -159,3 +159,6 @@ If the verdict was BADRESULTS or SLOWER, revert the commit before finishing.
 Write next_steps.md (and description.md) in your test's eval_out directory. What did you learn during this iteration? What would you try next? What looked promising but didn't pan out? Be specific — the next iteration starts with a fresh context and this is its best starting point.
 
 **Important:** Write and commit these notes *after* any reversion, not before. The revert will delete them if they were part of the reverted commit. Commit the notes as a separate commit so they survive regardless of verdict.
+
+
+REMEMBER: commit your changes whether they were good or bad. If they were good, add your notes with your commit. If they were bad, add your notes after the reversion and commit again. We need to track bad steps, too!
