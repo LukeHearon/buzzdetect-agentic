@@ -149,16 +149,6 @@ def main(argv=None) -> int:
         ),
     )
     parser.add_argument(
-        "--framehop-prop",
-        type=float,
-        default=1.0,
-        help=(
-            "Distance between the start of consecutive analysis frames, as a proportion of one "
-            "frame's length. 1.0 = contiguous frames (no overlap); 0.5 = 50%% overlap (doubles "
-            "inference work but improves temporal resolution). Default: 1.0"
-        ),
-    )
-    parser.add_argument(
         "--chunklength",
         type=float,
         default=200.0,
@@ -188,13 +178,31 @@ def main(argv=None) -> int:
 
     args = parser.parse_args(argv)
 
+    if args.chunklength > 1200:
+        print(
+            f"Error: --chunklength {args.chunklength} exceeds the limit of 1200 seconds. "
+            "This limit is enforced because larger values may exceed GPU VRAM.",
+            file=sys.stderr,
+        )
+        return 2
+
     dir_audio = Path("audio_eval").resolve()
     if not dir_audio.exists() or not dir_audio.is_dir():
         print(f"Audio directory not found or not a directory: {dir_audio}", file=sys.stderr)
         return 2
 
     test_name = args.test_name
+    if test_name != "baseline" and not BASELINE_PROFILE.exists():
+        print(
+            "Error: no baseline found. Run with --test-name baseline first to establish a reference.",
+            file=sys.stderr,
+        )
+        return 2
+
     dir_out = Path("eval_out", test_name).resolve()
+    if test_name == "baseline" and BASELINE_PROFILE.exists():
+        print("Note: overwriting existing baseline.")
+        shutil.rmtree(dir_out)
     os.makedirs(dir_out, exist_ok=True)
 
     argval = {
@@ -292,12 +300,12 @@ def main(argv=None) -> int:
             json.dump(comparison, f, indent=2)
         print(f"Comparison saved to: {comparison_path}")
 
-    # Rename test directory with verdict prefix
+    # Write verdict to file
     if test_name != "baseline" and (verdict is not None or results_bad):
-        prefix = "BADRESULTS" if results_bad else verdict
-        new_dir = dir_out.parent / f"{prefix}_{test_name}"
-        dir_out.rename(new_dir)
-        print(f"Renamed output directory to: {new_dir}")
+        verdict_str = "BADRESULTS" if results_bad else verdict
+        verdict_path = dir_out / "verdict.txt"
+        verdict_path.write_text(verdict_str)
+        print(f"Verdict: {verdict_str} (written to {verdict_path})")
 
     if results_bad:
         return 1

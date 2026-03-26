@@ -105,8 +105,7 @@ class WorkerStreamer:
 
     def run(self):
         self.log('launching', 'INFO')
-        with self.coordinator.profiler.phase('prewarm_audio'):
-            self._prewarm_resample()
+        self._prewarm_resample()
         a_stream = self.coordinator.q_stream.get()
         while a_stream is not None:
             self.log(f"buffering {a_stream.shortpath_audio}", 'INFO')

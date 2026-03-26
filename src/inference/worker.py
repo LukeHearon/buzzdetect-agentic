@@ -85,10 +85,8 @@ class WorkerInferer:
 
     def run(self):
         self.log('launching', 'INFO')
-        with self.coordinator.profiler.phase('model_init'):
-            self.model.initialize()
-        with self.coordinator.profiler.phase('prewarm_inference'):
-            self._prewarm_model()
+        self.model.initialize()
+        self._prewarm_model()
 
         self.timer_bottleneck.restart()
         while not self.coordinator.event_exitanalysis.is_set():
