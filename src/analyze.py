@@ -210,7 +210,7 @@ class Analyzer:
 
 
     def _launch_analyzers(self):
-        for a in range(self.coordinator.analyzers_total):
+        for a in range(self.coordinator.analyzers_cpu):
             analyzer = threading.Thread(
                 target=run_worker,
                 name=f"analyzer_cpu_{a}",
