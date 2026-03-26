@@ -19,3 +19,10 @@ training/
 # documentation
 docs/build/
 /audio_eval/
+
+# log files
+**/*.log
+
+# outputs
+**/*_buzzpart.csv
+**/*_buzzdetect.csv

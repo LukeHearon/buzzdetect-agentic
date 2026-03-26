@@ -1,10 +1,10 @@
 import argparse
 import csv
+import itertools
 import json
 import os
 import shutil
 import sys
-import time
 from pathlib import Path
 
 # Reduce TensorFlow and other verbose logs where possible
@@ -18,6 +18,31 @@ except Exception as e:
 
 MODEL_NAME = "model_general_v3"
 BASELINE_PROFILE = Path("eval_out/baseline/profile.csv")
+
+# Grid swept on every run (baseline and non-baseline). All combinations are
+# tried; the best overall runtime is promoted to the top-level output directory.
+# Do not modify — this is managed infrastructure, not an agent tuning target.
+TUNE_GRID = {
+    "chunklength":         [150, 200, 300],
+    "n_streamers":         [4, 6, 8],
+    "stream_buffer_depth": [4, 6],
+}
+
+
+def _combo_label(chunklength, n_streamers, stream_buffer_depth):
+    cl = int(chunklength) if chunklength == int(chunklength) else chunklength
+    return f"{cl}s_{n_streamers}str_buf{stream_buffer_depth}"
+
+
+def _read_overall_time(profile_path: Path):
+    """Return the overall mean_s from a profile CSV, or None if unavailable."""
+    if not profile_path.exists():
+        return None
+    with profile_path.open(newline="") as f:
+        for row in csv.DictReader(f):
+            if row["phase"] == "overall":
+                return float(row["mean_s"])
+    return None
 
 
 def _compare_profiles(current_path: Path, baseline_path: Path):
@@ -115,129 +140,40 @@ def _compare_results(current_files_dir: Path, baseline_files_dir: Path):
     return mismatches
 
 
-def main(argv=None) -> int:
-    parser = argparse.ArgumentParser(
-        description="Evaluate buzzdetect analysis on a test dataset (audio_eval) using GPU and record wall-clock time."
-    )
-
-    parser.add_argument(
-        "--test-name",
-        required=True,
-        help=(
-            "Label for this run. Creates eval_out/<test-name>/ and saves settings.json, "
-            "profile.csv, and comparison.json there. Use 'baseline' to record a reference run."
-        ),
-    )
-    parser.add_argument(
-        "--n-streamers",
-        type=int,
-        default=4,
-        help=(
-            "Number of parallel audio-reader threads (WorkerStreamer). Each thread reads a "
-            "chunk from disk, resamples it, and pushes it into the shared q_analyze queue that "
-            "feeds the inference worker(s). Increase if the GPU sits idle waiting for audio. Default: 4"
-        ),
-    )
-    parser.add_argument(
-        "--stream-buffer-depth",
-        type=int,
-        default=4,
-        help=(
-            "Max number of resampled audio chunks held in q_analyze (the queue between streamers "
-            "and the inference worker). Each streamer also holds one chunk while waiting to enqueue, "
-            "so peak RAM usage ≈ (n_streamers + stream_buffer_depth) × chunklength seconds of audio. Default: 4"
-        ),
-    )
-    parser.add_argument(
-        "--chunklength",
-        type=float,
-        default=200.0,
-        help=(
-            "Length (seconds) of each audio chunk passed through q_analyze to the inference "
-            "worker. Larger values reduce queue overhead but increase per-chunk RAM. Default: 200.0"
-        ),
-    )
-    parser.add_argument(
-        "--analyzers-cpu",
-        type=int,
-        default=0,
-        help=(
-            "Number of parallel CPU inference workers (WorkerInferer with processor='CPU'). "
-            "Each runs the TensorFlow model on CPU independently. Normally 0 when --gpu is used. Default: 0"
-        ),
-    )
-    parser.add_argument(
-        "--gpu",
-        action=argparse.BooleanOptionalAction,
-        default=True,
-        help=(
-            "Launch a single GPU inference worker (WorkerInferer with processor='GPU'). "
-            "Use --no-gpu to run CPU-only (requires --analyzers-cpu > 0 to do any inference). Default: True"
-        ),
-    )
-    parser.add_argument(
-        "--model",
-        default=MODEL_NAME,
-        help=f"Name of the model directory under models/ to use for inference. Default: {MODEL_NAME}",
-    )
-
-    args = parser.parse_args(argv)
-
-    if args.chunklength > 1200:
-        print(
-            f"Error: --chunklength {args.chunklength} exceeds the limit of 1200 seconds. "
-            "This limit is enforced because larger values may exceed GPU VRAM.",
-            file=sys.stderr,
-        )
-        return 2
-
-    dir_audio = Path("audio_eval").resolve()
-    if not dir_audio.exists() or not dir_audio.is_dir():
-        print(f"Audio directory not found or not a directory: {dir_audio}", file=sys.stderr)
-        return 2
-
-    test_name = args.test_name
-    if test_name != "baseline" and not BASELINE_PROFILE.exists():
-        print(
-            "Error: no baseline found. Run with --test-name baseline first to establish a reference.",
-            file=sys.stderr,
-        )
-        return 2
-
-    dir_out = Path("eval_out", test_name).resolve()
-    if test_name == "baseline" and BASELINE_PROFILE.exists():
-        print("Note: overwriting existing baseline.")
-        shutil.rmtree(dir_out)
+def _run_single(dir_out: Path, model: str, chunklength: float, n_streamers: int,
+                stream_buffer_depth: int, analyzers_cpu: int, gpu: bool,
+                dir_audio: Path, label: str = "") -> dict:
+    """Run one analysis pass into dir_out. Returns result dict with keys:
+    success, results_bad, verdict, comparison (or None).
+    """
     os.makedirs(dir_out, exist_ok=True)
 
-    argval = {
-        "test_name": test_name,
-        "model": args.model,
-        "chunklength": args.chunklength,
-        "n_streamers": args.n_streamers,
-        "stream_buffer_depth": args.stream_buffer_depth,
-        "analyzers_cpu": args.analyzers_cpu,
-        "gpu": args.gpu,
+    settings = {
+        "model": model,
+        "chunklength": chunklength,
+        "n_streamers": n_streamers,
+        "stream_buffer_depth": stream_buffer_depth,
+        "analyzers_cpu": analyzers_cpu,
+        "gpu": gpu,
     }
-    print("Eval args: " + ", ".join(f"{k}={v}" for k, v in argval.items()))
-
-    settings_path = dir_out / "settings.json"
-    with settings_path.open("w") as f:
-        json.dump(argval, f, indent=2)
-    print(f"Settings saved to: {settings_path}")
+    with (dir_out / "settings.json").open("w") as f:
+        json.dump(settings, f, indent=2)
 
     profile_path = str(dir_out / "profile.csv")
+    prefix = f"[{label}] " if label else ""
+    print(f"\n{prefix}chunk={chunklength}s  streamers={n_streamers}  buf={stream_buffer_depth}"
+          f"  cpu={analyzers_cpu}  gpu={gpu}  model={model}")
 
     try:
         analyze(
-            modelname=args.model,
+            modelname=model,
             classes_out=["ins_buzz"],
             framehop_prop=1,
-            chunklength=args.chunklength,
-            analyzers_cpu=args.analyzers_cpu,
-            analyzer_gpu=args.gpu,
-            n_streamers=args.n_streamers,
-            stream_buffer_depth=args.stream_buffer_depth,
+            chunklength=chunklength,
+            analyzers_cpu=analyzers_cpu,
+            analyzer_gpu=gpu,
+            n_streamers=n_streamers,
+            stream_buffer_depth=stream_buffer_depth,
             dir_audio=str(dir_audio),
             dir_out=str(dir_out),
             verbosity_print='WARNING',
@@ -247,40 +183,31 @@ def main(argv=None) -> int:
             profile_path=profile_path,
         )
         success = True
-
     except Exception as e:
-        print(f"Analysis failed: {e}", file=sys.stderr)
-        success = False
+        print(f"{prefix}Analysis failed: {e}", file=sys.stderr)
+        return {"success": False, "results_bad": False, "verdict": None, "comparison": None}
 
-    if not success:
-        return 1
-
-    # Results correctness check (skipped when running as baseline)
+    # Results correctness check (skipped when no baseline files exist yet)
     baseline_files_dir = Path("eval_out/baseline/files")
     current_files_dir = dir_out / "files"
     results_bad = False
-    if baseline_files_dir.exists() and test_name != "baseline":
+    if baseline_files_dir.exists():
         mismatches = _compare_results(current_files_dir, baseline_files_dir)
         if mismatches:
-            print("\n=== RESULTS MISMATCH (first 15 rows) ===", file=sys.stderr)
+            print(f"\n{prefix}=== RESULTS MISMATCH ===", file=sys.stderr)
             for m in mismatches:
                 print(m, file=sys.stderr)
-            print(
-                "\nERROR: Result CSVs differ from baseline. Fix the regression before proceeding.",
-                file=sys.stderr,
-            )
             results_bad = True
         else:
-            print("Results check passed: first 15 rows of all CSVs match baseline.")
-
+            print(f"{prefix}Results check passed.")
         if not results_bad and current_files_dir.exists():
             shutil.rmtree(current_files_dir)
-            print(f"Cleaned up results files: {current_files_dir}")
 
-    # Baseline comparison (skipped when running as baseline or baseline doesn't exist yet)
+    # Profile comparison against baseline (skipped when baseline doesn't exist yet)
     verdict = None
+    comparison = None
     current_profile = dir_out / "profile.csv"
-    if BASELINE_PROFILE.exists() and current_profile.exists() and test_name != "baseline":
+    if BASELINE_PROFILE.exists() and current_profile.exists():
         rows, overall_delta_s, overall_delta_pct = _compare_profiles(current_profile, BASELINE_PROFILE)
         _print_comparison(rows, overall_delta_s, overall_delta_pct)
 
@@ -300,22 +227,193 @@ def main(argv=None) -> int:
             "verdict": verdict,
             "phases": rows,
         }
-        comparison_path = dir_out / "comparison.json"
-        with comparison_path.open("w") as f:
+        with (dir_out / "comparison.json").open("w") as f:
             json.dump(comparison, f, indent=2)
-        print(f"Comparison saved to: {comparison_path}")
 
-    # Write verdict to file
-    if test_name != "baseline" and (verdict is not None or results_bad):
-        verdict_str = "BADRESULTS" if results_bad else verdict
-        verdict_path = dir_out / "verdict.txt"
-        verdict_path.write_text(verdict_str)
-        print(f"Verdict: {verdict_str} (written to {verdict_path})")
+    verdict_str = "BADRESULTS" if results_bad else verdict
+    if verdict_str is not None:
+        (dir_out / "verdict.txt").write_text(verdict_str)
 
-    if results_bad:
+    return {
+        "success": success,
+        "results_bad": results_bad,
+        "verdict": verdict_str,
+        "comparison": comparison,
+    }
+
+
+def _run_sweep(dir_out: Path, model: str, analyzers_cpu: int, gpu: bool,
+               dir_audio: Path, is_baseline: bool) -> int:
+    """Sweep TUNE_GRID, promote winner to dir_out. Returns exit code."""
+    dir_tuning = dir_out / "tuning"
+    os.makedirs(dir_tuning, exist_ok=True)
+
+    keys = list(TUNE_GRID.keys())
+    combos = list(itertools.product(*TUNE_GRID.values()))
+    total = len(combos)
+    print(f"\nSweeping {total} settings combinations.")
+
+    combo_results = []
+    for i, vals in enumerate(combos, 1):
+        combo = dict(zip(keys, vals))
+        label = _combo_label(combo["chunklength"], combo["n_streamers"], combo["stream_buffer_depth"])
+        combo_dir = dir_tuning / label
+        print(f"\n── Combo {i}/{total}: {label} ──")
+        result = _run_single(
+            dir_out=combo_dir,
+            model=model,
+            dir_audio=dir_audio,
+            analyzers_cpu=analyzers_cpu,
+            gpu=gpu,
+            **combo,
+        )
+        entry = {
+            "name": label,
+            "settings": {**combo, "analyzers_cpu": analyzers_cpu, "gpu": gpu, "model": model},
+            "success": result["success"],
+            "results_bad": result.get("results_bad", False),
+        }
+        if is_baseline:
+            entry["overall_s"] = _read_overall_time(combo_dir / "profile.csv")
+        else:
+            entry["verdict"] = result["verdict"]
+            entry["overall_delta_pct"] = (result["comparison"] or {}).get("overall_mean_delta_pct")
+        combo_results.append(entry)
+
+    # Select winner
+    if is_baseline:
+        eligible = [r for r in combo_results if r["success"] and r.get("overall_s") is not None]
+        eligible.sort(key=lambda r: r["overall_s"])
+        rank_key = "overall_s"
+    else:
+        eligible = [
+            r for r in combo_results
+            if r["success"] and not r["results_bad"]
+            and r.get("overall_delta_pct") is not None
+            and r.get("verdict") not in (None, "BADRESULTS")
+        ]
+        eligible.sort(key=lambda r: r["overall_delta_pct"])
+        rank_key = "overall_delta_pct"
+
+    for rank, r in enumerate(eligible, 1):
+        r["rank"] = rank
+    for r in combo_results:
+        if "rank" not in r:
+            r["rank"] = None
+
+    tuning_results = {
+        "best_combo": eligible[0]["name"] if eligible else None,
+        "combos": sorted(combo_results, key=lambda r: (r["rank"] is None, r["rank"] or 0)),
+    }
+    with (dir_out / "tuning_results.json").open("w") as f:
+        json.dump(tuning_results, f, indent=2)
+    print(f"\nTuning results saved to: {dir_out / 'tuning_results.json'}")
+
+    if not eligible:
+        print("\nNo eligible results to promote (all BADRESULTS or failed).", file=sys.stderr)
         return 1
 
+    winner = eligible[0]
+    winner_dir = dir_tuning / winner["name"]
+    if is_baseline:
+        print(f"\nBest combo: {winner['name']}  ({winner['overall_s']:.3f}s overall)")
+    else:
+        print(f"\nBest combo: {winner['name']}  ({winner['overall_delta_pct']:+.1f}%  {winner['verdict']})")
+    print(f"Promoting to {dir_out}/")
+
+    for fname in ("settings.json", "comparison.json", "verdict.txt", "profile.csv"):
+        src = winner_dir / fname
+        if src.exists():
+            shutil.copy2(src, dir_out / fname)
+
+    # Print final summary for the winner
+    if not is_baseline:
+        winner_comparison_path = dir_out / "comparison.json"
+        if winner_comparison_path.exists():
+            with winner_comparison_path.open() as f:
+                comp = json.load(f)
+            _print_comparison(
+                comp.get("phases", []),
+                comp.get("overall_mean_delta_s"),
+                comp.get("overall_mean_delta_pct"),
+            )
+        verdict_path = dir_out / "verdict.txt"
+        if verdict_path.exists():
+            print(f"\nFinal verdict: {verdict_path.read_text().strip()}")
+
     return 0
+
+
+def main(argv=None) -> int:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Evaluate buzzdetect analysis on a test dataset (audio_eval). "
+            "Every run sweeps a settings grid and promotes the best result."
+        )
+    )
+    parser.add_argument(
+        "--test-name",
+        required=True,
+        help=(
+            "Label for this run. Creates eval_out/<test-name>/ with results. "
+            "Use 'baseline' to establish a reference run."
+        ),
+    )
+    parser.add_argument(
+        "--model",
+        default=MODEL_NAME,
+        help=f"Name of the model directory under models/ to use for inference. Default: {MODEL_NAME}",
+    )
+    parser.add_argument(
+        "--analyzers-cpu",
+        type=int,
+        default=0,
+        help=(
+            "Number of parallel CPU inference workers. "
+            "Applied to every combo in the sweep. Default: 0"
+        ),
+    )
+    parser.add_argument(
+        "--gpu",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help=(
+            "Launch a GPU inference worker for every combo in the sweep. "
+            "Use --no-gpu for CPU-only (requires --analyzers-cpu > 0). Default: True"
+        ),
+    )
+
+    args = parser.parse_args(argv)
+    test_name = args.test_name
+
+    dir_audio = Path("audio_eval").resolve()
+    if not dir_audio.exists() or not dir_audio.is_dir():
+        print(f"Audio directory not found or not a directory: {dir_audio}", file=sys.stderr)
+        return 2
+
+    is_baseline = test_name == "baseline"
+
+    if not is_baseline and not BASELINE_PROFILE.exists():
+        print(
+            "Error: no baseline found. Run with --test-name baseline first.",
+            file=sys.stderr,
+        )
+        return 2
+
+    dir_out = Path("eval_out", test_name).resolve()
+    if is_baseline and dir_out.exists():
+        print("Note: overwriting existing baseline.")
+        shutil.rmtree(dir_out)
+    os.makedirs(dir_out, exist_ok=True)
+
+    return _run_sweep(
+        dir_out=dir_out,
+        model=args.model,
+        analyzers_cpu=args.analyzers_cpu,
+        gpu=args.gpu,
+        dir_audio=dir_audio,
+        is_baseline=is_baseline,
+    )
 
 
 if __name__ == "__main__":

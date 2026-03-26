@@ -47,7 +47,15 @@ Contains print statements from every step of the analysis. This file will be ove
 
 ## scratch/
 
-Feel free to create a scratchwork directory if you need to conduct some troubleshooting, in-depth analyses, or write a python script to test a variety of settings combinations.
+Feel free to create a scratchwork directory if you need to conduct some troubleshooting or in-depth analyses.
+
+## tuning/
+
+Contains one subdirectory per settings combination tried during the auto-tune sweep. Each subdir has its own settings.json, comparison.json, verdict.txt, and profile.csv. The best combo's files are promoted to the parent directory.
+
+## tuning_results.json
+
+All combos ranked by overall_delta_pct, with the winner flagged as `best_combo`.
 
 ## files/
 
@@ -59,11 +67,9 @@ Be aggressive about managing your context window. Do not cat large files. Use he
 
 # Settings
 
-Settings means the arguments for eval.py, e.g. chunk length and number of concurrent audio streamers. You are free to change settings alongside code optimizations — sometimes a code change shifts the optimal settings. For example, if you change the audio streaming logic, larger chunks may become more efficient.
+Settings means parameters like chunk length and number of concurrent audio streamers. eval.py automatically sweeps a grid of these combinations on every non-baseline run and promotes the best result — you do not tune them manually.
 
-However, settings tuning alone is not the primary interest. Seek code-level changes first, and tune settings to fit. If you think settings need adjustment after a code change (e.g., the analyzer is outpacing the streamer), you may backup the first run's results to a scratch subdirectory, add a note, and re-run with different settings.
-
-The default settings in eval.py are the current fastest settings.
+Settings tuning alone is not the primary interest. Focus on code-level changes; the auto-tune handles finding the best settings for whatever code you've written.
 
 # Workflow
 
@@ -107,13 +113,15 @@ You may not change the input audio files in any way.
 
 ## 06. Run evaluation
 
-Run `eval.py -help` to see options for settings.
+Run eval.py with just your test name (and optionally a model name):
 
-Run eval.py (the virtual environment with dependencies is in ./.venv), giving your test name as an argument and changing whatever arguments you see fit. The output is very verbose; do not include it in your context.
+```
+.venv/bin/python eval.py --test-name <your_test_name> [--model <model_name>]
+```
 
-eval.py will automatically output the test results to eval_out/[your test name]
+eval.py automatically sweeps 18 settings combinations and promotes the best to `eval_out/<your_test_name>/`. The output is very verbose; do not include it in your context.
 
-The script takes ~70s to run at baseline. Set a timeout for 10 minutes.
+The sweep takes ~20 minutes. Set a timeout for 30 minutes.
 
 ## 07. Verdict
 
