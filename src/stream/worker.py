@@ -1,3 +1,4 @@
+import time
 from queue import Full
 
 import librosa
@@ -19,6 +20,7 @@ class WorkerStreamer:
         self.id_streamer = id_streamer
         self.resample_rate = resample_rate
         self.coordinator = coordinator
+        self._enqueue_skipped_first = False
 
     def __call__(self):
         self.run()
@@ -78,9 +80,15 @@ class WorkerStreamer:
                 samples = librosa.resample(y=samples, orig_sr=track.samplerate, target_sr=self.resample_rate)
 
             a_chunk = AssignChunk(file=a_file, chunk=chunk, samples=samples)
+            t_wait_start = time.perf_counter()
             while not self.coordinator.event_exitanalysis.is_set():
                 try:
                     self.coordinator.q_analyze.put(a_chunk, timeout=3)
+                    wait_s = time.perf_counter() - t_wait_start
+                    if not self._enqueue_skipped_first:
+                        self._enqueue_skipped_first = True
+                    else:
+                        self.coordinator.profiler.record('audio_io/fullqueue', wait_s)
                     break
                 except Full:
                     continue

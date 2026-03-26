@@ -35,12 +35,14 @@ def _combo_label(chunklength, n_streamers):
 # Phases shown as columns in the rankings table. Edit to add/remove/reorder.
 # Each entry is (profile_phase_name, column_header).
 DISPLAY_PHASES = [
-    ("overall",             "overall"),
-    ("inference",           "inference"),
-    ("audio_io/reading",    "read"),
-    ("audio_io/resampling", "resample"),
-    ("write_io/formatting", "format"),
-    ("write_io/writing",    "write"),
+    ("overall",                              "overall"),
+    ("inference",                            "inference"),
+    ("audio_io/reading",                     "read"),
+    ("audio_io/resampling",                  "resample"),
+    ("write_io/formatting",                  "format"),
+    ("write_io/writing",                     "write"),
+    ("audio_io/fullqueue",                   "q_streamer"),
+    ("inference/emptyqueue",                 "q_analyzer"),
 ]
 
 
@@ -60,11 +62,12 @@ def _read_overall_time(profile_path: Path):
 def compare_tests(dir: Path, reference: str | None = None, n: int = 3) -> list[dict]:
     """Read profile.csv from each subdirectory of dir.
 
-    All % differences are computed against the best performer (lowest overall_s),
-    which is shown with dashes. If a reference test is given, it is pinned to the
-    top of the table. Shows the reference row (if given) + top n rows by overall_s.
+    All % differences are computed against the best performer (lowest overall_s).
+    If a reference test is given, it is pinned to the top of the table (always first,
+    separated by a divider) and its deltas are shown vs. the best non-reference entry
+    (so if reference IS the best, it compares to next-best; if not, it compares to best).
+    The returned entries include compare_delta_pct/compare_name on the reference entry.
 
-    Prints a ranked table with per-phase % differences vs. the best performer.
     Returns all entries as a sorted list of dicts:
       {name, overall_s, delta_s, delta_pct, phase_pcts}
     """
@@ -87,11 +90,10 @@ def compare_tests(dir: Path, reference: str | None = None, n: int = 3) -> list[d
         ref = next((e for e in entries if e["name"] == reference), None)
         if ref is None:
             print(f"Warning: reference test '{reference}' not found in {dir}")
-            ref = None
     else:
         ref = None
 
-    # All deltas are vs. best performer
+    # All deltas vs. best performer
     for e in entries:
         e["delta_s"] = e["overall_s"] - best_s
         e["delta_pct"] = (e["delta_s"] / best_s * 100) if best_s else 0.0
@@ -102,19 +104,51 @@ def compare_tests(dir: Path, reference: str | None = None, n: int = 3) -> list[d
             for phase, _ in DISPLAY_PHASES
         }
 
-    # Build display: reference pinned first (if given and not already best),
-    # then top n by overall_s (best always first among these, shown with dashes)
+    # Reference row compares vs best non-reference entry (next-best if ref is best, else best)
+    if ref is not None:
+        others = [e for e in entries if e["name"] != ref["name"]]
+        ref_cmp = others[0] if others else None
+        if ref_cmp is not None:
+            ref_cmp_s = ref_cmp["overall_s"]
+            ref["compare_delta_pct"] = ((ref["overall_s"] - ref_cmp_s) / ref_cmp_s * 100) if ref_cmp_s else 0.0
+            ref["compare_name"] = ref_cmp["name"]
+            ref["compare_phase_pcts"] = {
+                phase: ((ref["phases"].get(phase, 0) - ref_cmp["phases"].get(phase, 0))
+                        / ref_cmp["phases"][phase] * 100)
+                if ref_cmp["phases"].get(phase) else 0.0
+                for phase, _ in DISPLAY_PHASES
+            }
+        else:
+            ref["compare_delta_pct"] = 0.0
+            ref["compare_name"] = None
+            ref["compare_phase_pcts"] = {phase: 0.0 for phase, _ in DISPLAY_PHASES}
+
+    # Top n excludes reference (it's shown separately above the divider)
     top_n = [e for e in entries if ref is None or e["name"] != ref["name"]][:n]
-    display = ([ref] if ref is not None and ref["name"] != best["name"] else []) + top_n
 
     col_w = 10
     name_w = 35
     headers = [label for _, label in DISPLAY_PHASES]
     header = f"{'test':<{name_w}}" + "".join(f"{h:>{col_w}}" for h in headers)
-    print(f"\n=== RANKINGS (vs. last best: {best['name']}, {best_s:.3f}s) ===")
+    title = f"RANKINGS for {reference}" if reference else f"RANKINGS (best: {best['name']}, {best_s:.3f}s)"
+    print(f"\n=== {title} ===")
     print(header)
     print("-" * len(header))
-    for e in display:
+
+    if ref is not None:
+        row = f"{ref['name']:<{name_w}}"
+        if ref["compare_name"] is not None:
+            for phase, _ in DISPLAY_PHASES:
+                pct = ref["compare_phase_pcts"].get(phase, 0.0)
+                row += f"{pct:>+9.1f}%"
+            row += f"  (vs {ref['compare_name']})"
+        else:
+            for _ in DISPLAY_PHASES:
+                row += f"{'—':>{col_w}}"
+        print(row)
+        print("-" * len(header))
+
+    for e in top_n:
         row = f"{e['name']:<{name_w}}"
         for phase, _ in DISPLAY_PHASES:
             pct = e["phase_pcts"].get(phase, 0.0)
@@ -306,14 +340,15 @@ def _run_sweep(dir_out: Path, model: str, analyzers_cpu: int, gpu: bool,
         all_results = compare_tests(eval_out, reference=test_name)
         my_result = next((r for r in all_results if r["name"] == test_name), None)
         if my_result and "delta_pct" in my_result:
-            dpct = my_result["delta_pct"]
+            dpct = my_result.get("compare_delta_pct", my_result["delta_pct"])
+            cmp_name = my_result.get("compare_name") or (all_results[0]["name"] if all_results else "?")
             if dpct < -5.0:
                 verdict = "FASTER"
             elif dpct > 5.0:
                 verdict = "SLOWER"
             else:
                 verdict = "NEUTRAL"
-            print(f"\nFinal verdict: {verdict}  ({dpct:+.1f}% vs {all_results[0]['name']})")
+            print(f"\nFinal verdict for {test_name}: {verdict}  ({dpct:+.1f}% vs {cmp_name})")
 
     return 0
 

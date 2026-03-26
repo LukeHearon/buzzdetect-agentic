@@ -24,6 +24,7 @@ class WorkerInferer:
         self.model = load_model(modelname, framehop_prop, initialize=False)
         self.timer_analysis = Timer()
         self.timer_bottleneck = Timer()
+        self._bottleneck_skipped_first = False
 
 
     def __call__(self):
@@ -93,8 +94,13 @@ class WorkerInferer:
             try:
                 a_chunk = self.coordinator.q_analyze.get(timeout=1)
                 self.timer_bottleneck.stop()
-                if self.timer_bottleneck.get_total() > 0.01:
-                    self.report_bottleneck()
+                wait_s = self.timer_bottleneck.get_total(5)
+                if not self._bottleneck_skipped_first:
+                    self._bottleneck_skipped_first = True
+                else:
+                    self.coordinator.profiler.record('inference/emptyqueue', wait_s)
+                    if wait_s > 0.01:
+                        self.report_bottleneck()
                 self.process_chunk(a_chunk)
                 self.timer_bottleneck.restart()
             except Empty:
