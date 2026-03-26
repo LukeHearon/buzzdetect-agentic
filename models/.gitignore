@@ -5,6 +5,7 @@
 # Unignore these shared models
 !model_general_v3/
 !model_general_v3_onnx/
+!model_general_v3_onxx/
 
 # Within unignored directories, ignore output* and tests/results*
 */output*
