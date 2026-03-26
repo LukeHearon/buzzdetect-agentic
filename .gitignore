@@ -21,7 +21,10 @@ docs/build/
 /audio_eval/
 
 # log files
-**/*.log
+**.log
+
+# claude code local settings
+.claude/
 
 # outputs
 **/*_buzzpart.csv

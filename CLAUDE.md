@@ -4,30 +4,14 @@ This repository exists for optimizing buzzdetect code in a hands-off agentic loo
 
 # Previous tests
 
-The folder "eval_out" holds all previous tests. Each directory name is the name of a previous test. Contents of each test (except the baseline) are as follows:
+The folder "eval_out" holds all previous tests. Each directory name is the name of a previous test. Contents of each test are as follows:
 
-## Verdict.json
+## profile.csv
 
-FASTER means a >5% speedup in overall analysis or a previous agent decided that a smaller speedup was nonetheless significant.
+Profiling data for the winning settings combo. Key phases:
 
-NEUTRAL means no meaningful difference
-
-SLOWER means the test made the analysis slower by >5%
-
-BADRESULTS means the code changes caused the results to differ from the baseline, which is unacceptable
-
-The FASTER/SLOWER/NEUTRAL verdict is made automatically based on a 5% threshold of the *overall* evaluation runtime rather than individual steps. Real-world analyses are often on thousands of hours of audio at once, so the audio analysis speed (which is the bulk of this eval) is most important. Improving, e.g., the file cleaning time may be valuable, but is not the direct target of the current optimization task. See the 07. Verdict step for exceptions.
-
-## comparison.json
-
-Compares the runtime of each processing step to the baseline.
-
-NOTE: the value we want to decrease is "overall"
-
-Profiling is done by phases.
-
-* Overall: the total time to run the eval analysis. This is what we're trying to optimize
-* Inference: the time it takes the embedder and model to convert the audio input to class predictions
+* **overall**: total analysis time — this is the value to minimize
+* **inference**: time the embedder and model spend converting audio to class predictions
 
 ## settings.json
 
@@ -51,23 +35,39 @@ Feel free to create a scratchwork directory if you need to conduct some troubles
 
 ## tuning/
 
-Contains one subdirectory per settings combination tried during the auto-tune sweep. Each subdir has its own settings.json, comparison.json, verdict.txt, and profile.csv. The best combo's files are promoted to the parent directory.
+Contains one subdirectory per settings combination tried during the auto-tune sweep. Each subdir has its own `settings.json` and `profile.csv`. The best combo's files are promoted to the parent directory.
 
 ## tuning_results.json
 
-All combos ranked by overall_delta_pct, with the winner flagged as `best_combo`.
+All combos ranked by `overall_s`, with the winner flagged as `best_combo`.
 
 ## files/
 
 This folder only exists temporarily, until the results of the analysis can be checked against the baseline to make sure there are no numerical discrepancies.
 
+## Comparing tests
+
+To compare all tests and see how they rank against each other, run:
+
+```
+.venv/bin/python -c "from eval import compare_tests; from pathlib import Path; compare_tests(Path('eval_out'))"
+```
+
+This prints all tests ranked by overall time, relative to the best performer.
+
+To compare the autotune combos within a single run:
+
+```
+.venv/bin/python -c "from eval import compare_tests; from pathlib import Path; compare_tests(Path('eval_out/<test_name>/tuning'))"
+```
+
 # Context management
 
-Be aggressive about managing your context window. Do not cat large files. Use head, tail, and grep. Do not include eval output in your context. When reading previous tests, read the description.md and comparison.json — not the logs unless you have a specific reason to check something in them.
+Be aggressive about managing your context window. Do not cat large files. Use head, tail, and grep. Do not include eval output in your context. When reading previous tests, read the description.md — not the logs unless you have a specific reason to check something in them. Use `compare_tests()` to get performance numbers rather than reading profile.csv files manually.
 
 # Settings
 
-Settings means parameters like chunk length and number of concurrent audio streamers. eval.py automatically sweeps a grid of these combinations on every non-baseline run and promotes the best result — you do not tune them manually.
+Settings means parameters like chunk length and number of concurrent audio streamers. eval.py automatically sweeps a grid of these combinations on every run and promotes the best result — you do not tune them manually.
 
 Settings tuning alone is not the primary interest. Focus on code-level changes; the auto-tune handles finding the best settings for whatever code you've written.
 
@@ -92,6 +92,7 @@ You can also take some steps in advance of the optimization like profiling GPU u
 ## 04. Name optimization
 
 Give a name to your optimization. It should be short, informative, unique to the prior tests, and appropriate for a directory name (e.g. use underscores over spaces)
+Your test name must be prefixed with the next number in the testing sequence, e.g. "09_cast_samples"
 
 ## 05. Apply optimization
 
@@ -121,15 +122,28 @@ Run eval.py with just your test name (and optionally a model name):
 
 eval.py automatically sweeps 18 settings combinations and promotes the best to `eval_out/<your_test_name>/`. The output is very verbose; do not include it in your context.
 
-The sweep takes ~20 minutes. Set a timeout for 30 minutes.
+The sweep takes ~20 minutes. Set a timeout for 30 minutes. If the tests aren't finished by then, check any existing results and make a manual verdict (likely SLOWER).
 
 ## 07. Verdict
 
-The verdict of whether the optimization is FASTER or SLOWER is based on a 5% threshold of the overall analysis time. If you have made a change that you are **certain** improves the speed of one of the steps (e.g., writing files is 80% faster), **you may manually change verdict.txt to FASTER**. You may only do this if you are confident that the improvement is a real one. Note that steps that are very quick will consequently have very noisy % changes. +430% might just be noise if the step previously took 0.0002s. Before manually changing the verdict, compare against previous test results or the available baselines.
+After eval.py finishes, it prints a rankings table showing all tests relative to the best  performer. The `delta_%` column gives your verdict:
+
+- **FASTER**: delta_% < -5%
+- **SLOWER**: delta_% > +5%
+- **NEUTRAL**: within ±5%
+- **BADRESULTS**: results check failed (printed during the run)
+
+You can re-run the comparison at any time:
+
+```
+.venv/bin/python -c "from eval import compare_tests; from pathlib import Path; compare_tests(Path('eval_out'), '<your_test_name>')"
+```
+
+Note that very quick phases have noisy % changes. +430% might just be noise if the step previously took 0.0002s. The only metric that determines the verdict is `overall`.
 
 ## 08. Commit
 
-**No matter the verdict**, commit. The commit message should start with the verdict, then give a brief breakdown of the results.
+**No matter the verdict**, commit. The commit message should start with the verdict (FASTER/SLOWER/NEUTRAL/BADRESULTS), then give a brief breakdown of the results.
 
 If the verdict was BADRESULTS or SLOWER, revert the commit before finishing.
 

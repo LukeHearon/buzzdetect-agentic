@@ -10,101 +10,125 @@ from pathlib import Path
 # Reduce TensorFlow and other verbose logs where possible
 os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
 
+baseline_files_dir = Path("baseline_results")
+
 try:
     from src.analyze import analyze
 except Exception as e:
     print(f"Failed to import analyze from src.analyze: {e}", file=sys.stderr)
     sys.exit(1)
 
-MODEL_NAME = "model_general_v3"
-BASELINE_PROFILE = Path("eval_out/baseline/profile.csv")
 
-# Grid swept on every run (baseline and non-baseline). All combinations are
-# tried; the best overall runtime is promoted to the top-level output directory.
+# Grid swept on every run. All combinations are tried; the best overall runtime
+# is promoted to the top-level output directory.
 # Do not modify — this is managed infrastructure, not an agent tuning target.
 TUNE_GRID = {
-    "chunklength":         [150, 200, 300],
-    "n_streamers":         [4, 6, 8],
-    "stream_buffer_depth": [4, 6],
+    "chunklength":         [200, 600, 1200],
+    "n_streamers":         [3, 6]
 }
 
 
-def _combo_label(chunklength, n_streamers, stream_buffer_depth):
-    cl = int(chunklength) if chunklength == int(chunklength) else chunklength
-    return f"{cl}s_{n_streamers}str_buf{stream_buffer_depth}"
+def _combo_label(chunklength, n_streamers):
+    return f"{int(chunklength)}s_{n_streamers}str"
+
+
+# Phases shown as columns in the rankings table. Edit to add/remove/reorder.
+# Each entry is (profile_phase_name, column_header).
+DISPLAY_PHASES = [
+    ("overall",             "overall"),
+    ("inference",           "inference"),
+    ("audio_io/reading",    "read"),
+    ("audio_io/resampling", "resample"),
+    ("write_io/formatting", "format"),
+    ("write_io/writing",    "write"),
+]
+
+
+def _read_profile(profile_path: Path) -> dict[str, float]:
+    """Return {phase: mean_s} for all phases in a profile CSV."""
+    if not profile_path.exists():
+        return {}
+    with profile_path.open(newline="") as f:
+        return {row["phase"]: float(row["mean_s"]) for row in csv.DictReader(f)}
 
 
 def _read_overall_time(profile_path: Path):
     """Return the overall mean_s from a profile CSV, or None if unavailable."""
-    if not profile_path.exists():
-        return None
-    with profile_path.open(newline="") as f:
-        for row in csv.DictReader(f):
-            if row["phase"] == "overall":
-                return float(row["mean_s"])
-    return None
+    return _read_profile(profile_path).get("overall")
 
 
-def _compare_profiles(current_path: Path, baseline_path: Path):
-    """Compare two profile CSVs. Returns (rows, overall_delta_s, overall_delta_pct)."""
-    def load(p):
-        with p.open(newline="") as f:
-            return {row["phase"]: row for row in csv.DictReader(f)}
+def compare_tests(dir: Path, reference: str | None = None, n: int = 3) -> list[dict]:
+    """Read profile.csv from each subdirectory of dir.
 
-    baseline = load(baseline_path)
-    current = load(current_path)
+    All % differences are computed against the best performer (lowest overall_s),
+    which is shown with dashes. If a reference test is given, it is pinned to the
+    top of the table. Shows the reference row (if given) + top n rows by overall_s.
 
-    rows = []
-    overall_delta_s = None
-    overall_delta_pct = None
-
-    for phase, b_row in baseline.items():
-        if phase not in current:
+    Prints a ranked table with per-phase % differences vs. the best performer.
+    Returns all entries as a sorted list of dicts:
+      {name, overall_s, delta_s, delta_pct, phase_pcts}
+    """
+    entries = []
+    for sub in sorted(dir.iterdir()):
+        if not sub.is_dir():
             continue
-        b_s = float(b_row["mean_s"])
-        c_s = float(current[phase]["mean_s"])
-        delta_s = c_s - b_s
-        delta_pct = (delta_s / b_s * 100) if b_s != 0 else 0.0
-        row = {
-            "phase": phase,
-            "baseline_s": b_s,
-            "current_s": c_s,
-            "delta_s": delta_s,
-            "delta_pct": delta_pct,
+        phases = _read_profile(sub / "profile.csv")
+        if "overall" in phases:
+            entries.append({"name": sub.name, "overall_s": phases["overall"], "phases": phases})
+
+    if not entries:
+        return entries
+
+    entries.sort(key=lambda e: e["overall_s"])
+    best = entries[0]
+    best_s = best["overall_s"]
+
+    if reference is not None:
+        ref = next((e for e in entries if e["name"] == reference), None)
+        if ref is None:
+            print(f"Warning: reference test '{reference}' not found in {dir}")
+            ref = None
+    else:
+        ref = None
+
+    # All deltas are vs. best performer
+    for e in entries:
+        e["delta_s"] = e["overall_s"] - best_s
+        e["delta_pct"] = (e["delta_s"] / best_s * 100) if best_s else 0.0
+        e["phase_pcts"] = {
+            phase: ((e["phases"].get(phase, 0) - best["phases"].get(phase, 0))
+                    / best["phases"][phase] * 100)
+            if best["phases"].get(phase) else 0.0
+            for phase, _ in DISPLAY_PHASES
         }
-        rows.append(row)
-        if phase == "overall":
-            overall_delta_s = delta_s
-            overall_delta_pct = delta_pct
 
-    return rows, overall_delta_s, overall_delta_pct
+    # Build display: reference pinned first (if given and not already best),
+    # then top n by overall_s (best always first among these, shown with dashes)
+    top_n = [e for e in entries if ref is None or e["name"] != ref["name"]][:n]
+    display = ([ref] if ref is not None and ref["name"] != best["name"] else []) + top_n
 
-
-def _print_comparison(rows, overall_delta_s, overall_delta_pct):
-    print("\n=== BASELINE COMPARISON ===")
-    header = f"{'phase':<30} {'baseline_mean_s':>15} {'current_mean_s':>15} {'delta_s':>10} {'delta_%':>9}"
+    col_w = 10
+    name_w = 35
+    headers = [label for _, label in DISPLAY_PHASES]
+    header = f"{'test':<{name_w}}" + "".join(f"{h:>{col_w}}" for h in headers)
+    print(f"\n=== RANKINGS (vs. last best: {best['name']}, {best_s:.3f}s) ===")
     print(header)
     print("-" * len(header))
-    for row in rows:
-        print(
-            f"{row['phase']:<30} {row['baseline_s']:>15.3f} {row['current_s']:>15.3f}"
-            f" {row['delta_s']:>+10.3f} {row['delta_pct']:>+8.1f}%"
-        )
-    if overall_delta_s is not None:
-        if overall_delta_pct is not None and overall_delta_pct < -5.0:
-            direction = "FASTER"
-        elif overall_delta_pct is not None and overall_delta_pct > 5.0:
-            direction = "SLOWER"
-        else:
-            direction = "NEUTRAL"
-        print(f"\nVERDICT: {direction}  ({overall_delta_s:+.3f}s mean vs baseline overall)")
+    for e in display:
+        row = f"{e['name']:<{name_w}}"
+        for phase, _ in DISPLAY_PHASES:
+            pct = e["phase_pcts"].get(phase, 0.0)
+            row += f"{pct:>+9.1f}%" if e["name"] != best["name"] else f"{'—':>{col_w}}"
+        print(row)
+    return entries
 
 
-def _compare_results(current_files_dir: Path, baseline_files_dir: Path):
+def _check_results_match(current_files_dir: Path):
     """Compare first 15 rows of each results CSV against baseline.
 
     Returns a list of mismatch descriptions (empty = all match).
     """
+
     baseline_csvs = sorted(baseline_files_dir.rglob("*_buzzdetect.csv"))
     if not baseline_csvs:
         return []
@@ -141,18 +165,15 @@ def _compare_results(current_files_dir: Path, baseline_files_dir: Path):
 
 
 def _run_single(dir_out: Path, model: str, chunklength: float, n_streamers: int,
-                stream_buffer_depth: int, analyzers_cpu: int, gpu: bool,
-                dir_audio: Path, label: str = "") -> dict:
-    """Run one analysis pass into dir_out. Returns result dict with keys:
-    success, results_bad, verdict, comparison (or None).
-    """
+                analyzers_cpu: int, gpu: bool,
+                dir_audio: Path, label: str = "", silent_profile=False) -> dict:
+    """Run one analysis pass into dir_out. Returns {success, results_bad}."""
     os.makedirs(dir_out, exist_ok=True)
 
     settings = {
         "model": model,
         "chunklength": chunklength,
         "n_streamers": n_streamers,
-        "stream_buffer_depth": stream_buffer_depth,
         "analyzers_cpu": analyzers_cpu,
         "gpu": gpu,
     }
@@ -161,7 +182,7 @@ def _run_single(dir_out: Path, model: str, chunklength: float, n_streamers: int,
 
     profile_path = str(dir_out / "profile.csv")
     prefix = f"[{label}] " if label else ""
-    print(f"\n{prefix}chunk={chunklength}s  streamers={n_streamers}  buf={stream_buffer_depth}"
+    print(f"\n{prefix}chunk={chunklength}s  streamers={n_streamers} "
           f"  cpu={analyzers_cpu}  gpu={gpu}  model={model}")
 
     try:
@@ -173,7 +194,7 @@ def _run_single(dir_out: Path, model: str, chunklength: float, n_streamers: int,
             analyzers_cpu=analyzers_cpu,
             analyzer_gpu=gpu,
             n_streamers=n_streamers,
-            stream_buffer_depth=stream_buffer_depth,
+            stream_buffer_depth=6,
             dir_audio=str(dir_audio),
             dir_out=str(dir_out),
             verbosity_print='WARNING',
@@ -181,18 +202,18 @@ def _run_single(dir_out: Path, model: str, chunklength: float, n_streamers: int,
             event_stopanalysis=None,
             profile=True,
             profile_path=profile_path,
+            silent_profile=True
         )
         success = True
     except Exception as e:
         print(f"{prefix}Analysis failed: {e}", file=sys.stderr)
-        return {"success": False, "results_bad": False, "verdict": None, "comparison": None}
+        return {"success": False, "results_bad": False}
 
     # Results correctness check (skipped when no baseline files exist yet)
-    baseline_files_dir = Path("eval_out/baseline/files")
     current_files_dir = dir_out / "files"
     results_bad = False
     if baseline_files_dir.exists():
-        mismatches = _compare_results(current_files_dir, baseline_files_dir)
+        mismatches = _check_results_match(current_files_dir)
         if mismatches:
             print(f"\n{prefix}=== RESULTS MISMATCH ===", file=sys.stderr)
             for m in mismatches:
@@ -202,48 +223,14 @@ def _run_single(dir_out: Path, model: str, chunklength: float, n_streamers: int,
             print(f"{prefix}Results check passed.")
         if not results_bad and current_files_dir.exists():
             shutil.rmtree(current_files_dir)
+    else:
+        shutil.move(dir_out / "files", baseline_files_dir)
 
-    # Profile comparison against baseline (skipped when baseline doesn't exist yet)
-    verdict = None
-    comparison = None
-    current_profile = dir_out / "profile.csv"
-    if BASELINE_PROFILE.exists() and current_profile.exists():
-        rows, overall_delta_s, overall_delta_pct = _compare_profiles(current_profile, BASELINE_PROFILE)
-        _print_comparison(rows, overall_delta_s, overall_delta_pct)
-
-        if overall_delta_s is not None:
-            if overall_delta_pct < -5.0:
-                verdict = "FASTER"
-            elif overall_delta_pct > 5.0:
-                verdict = "SLOWER"
-            else:
-                verdict = "NEUTRAL"
-        else:
-            verdict = "UNKNOWN"
-
-        comparison = {
-            "overall_mean_delta_s": overall_delta_s,
-            "overall_mean_delta_pct": overall_delta_pct,
-            "verdict": verdict,
-            "phases": rows,
-        }
-        with (dir_out / "comparison.json").open("w") as f:
-            json.dump(comparison, f, indent=2)
-
-    verdict_str = "BADRESULTS" if results_bad else verdict
-    if verdict_str is not None:
-        (dir_out / "verdict.txt").write_text(verdict_str)
-
-    return {
-        "success": success,
-        "results_bad": results_bad,
-        "verdict": verdict_str,
-        "comparison": comparison,
-    }
+    return {"success": success, "results_bad": results_bad}
 
 
 def _run_sweep(dir_out: Path, model: str, analyzers_cpu: int, gpu: bool,
-               dir_audio: Path, is_baseline: bool) -> int:
+               dir_audio: Path, test_name: str) -> int:
     """Sweep TUNE_GRID, promote winner to dir_out. Returns exit code."""
     dir_tuning = dir_out / "tuning"
     os.makedirs(dir_tuning, exist_ok=True)
@@ -256,7 +243,7 @@ def _run_sweep(dir_out: Path, model: str, analyzers_cpu: int, gpu: bool,
     combo_results = []
     for i, vals in enumerate(combos, 1):
         combo = dict(zip(keys, vals))
-        label = _combo_label(combo["chunklength"], combo["n_streamers"], combo["stream_buffer_depth"])
+        label = _combo_label(combo["chunklength"], combo["n_streamers"])
         combo_dir = dir_tuning / label
         print(f"\n── Combo {i}/{total}: {label} ──")
         result = _run_single(
@@ -265,6 +252,7 @@ def _run_sweep(dir_out: Path, model: str, analyzers_cpu: int, gpu: bool,
             dir_audio=dir_audio,
             analyzers_cpu=analyzers_cpu,
             gpu=gpu,
+            silent_profile=True,
             **combo,
         )
         entry = {
@@ -272,28 +260,16 @@ def _run_sweep(dir_out: Path, model: str, analyzers_cpu: int, gpu: bool,
             "settings": {**combo, "analyzers_cpu": analyzers_cpu, "gpu": gpu, "model": model},
             "success": result["success"],
             "results_bad": result.get("results_bad", False),
+            "overall_s": _read_overall_time(combo_dir / "profile.csv"),
         }
-        if is_baseline:
-            entry["overall_s"] = _read_overall_time(combo_dir / "profile.csv")
-        else:
-            entry["verdict"] = result["verdict"]
-            entry["overall_delta_pct"] = (result["comparison"] or {}).get("overall_mean_delta_pct")
         combo_results.append(entry)
 
-    # Select winner
-    if is_baseline:
-        eligible = [r for r in combo_results if r["success"] and r.get("overall_s") is not None]
-        eligible.sort(key=lambda r: r["overall_s"])
-        rank_key = "overall_s"
-    else:
-        eligible = [
-            r for r in combo_results
-            if r["success"] and not r["results_bad"]
-            and r.get("overall_delta_pct") is not None
-            and r.get("verdict") not in (None, "BADRESULTS")
-        ]
-        eligible.sort(key=lambda r: r["overall_delta_pct"])
-        rank_key = "overall_delta_pct"
+    # Select winner by lowest overall_s
+    eligible = [
+        r for r in combo_results
+        if r["success"] and not r["results_bad"] and r.get("overall_s") is not None
+    ]
+    eligible.sort(key=lambda r: r["overall_s"])
 
     for rank, r in enumerate(eligible, 1):
         r["rank"] = rank
@@ -315,31 +291,29 @@ def _run_sweep(dir_out: Path, model: str, analyzers_cpu: int, gpu: bool,
 
     winner = eligible[0]
     winner_dir = dir_tuning / winner["name"]
-    if is_baseline:
-        print(f"\nBest combo: {winner['name']}  ({winner['overall_s']:.3f}s overall)")
-    else:
-        print(f"\nBest combo: {winner['name']}  ({winner['overall_delta_pct']:+.1f}%  {winner['verdict']})")
+    print(f"\nBest combo: {winner['name']}  ({winner['overall_s']:.3f}s overall)")
     print(f"Promoting to {dir_out}/")
 
-    for fname in ("settings.json", "comparison.json", "verdict.txt", "profile.csv"):
+    for fname in ("settings.json", "profile.csv"):
         src = winner_dir / fname
         if src.exists():
             shutil.copy2(src, dir_out / fname)
 
-    # Print final summary for the winner
-    if not is_baseline:
-        winner_comparison_path = dir_out / "comparison.json"
-        if winner_comparison_path.exists():
-            with winner_comparison_path.open() as f:
-                comp = json.load(f)
-            _print_comparison(
-                comp.get("phases", []),
-                comp.get("overall_mean_delta_s"),
-                comp.get("overall_mean_delta_pct"),
-            )
-        verdict_path = dir_out / "verdict.txt"
-        if verdict_path.exists():
-            print(f"\nFinal verdict: {verdict_path.read_text().strip()}")
+    # Print cross-run rankings (current test vs all others)
+    # NOTE: skipping auto-tune rankings, unnecessarily verbose.
+    eval_out = Path("eval_out")
+    if eval_out.exists():
+        all_results = compare_tests(eval_out, reference=test_name)
+        my_result = next((r for r in all_results if r["name"] == test_name), None)
+        if my_result and "delta_pct" in my_result:
+            dpct = my_result["delta_pct"]
+            if dpct < -5.0:
+                verdict = "FASTER"
+            elif dpct > 5.0:
+                verdict = "SLOWER"
+            else:
+                verdict = "NEUTRAL"
+            print(f"\nFinal verdict: {verdict}  ({dpct:+.1f}% vs {all_results[0]['name']})")
 
     return 0
 
@@ -354,15 +328,12 @@ def main(argv=None) -> int:
     parser.add_argument(
         "--test-name",
         required=True,
-        help=(
-            "Label for this run. Creates eval_out/<test-name>/ with results. "
-            "Use 'baseline' to establish a reference run."
-        ),
+        help="Label for this run. Creates eval_out/<test-name>/ with results. Must start with the next number in sequence ",
     )
     parser.add_argument(
         "--model",
-        default=MODEL_NAME,
-        help=f"Name of the model directory under models/ to use for inference. Default: {MODEL_NAME}",
+        required=True,
+        help=f"Name of the model directory under models/ to use for inference.",
     )
     parser.add_argument(
         "--analyzers-cpu",
@@ -391,19 +362,7 @@ def main(argv=None) -> int:
         print(f"Audio directory not found or not a directory: {dir_audio}", file=sys.stderr)
         return 2
 
-    is_baseline = test_name == "baseline"
-
-    if not is_baseline and not BASELINE_PROFILE.exists():
-        print(
-            "Error: no baseline found. Run with --test-name baseline first.",
-            file=sys.stderr,
-        )
-        return 2
-
     dir_out = Path("eval_out", test_name).resolve()
-    if is_baseline and dir_out.exists():
-        print("Note: overwriting existing baseline.")
-        shutil.rmtree(dir_out)
     os.makedirs(dir_out, exist_ok=True)
 
     return _run_sweep(
@@ -412,7 +371,7 @@ def main(argv=None) -> int:
         analyzers_cpu=args.analyzers_cpu,
         gpu=args.gpu,
         dir_audio=dir_audio,
-        is_baseline=is_baseline,
+        test_name=test_name,
     )
 
 

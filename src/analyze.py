@@ -309,6 +309,7 @@ def analyze(
         event_stopanalysis: multiprocessing.Event = None,
         profile: bool = False,
         profile_path: str = None,
+        silent_profile: bool = False,
 ):
     """Analyze audio files using a buzz detection model.
 
@@ -405,7 +406,8 @@ def analyze(
         analyzer.run()
 
     if profile:
-        print(profiler.summary())
+        if not silent_profile:
+            print(profiler.summary())
         timestamp = analyzer.timer_total.time_start.strftime('%Y-%m-%d_%H%M%S')
         path_profile = profile_path or os.path.join(analyzer.dir_out, f"{timestamp}_profile.csv")
         profiler.save_csv(path_profile)

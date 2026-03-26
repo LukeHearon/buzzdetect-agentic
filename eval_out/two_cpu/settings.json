@@ -1,9 +1,0 @@
-{
-  "test_name": "two_cpu",
-  "model": "model_general_v3",
-  "chunklength": 200.0,
-  "n_streamers": 4,
-  "stream_buffer_depth": 4,
-  "analyzers_cpu": 2,
-  "gpu": true
-}
