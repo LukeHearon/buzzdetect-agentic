@@ -1,6 +1,8 @@
 import os
 from _queue import Empty
 
+import numpy as np
+
 from src.pipeline.assignments import AssignChunk, AssignLog
 from src.pipeline.coordination import Coordinator
 from src.write.formatting import format_activations, format_detections
@@ -66,7 +68,7 @@ class WorkerWriter:
     def write_results(self, a_chunk: AssignChunk):
         with self.coordinator.profiler.phase('write_io/formatting'):
             output = self.format(
-                results=a_chunk.results.numpy(),
+                results=np.asarray(a_chunk.results),
                 time_start=a_chunk.chunk[0]
             )
 
