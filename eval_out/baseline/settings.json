@@ -1,0 +1,9 @@
+{
+  "test_name": "baseline",
+  "model": "model_general_v3",
+  "chunklength": 200.0,
+  "n_streamers": 4,
+  "stream_buffer_depth": 4,
+  "analyzers_cpu": 0,
+  "gpu": true
+}

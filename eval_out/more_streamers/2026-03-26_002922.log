@@ -1,0 +1,957 @@
+2026-03-26 00:29:22,682 [INFO] Model: model_general_v3
+Frame hop: 1
+Threshold: None
+Output classes: ins_buzz
+Input directory: /workspace/audio_eval
+Output directory: /workspace/eval_out/more_streamers
+CPU analyzers: 0
+GPU analyzer: True
+Chunk length: 199.68s
+Streamers: 6
+Queue depth: 6
+
+2026-03-26 00:29:22,684 [INFO] Building assignments for files/1_82/250704_0000..mp3
+2026-03-26 00:29:22,684 [INFO] Building assignments for files/1_109/250704_0000..mp3
+2026-03-26 00:29:22,685 [INFO] Building assignments for files/1_37/250704_0000..mp3
+2026-03-26 00:29:22,685 [INFO] Building assignments for files/1_137/250704_0000..mp3
+2026-03-26 00:29:22,686 [INFO] Building assignments for files/1_59/250704_0000..mp3
+2026-03-26 00:29:22,686 [INFO] Building assignments for files/1_104/250704_0000..mp3
+2026-03-26 00:29:22,686 [INFO] writer: launching
+2026-03-26 00:29:22,687 [INFO] streamer 0: launching
+2026-03-26 00:29:22,687 [INFO] streamer 1: launching
+2026-03-26 00:29:22,687 [INFO] streamer 2: launching
+2026-03-26 00:29:22,687 [INFO] streamer 3: launching
+2026-03-26 00:29:22,688 [INFO] streamer 4: launching
+2026-03-26 00:29:22,688 [INFO] streamer 5: launching
+2026-03-26 00:29:22,690 [INFO] analyzer 0: launching
+2026-03-26 00:29:22,691 [INFO] analyzer GPU: launching
+2026-03-26 00:29:31,779 [INFO] streamer 0: buffering files/1_82/250704_0000..mp3
+2026-03-26 00:29:31,780 [INFO] streamer 4: buffering files/1_109/250704_0000..mp3
+2026-03-26 00:29:31,780 [INFO] streamer 5: buffering files/1_37/250704_0000..mp3
+2026-03-26 00:29:31,781 [INFO] streamer 1: buffering files/1_137/250704_0000..mp3
+2026-03-26 00:29:31,781 [INFO] streamer 2: buffering files/1_59/250704_0000..mp3
+2026-03-26 00:29:31,781 [INFO] streamer 3: buffering files/1_104/250704_0000..mp3
+2026-03-26 00:29:32,033 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.7s
+2026-03-26 00:29:32,058 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.4s
+2026-03-26 00:29:33,305 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (0.0, 199.68) in 10.61s (rate: 18.8)
+2026-03-26 00:29:33,327 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (0.0, 199.68) in 10.64s (rate: 18.8)
+2026-03-26 00:29:33,375 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (0.0, 199.68) in 0.07s (rate: 2866.1)
+2026-03-26 00:29:33,414 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (0.0, 199.68) in 0.09s (rate: 2304.2)
+2026-03-26 00:29:33,463 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (0.0, 199.68) in 0.09s (rate: 2255.5)
+2026-03-26 00:29:33,555 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (199.68, 399.36) in 0.09s (rate: 2229.6)
+2026-03-26 00:29:33,556 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (0.0, 199.68) in 0.14s (rate: 1425.3)
+2026-03-26 00:29:33,626 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (199.68, 399.36) in 0.07s (rate: 2753.8)
+2026-03-26 00:29:33,678 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (199.68, 399.36) in 0.12s (rate: 1651.7)
+2026-03-26 00:29:33,728 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (199.68, 399.36) in 0.1s (rate: 1946.4)
+2026-03-26 00:29:33,774 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (199.68, 399.36) in 0.1s (rate: 2024.5)
+2026-03-26 00:29:33,821 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (199.68, 399.36) in 0.09s (rate: 2158.7)
+2026-03-26 00:29:33,882 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (399.36, 599.04) in 0.11s (rate: 1869.8)
+2026-03-26 00:29:33,915 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (399.36, 599.04) in 0.09s (rate: 2140.0)
+2026-03-26 00:29:33,982 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (399.36, 599.04) in 0.1s (rate: 1972.1)
+2026-03-26 00:29:34,013 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (399.36, 599.04) in 0.1s (rate: 2044.0)
+2026-03-26 00:29:34,073 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (399.36, 599.04) in 0.09s (rate: 2200.3)
+2026-03-26 00:29:34,124 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (399.36, 599.04) in 0.11s (rate: 1786.2)
+2026-03-26 00:29:34,171 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (599.04, 798.72) in 0.1s (rate: 2090.2)
+2026-03-26 00:29:34,223 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (599.04, 798.72) in 0.1s (rate: 2037.8)
+2026-03-26 00:29:34,272 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (599.04, 798.72) in 0.1s (rate: 1943.9)
+2026-03-26 00:29:34,325 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (599.04, 798.72) in 0.1s (rate: 1959.4)
+2026-03-26 00:29:34,382 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (599.04, 798.72) in 0.11s (rate: 1876.2)
+2026-03-26 00:29:34,425 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (599.04, 798.72) in 0.1s (rate: 2004.0)
+2026-03-26 00:29:34,480 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (798.72, 998.4) in 0.1s (rate: 1973.1)
+2026-03-26 00:29:34,526 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (798.72, 998.4) in 0.1s (rate: 1971.6)
+2026-03-26 00:29:34,583 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (798.72, 998.4) in 0.1s (rate: 1930.6)
+2026-03-26 00:29:34,639 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (798.72, 998.4) in 0.11s (rate: 1772.6)
+2026-03-26 00:29:34,680 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (798.72, 998.4) in 0.1s (rate: 2054.1)
+2026-03-26 00:29:34,743 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (798.72, 998.4) in 0.1s (rate: 1940.3)
+2026-03-26 00:29:34,792 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (998.4, 1198.08) in 0.11s (rate: 1805.6)
+2026-03-26 00:29:34,852 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (998.4, 1198.08) in 0.11s (rate: 1843.3)
+2026-03-26 00:29:34,898 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (998.4, 1198.08) in 0.11s (rate: 1876.3)
+2026-03-26 00:29:34,948 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (998.4, 1198.08) in 0.1s (rate: 2039.2)
+2026-03-26 00:29:35,015 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (998.4, 1198.08) in 0.12s (rate: 1721.4)
+2026-03-26 00:29:35,046 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (998.4, 1198.08) in 0.1s (rate: 2053.9)
+2026-03-26 00:29:35,103 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (1198.08, 1397.76) in 0.09s (rate: 2247.9)
+2026-03-26 00:29:35,156 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (1198.08, 1397.76) in 0.11s (rate: 1801.4)
+2026-03-26 00:29:35,204 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (1198.08, 1397.76) in 0.1s (rate: 2016.0)
+2026-03-26 00:29:35,260 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (1198.08, 1397.76) in 0.1s (rate: 1926.1)
+2026-03-26 00:29:35,328 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (1198.08, 1397.76) in 0.13s (rate: 1587.7)
+2026-03-26 00:29:35,385 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (1397.76, 1597.44) in 0.12s (rate: 1609.8)
+2026-03-26 00:29:35,428 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (1198.08, 1397.76) in 0.1s (rate: 1995.8)
+2026-03-26 00:29:35,492 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (1397.76, 1597.44) in 0.11s (rate: 1861.1)
+2026-03-26 00:29:35,540 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (1397.76, 1597.44) in 0.11s (rate: 1792.0)
+2026-03-26 00:29:35,592 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (1397.76, 1597.44) in 0.1s (rate: 2006.0)
+2026-03-26 00:29:35,635 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (1597.44, 1797.12) in 0.1s (rate: 2090.0)
+2026-03-26 00:29:35,695 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (1397.76, 1597.44) in 0.1s (rate: 1947.9)
+2026-03-26 00:29:35,751 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (1397.76, 1597.44) in 0.12s (rate: 1735.7)
+2026-03-26 00:29:35,797 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (1597.44, 1797.12) in 0.1s (rate: 1957.1)
+2026-03-26 00:29:35,857 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (1597.44, 1797.12) in 0.11s (rate: 1877.0)
+2026-03-26 00:29:35,916 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (1597.44, 1797.12) in 0.12s (rate: 1675.3)
+2026-03-26 00:29:35,963 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (1797.12, 1996.8) in 0.1s (rate: 1906.6)
+2026-03-26 00:29:36,056 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (1597.44, 1797.12) in 0.11s (rate: 1781.6)
+2026-03-26 00:29:36,073 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (1597.44, 1797.12) in 0.11s (rate: 1807.4)
+2026-03-26 00:29:36,127 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (1797.12, 1996.8) in 0.1s (rate: 2031.7)
+2026-03-26 00:29:36,170 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (1797.12, 1996.8) in 0.1s (rate: 2090.9)
+2026-03-26 00:29:36,228 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (1797.12, 1996.8) in 0.1s (rate: 1969.2)
+2026-03-26 00:29:36,258 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:36,277 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (1996.8, 2196.48) in 0.11s (rate: 1832.9)
+2026-03-26 00:29:36,319 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (1797.12, 1996.8) in 0.09s (rate: 2195.3)
+2026-03-26 00:29:36,350 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:36,382 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:36,440 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (1797.12, 1996.8) in 0.16s (rate: 1243.2)
+2026-03-26 00:29:36,491 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (1996.8, 2196.48) in 0.17s (rate: 1162.4)
+2026-03-26 00:29:36,531 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (1996.8, 2196.48) in 0.09s (rate: 2194.3)
+2026-03-26 00:29:36,600 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (1996.8, 2196.48) in 0.11s (rate: 1861.5)
+2026-03-26 00:29:36,652 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (2196.48, 2396.16) in 0.12s (rate: 1639.0)
+2026-03-26 00:29:36,689 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (1996.8, 2196.48) in 0.09s (rate: 2218.9)
+2026-03-26 00:29:36,737 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:36,738 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:36,824 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (2196.48, 2396.16) in 0.17s (rate: 1156.4)
+2026-03-26 00:29:36,866 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (1996.8, 2196.48) in 0.17s (rate: 1157.1)
+2026-03-26 00:29:36,955 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (2196.48, 2396.16) in 0.13s (rate: 1533.5)
+2026-03-26 00:29:36,975 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (2196.48, 2396.16) in 0.11s (rate: 1823.2)
+2026-03-26 00:29:37,043 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (2396.16, 2595.84) in 0.09s (rate: 2272.7)
+2026-03-26 00:29:37,100 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (2196.48, 2396.16) in 0.13s (rate: 1555.1)
+2026-03-26 00:29:37,145 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (2396.16, 2595.84) in 0.1s (rate: 1955.7)
+2026-03-26 00:29:37,200 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (2196.48, 2396.16) in 0.1s (rate: 1994.6)
+2026-03-26 00:29:37,244 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (2396.16, 2595.84) in 0.1s (rate: 2017.0)
+2026-03-26 00:29:37,295 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (2396.16, 2595.84) in 0.09s (rate: 2106.8)
+2026-03-26 00:29:37,357 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (2595.84, 2795.52) in 0.11s (rate: 1764.9)
+2026-03-26 00:29:37,400 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (2396.16, 2595.84) in 0.1s (rate: 1910.1)
+2026-03-26 00:29:37,447 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:37,467 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (2595.84, 2795.52) in 0.07s (rate: 2967.0)
+2026-03-26 00:29:37,561 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (2595.84, 2795.52) in 0.09s (rate: 2145.0)
+2026-03-26 00:29:37,562 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (2396.16, 2595.84) in 0.2s (rate: 978.0)
+2026-03-26 00:29:37,646 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (2595.84, 2795.52) in 0.09s (rate: 2347.8)
+2026-03-26 00:29:37,672 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:37,685 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (2795.52, 2995.2) in 0.12s (rate: 1625.9)
+2026-03-26 00:29:37,730 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:37,750 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (2595.84, 2795.52) in 0.1s (rate: 1917.2)
+2026-03-26 00:29:37,791 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:37,809 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (2795.52, 2995.2) in 0.12s (rate: 1601.5)
+2026-03-26 00:29:37,833 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:37,857 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (2595.84, 2795.52) in 0.11s (rate: 1892.2)
+2026-03-26 00:29:37,916 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (2795.52, 2995.2) in 0.11s (rate: 1879.0)
+2026-03-26 00:29:37,967 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (2795.52, 2995.2) in 0.11s (rate: 1799.7)
+2026-03-26 00:29:38,008 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:38,017 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (2995.2, 3194.88) in 0.1s (rate: 1984.5)
+2026-03-26 00:29:38,059 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (2795.52, 2995.2) in 0.09s (rate: 2174.0)
+2026-03-26 00:29:38,083 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:38,122 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:38,173 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (2795.52, 2995.2) in 0.16s (rate: 1284.2)
+2026-03-26 00:29:38,213 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (2995.2, 3194.88) in 0.15s (rate: 1303.7)
+2026-03-26 00:29:38,270 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (3194.88, 3394.56) in 0.1s (rate: 2056.6)
+2026-03-26 00:29:38,332 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (2995.2, 3194.88) in 0.12s (rate: 1681.2)
+2026-03-26 00:29:38,391 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (2995.2, 3194.88) in 0.12s (rate: 1647.7)
+2026-03-26 00:29:38,430 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (2995.2, 3194.88) in 0.1s (rate: 2038.8)
+2026-03-26 00:29:38,438 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:38,466 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:38,527 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (2995.2, 3194.88) in 0.14s (rate: 1469.0)
+2026-03-26 00:29:38,565 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (3194.88, 3394.56) in 0.14s (rate: 1477.5)
+2026-03-26 00:29:38,633 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (3394.56, 3594.24) in 0.07s (rate: 2940.8)
+2026-03-26 00:29:38,674 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (3194.88, 3394.56) in 0.14s (rate: 1380.7)
+2026-03-26 00:29:38,698 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:38,716 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (3194.88, 3394.56) in 0.08s (rate: 2400.9)
+2026-03-26 00:29:38,752 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:38,780 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (3194.88, 3394.56) in 0.11s (rate: 1892.2)
+2026-03-26 00:29:38,812 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:38,831 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (3194.88, 3394.56) in 0.11s (rate: 1737.9)
+2026-03-26 00:29:38,894 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (3394.56, 3594.24) in 0.12s (rate: 1718.7)
+2026-03-26 00:29:38,933 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:38,935 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (3394.56, 3594.24) in 0.1s (rate: 1940.0)
+2026-03-26 00:29:38,977 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:39,091 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (3394.56, 3594.24) in 0.18s (rate: 1123.2)
+2026-03-26 00:29:39,091 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (3594.24, 3793.92) in 0.16s (rate: 1276.9)
+2026-03-26 00:29:39,137 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:39,150 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (3394.56, 3594.24) in 0.08s (rate: 2552.8)
+2026-03-26 00:29:39,218 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (3594.24, 3793.92) in 0.13s (rate: 1571.4)
+2026-03-26 00:29:39,262 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (3394.56, 3594.24) in 0.11s (rate: 1784.6)
+2026-03-26 00:29:39,303 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (3594.24, 3793.92) in 0.08s (rate: 2354.2)
+2026-03-26 00:29:39,344 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:39,367 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (3594.24, 3793.92) in 0.1s (rate: 1916.3)
+2026-03-26 00:29:39,389 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:39,422 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (3793.92, 3993.6) in 0.12s (rate: 1681.4)
+2026-03-26 00:29:39,463 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:39,481 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (3594.24, 3793.92) in 0.11s (rate: 1747.1)
+2026-03-26 00:29:39,513 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:39,534 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (3793.92, 3993.6) in 0.11s (rate: 1789.2)
+2026-03-26 00:29:39,571 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:39,596 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (3594.24, 3793.92) in 0.11s (rate: 1740.6)
+2026-03-26 00:29:39,630 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:39,650 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (3793.92, 3993.6) in 0.12s (rate: 1715.5)
+2026-03-26 00:29:39,696 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:39,710 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (3793.92, 3993.6) in 0.11s (rate: 1756.8)
+2026-03-26 00:29:39,761 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (3993.6, 4193.28) in 0.11s (rate: 1814.4)
+2026-03-26 00:29:39,812 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:39,821 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (3793.92, 3993.6) in 0.11s (rate: 1798.1)
+2026-03-26 00:29:39,845 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:39,871 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (3993.6, 4193.28) in 0.11s (rate: 1806.4)
+2026-03-26 00:29:39,897 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:39,941 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (3793.92, 3993.6) in 0.12s (rate: 1703.0)
+2026-03-26 00:29:39,977 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:39,979 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (3993.6, 4193.28) in 0.11s (rate: 1847.9)
+2026-03-26 00:29:40,000 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:40,042 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (3993.6, 4193.28) in 0.1s (rate: 1948.3)
+2026-03-26 00:29:40,066 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:40,089 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (4193.28, 4392.96) in 0.11s (rate: 1823.2)
+2026-03-26 00:29:40,138 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (3993.6, 4193.28) in 0.1s (rate: 2060.9)
+2026-03-26 00:29:40,149 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:40,201 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:40,202 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (4193.28, 4392.96) in 0.11s (rate: 1772.1)
+2026-03-26 00:29:40,238 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:40,257 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (3993.6, 4193.28) in 0.12s (rate: 1686.6)
+2026-03-26 00:29:40,298 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:40,315 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (4193.28, 4392.96) in 0.11s (rate: 1768.6)
+2026-03-26 00:29:40,348 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:40,375 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (4193.28, 4392.96) in 0.12s (rate: 1687.5)
+2026-03-26 00:29:40,415 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:40,434 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (4392.96, 4592.64) in 0.12s (rate: 1677.0)
+2026-03-26 00:29:40,484 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (4193.28, 4392.96) in 0.11s (rate: 1845.6)
+2026-03-26 00:29:40,495 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:40,515 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:40,544 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (4392.96, 4592.64) in 0.11s (rate: 1819.9)
+2026-03-26 00:29:40,581 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:40,599 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (4193.28, 4392.96) in 0.11s (rate: 1737.4)
+2026-03-26 00:29:40,640 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:40,656 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (4392.96, 4592.64) in 0.11s (rate: 1784.3)
+2026-03-26 00:29:40,705 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:40,716 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (4392.96, 4592.64) in 0.12s (rate: 1711.9)
+2026-03-26 00:29:40,749 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:40,769 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (4592.64, 4792.32) in 0.11s (rate: 1770.7)
+2026-03-26 00:29:40,808 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:40,824 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (4392.96, 4592.64) in 0.11s (rate: 1854.2)
+2026-03-26 00:29:40,889 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (4592.64, 4792.32) in 0.12s (rate: 1662.9)
+2026-03-26 00:29:40,934 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (4392.96, 4592.64) in 0.11s (rate: 1809.8)
+2026-03-26 00:29:40,984 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (4592.64, 4792.32) in 0.09s (rate: 2108.8)
+2026-03-26 00:29:41,006 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:41,026 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:41,122 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (4792.32, 4992.0) in 0.15s (rate: 1327.8)
+2026-03-26 00:29:41,140 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (4592.64, 4792.32) in 0.15s (rate: 1291.5)
+2026-03-26 00:29:41,174 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:41,184 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (4592.64, 4792.32) in 0.1s (rate: 2026.4)
+2026-03-26 00:29:41,256 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (4792.32, 4992.0) in 0.11s (rate: 1738.6)
+2026-03-26 00:29:41,294 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (4592.64, 4792.32) in 0.11s (rate: 1812.0)
+2026-03-26 00:29:41,332 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (4792.32, 4992.0) in 0.08s (rate: 2548.2)
+2026-03-26 00:29:41,383 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:41,405 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:41,469 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (4792.32, 4992.0) in 0.18s (rate: 1140.8)
+2026-03-26 00:29:41,507 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (4992.0, 5191.68) in 0.17s (rate: 1145.4)
+2026-03-26 00:29:41,582 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (4792.32, 4992.0) in 0.11s (rate: 1792.1)
+2026-03-26 00:29:41,610 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (4992.0, 5191.68) in 0.1s (rate: 1932.1)
+2026-03-26 00:29:41,674 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (4792.32, 4992.0) in 0.09s (rate: 2172.1)
+2026-03-26 00:29:41,710 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (4992.0, 5191.68) in 0.1s (rate: 2012.5)
+2026-03-26 00:29:41,717 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:41,744 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:41,813 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (4992.0, 5191.68) in 0.14s (rate: 1426.0)
+2026-03-26 00:29:41,849 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (4992.0, 5191.68) in 0.14s (rate: 1434.9)
+2026-03-26 00:29:41,884 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:41,907 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (5191.68, 5391.36) in 0.09s (rate: 2135.2)
+2026-03-26 00:29:41,970 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (5191.68, 5391.36) in 0.12s (rate: 1662.3)
+2026-03-26 00:29:42,010 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (5191.68, 5391.36) in 0.1s (rate: 1928.0)
+2026-03-26 00:29:42,052 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (4992.0, 5191.68) in 0.08s (rate: 2436.3)
+2026-03-26 00:29:42,094 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:42,094 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:42,179 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (5191.68, 5391.36) in 0.13s (rate: 1573.0)
+2026-03-26 00:29:42,228 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (5391.36, 5591.04) in 0.22s (rate: 917.3)
+2026-03-26 00:29:42,287 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (5191.68, 5391.36) in 0.11s (rate: 1848.0)
+2026-03-26 00:29:42,336 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (5391.36, 5591.04) in 0.11s (rate: 1859.7)
+2026-03-26 00:29:42,393 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (5391.36, 5591.04) in 0.11s (rate: 1895.9)
+2026-03-26 00:29:42,431 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (5191.68, 5391.36) in 0.1s (rate: 2082.6)
+2026-03-26 00:29:42,446 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:42,460 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:42,530 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (5391.36, 5591.04) in 0.14s (rate: 1455.6)
+2026-03-26 00:29:42,570 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (5591.04, 5790.72) in 0.14s (rate: 1438.2)
+2026-03-26 00:29:42,622 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (5391.36, 5591.04) in 0.09s (rate: 2167.1)
+2026-03-26 00:29:42,671 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (5591.04, 5790.72) in 0.1s (rate: 2070.3)
+2026-03-26 00:29:42,730 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (5591.04, 5790.72) in 0.11s (rate: 1853.7)
+2026-03-26 00:29:42,763 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:42,799 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (5391.36, 5591.04) in 0.12s (rate: 1641.2)
+2026-03-26 00:29:42,816 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:42,838 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (5591.04, 5790.72) in 0.11s (rate: 1861.8)
+2026-03-26 00:29:42,898 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (5790.72, 5990.4) in 0.11s (rate: 1830.1)
+2026-03-26 00:29:42,949 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (5591.04, 5790.72) in 0.11s (rate: 1783.8)
+2026-03-26 00:29:42,979 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:43,005 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (5790.72, 5990.4) in 0.11s (rate: 1877.0)
+2026-03-26 00:29:43,065 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (5790.72, 5990.4) in 0.11s (rate: 1768.2)
+2026-03-26 00:29:43,100 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:43,118 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (5591.04, 5790.72) in 0.11s (rate: 1757.6)
+2026-03-26 00:29:43,162 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (5790.72, 5990.4) in 0.1s (rate: 2026.0)
+2026-03-26 00:29:43,208 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:43,220 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:43,323 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (5790.72, 5990.4) in 0.17s (rate: 1208.1)
+2026-03-26 00:29:43,342 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (5990.4, 6190.08) in 0.18s (rate: 1107.4)
+2026-03-26 00:29:43,394 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (5990.4, 6190.08) in 0.11s (rate: 1813.8)
+2026-03-26 00:29:43,450 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (5990.4, 6190.08) in 0.11s (rate: 1887.5)
+2026-03-26 00:29:43,505 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (5790.72, 5990.4) in 0.11s (rate: 1797.3)
+2026-03-26 00:29:43,548 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (5990.4, 6190.08) in 0.1s (rate: 2005.6)
+2026-03-26 00:29:43,563 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:43,597 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:43,649 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (6190.08, 6389.76) in 0.14s (rate: 1395.8)
+2026-03-26 00:29:43,703 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (6190.08, 6389.76) in 0.15s (rate: 1288.8)
+2026-03-26 00:29:43,748 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (5990.4, 6190.08) in 0.1s (rate: 2021.9)
+2026-03-26 00:29:43,802 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (6190.08, 6389.76) in 0.1s (rate: 2045.5)
+2026-03-26 00:29:43,865 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (5990.4, 6190.08) in 0.12s (rate: 1720.3)
+2026-03-26 00:29:43,901 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (6190.08, 6389.76) in 0.1s (rate: 2001.8)
+2026-03-26 00:29:43,925 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:43,962 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:44,013 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (6389.76, 6589.44) in 0.15s (rate: 1350.1)
+2026-03-26 00:29:44,072 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (6190.08, 6389.76) in 0.17s (rate: 1172.9)
+2026-03-26 00:29:44,118 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (6389.76, 6589.44) in 0.11s (rate: 1894.1)
+2026-03-26 00:29:44,180 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (6389.76, 6589.44) in 0.11s (rate: 1850.6)
+2026-03-26 00:29:44,231 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (6190.08, 6389.76) in 0.11s (rate: 1766.5)
+2026-03-26 00:29:44,270 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (6389.76, 6589.44) in 0.09s (rate: 2208.1)
+2026-03-26 00:29:44,294 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:44,319 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:44,430 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (6589.44, 6789.12) in 0.17s (rate: 1193.5)
+2026-03-26 00:29:44,432 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (6589.44, 6789.12) in 0.16s (rate: 1241.7)
+2026-03-26 00:29:44,498 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (6389.76, 6589.44) in 0.1s (rate: 2017.0)
+2026-03-26 00:29:44,529 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (6389.76, 6589.44) in 0.1s (rate: 2060.5)
+2026-03-26 00:29:44,628 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (6589.44, 6789.12) in 0.1s (rate: 2002.4)
+2026-03-26 00:29:44,640 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (6589.44, 6789.12) in 0.14s (rate: 1417.8)
+2026-03-26 00:29:44,659 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:44,690 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (6789.12, 6988.8) in 0.06s (rate: 3219.6)
+2026-03-26 00:29:44,757 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (6789.12, 6988.8) in 0.12s (rate: 1690.9)
+2026-03-26 00:29:44,792 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (6589.44, 6789.12) in 0.1s (rate: 1970.8)
+2026-03-26 00:29:44,910 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (6589.44, 6789.12) in 0.14s (rate: 1466.1)
+2026-03-26 00:29:44,912 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (6789.12, 6988.8) in 0.12s (rate: 1665.7)
+2026-03-26 00:29:44,970 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:44,983 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (6789.12, 6988.8) in 0.09s (rate: 2229.3)
+2026-03-26 00:29:45,001 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:45,028 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (6988.8, 7188.48) in 0.12s (rate: 1722.0)
+2026-03-26 00:29:45,128 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (6789.12, 6988.8) in 0.1s (rate: 1999.0)
+2026-03-26 00:29:45,128 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (6988.8, 7188.48) in 0.15s (rate: 1374.1)
+2026-03-26 00:29:45,146 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:45,207 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (6789.12, 6988.8) in 0.08s (rate: 2644.8)
+2026-03-26 00:29:45,248 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (6988.8, 7188.48) in 0.12s (rate: 1669.4)
+2026-03-26 00:29:45,292 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (6988.8, 7188.48) in 0.09s (rate: 2272.2)
+2026-03-26 00:29:45,341 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:45,378 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:45,430 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (6988.8, 7188.48) in 0.18s (rate: 1101.6)
+2026-03-26 00:29:45,469 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (7188.48, 7388.16) in 0.18s (rate: 1135.4)
+2026-03-26 00:29:45,535 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (6988.8, 7188.48) in 0.07s (rate: 3001.8)
+2026-03-26 00:29:45,572 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (7188.48, 7388.16) in 0.14s (rate: 1401.1)
+2026-03-26 00:29:45,642 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (7188.48, 7388.16) in 0.11s (rate: 1854.7)
+2026-03-26 00:29:45,678 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (7188.48, 7388.16) in 0.11s (rate: 1886.4)
+2026-03-26 00:29:45,711 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:45,717 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:45,833 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (7388.16, 7587.84) in 0.15s (rate: 1294.3)
+2026-03-26 00:29:45,835 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (7188.48, 7388.16) in 0.19s (rate: 1039.9)
+2026-03-26 00:29:45,921 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (7188.48, 7388.16) in 0.08s (rate: 2370.1)
+2026-03-26 00:29:45,951 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (7388.16, 7587.84) in 0.12s (rate: 1694.8)
+2026-03-26 00:29:46,011 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (7388.16, 7587.84) in 0.09s (rate: 2175.6)
+2026-03-26 00:29:46,033 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:46,056 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (7388.16, 7587.84) in 0.1s (rate: 1936.4)
+2026-03-26 00:29:46,104 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:46,105 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (7587.84, 7787.52) in 0.09s (rate: 2137.2)
+2026-03-26 00:29:46,230 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (7388.16, 7587.84) in 0.12s (rate: 1632.6)
+2026-03-26 00:29:46,231 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (7587.84, 7787.52) in 0.17s (rate: 1151.0)
+2026-03-26 00:29:46,323 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (7587.84, 7787.52) in 0.09s (rate: 2113.9)
+2026-03-26 00:29:46,375 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (7388.16, 7587.84) in 0.15s (rate: 1352.0)
+2026-03-26 00:29:46,418 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (7587.84, 7787.52) in 0.1s (rate: 2072.4)
+2026-03-26 00:29:46,466 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (7787.52, 7987.2) in 0.09s (rate: 2197.4)
+2026-03-26 00:29:46,526 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (7787.52, 7987.2) in 0.11s (rate: 1859.7)
+2026-03-26 00:29:46,581 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (7587.84, 7787.52) in 0.11s (rate: 1738.6)
+2026-03-26 00:29:46,627 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (7587.84, 7787.52) in 0.1s (rate: 1999.0)
+2026-03-26 00:29:46,678 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (7787.52, 7987.2) in 0.1s (rate: 2062.4)
+2026-03-26 00:29:46,727 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:46,729 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (7787.52, 7987.2) in 0.1s (rate: 1955.0)
+2026-03-26 00:29:46,779 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:46,781 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (7987.2, 8186.88) in 0.1s (rate: 1932.6)
+2026-03-26 00:29:46,809 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:46,838 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (7987.2, 8186.88) in 0.11s (rate: 1822.7)
+2026-03-26 00:29:46,853 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:46,889 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (7787.52, 7987.2) in 0.11s (rate: 1857.7)
+2026-03-26 00:29:46,908 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:46,949 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (7787.52, 7987.2) in 0.11s (rate: 1838.5)
+2026-03-26 00:29:46,983 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:47,001 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (7987.2, 8186.88) in 0.11s (rate: 1781.1)
+2026-03-26 00:29:47,063 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:47,064 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (7987.2, 8186.88) in 0.12s (rate: 1706.5)
+2026-03-26 00:29:47,122 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:47,124 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (8186.88, 8386.56) in 0.12s (rate: 1619.7)
+2026-03-26 00:29:47,157 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:47,181 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (8186.88, 8386.56) in 0.12s (rate: 1712.1)
+2026-03-26 00:29:47,204 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:47,236 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (7987.2, 8186.88) in 0.11s (rate: 1797.3)
+2026-03-26 00:29:47,299 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (7987.2, 8186.88) in 0.12s (rate: 1693.8)
+2026-03-26 00:29:47,335 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (8186.88, 8386.56) in 0.1s (rate: 2013.1)
+2026-03-26 00:29:47,390 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (8186.88, 8386.56) in 0.09s (rate: 2191.2)
+2026-03-26 00:29:47,403 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:47,453 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:47,477 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (8386.56, 8586.24) in 0.14s (rate: 1406.9)
+2026-03-26 00:29:47,502 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:47,540 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (8386.56, 8586.24) in 0.15s (rate: 1330.4)
+2026-03-26 00:29:47,598 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (8186.88, 8386.56) in 0.12s (rate: 1654.3)
+2026-03-26 00:29:47,647 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (8186.88, 8386.56) in 0.11s (rate: 1871.4)
+2026-03-26 00:29:47,700 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (8386.56, 8586.24) in 0.1s (rate: 1952.3)
+2026-03-26 00:29:47,720 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:47,747 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (8386.56, 8586.24) in 0.1s (rate: 2012.7)
+2026-03-26 00:29:47,797 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (8586.24, 8785.92) in 0.1s (rate: 2057.9)
+2026-03-26 00:29:47,844 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:47,873 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:47,925 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (8586.24, 8785.92) in 0.18s (rate: 1119.9)
+2026-03-26 00:29:47,975 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (8386.56, 8586.24) in 0.18s (rate: 1127.4)
+2026-03-26 00:29:48,085 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (8586.24, 8785.92) in 0.14s (rate: 1398.6)
+2026-03-26 00:29:48,085 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (8386.56, 8586.24) in 0.09s (rate: 2131.7)
+2026-03-26 00:29:48,151 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (8586.24, 8785.92) in 0.08s (rate: 2417.7)
+2026-03-26 00:29:48,209 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (8785.92, 8985.6) in 0.14s (rate: 1428.7)
+2026-03-26 00:29:48,294 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (8785.92, 8985.6) in 0.1s (rate: 1987.9)
+2026-03-26 00:29:48,300 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (8586.24, 8785.92) in 0.09s (rate: 2184.0)
+2026-03-26 00:29:48,359 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (8586.24, 8785.92) in 0.06s (rate: 3396.5)
+2026-03-26 00:29:48,406 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (8785.92, 8985.6) in 0.16s (rate: 1285.9)
+2026-03-26 00:29:48,464 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (8785.92, 8985.6) in 0.1s (rate: 1913.2)
+2026-03-26 00:29:48,487 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:48,508 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (8985.6, 9185.28) in 0.1s (rate: 1973.1)
+2026-03-26 00:29:48,541 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:48,559 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (8985.6, 9185.28) in 0.1s (rate: 2090.2)
+2026-03-26 00:29:48,584 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:48,633 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (8785.92, 8985.6) in 0.12s (rate: 1623.4)
+2026-03-26 00:29:48,681 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (8785.92, 8985.6) in 0.12s (rate: 1638.7)
+2026-03-26 00:29:48,738 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (8985.6, 9185.28) in 0.11s (rate: 1868.3)
+2026-03-26 00:29:48,797 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (9185.28, 9384.96) in 0.11s (rate: 1737.7)
+2026-03-26 00:29:48,837 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:48,840 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (8985.6, 9185.28) in 0.1s (rate: 1953.1)
+2026-03-26 00:29:48,892 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (9185.28, 9384.96) in 0.09s (rate: 2127.0)
+2026-03-26 00:29:48,924 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:48,927 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:49,001 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (8985.6, 9185.28) in 0.11s (rate: 1809.4)
+2026-03-26 00:29:49,042 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (8985.6, 9185.28) in 0.2s (rate: 989.8)
+2026-03-26 00:29:49,104 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (9185.28, 9384.96) in 0.1s (rate: 1947.0)
+2026-03-26 00:29:49,149 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (9384.96, 9584.64) in 0.11s (rate: 1894.3)
+2026-03-26 00:29:49,165 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:49,194 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (9185.28, 9384.96) in 0.09s (rate: 2207.9)
+2026-03-26 00:29:49,238 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:49,252 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (9384.96, 9584.64) in 0.1s (rate: 1913.9)
+2026-03-26 00:29:49,274 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:49,296 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (9185.28, 9384.96) in 0.1s (rate: 1980.2)
+2026-03-26 00:29:49,362 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (9384.96, 9584.64) in 0.11s (rate: 1816.3)
+2026-03-26 00:29:49,411 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (9185.28, 9384.96) in 0.12s (rate: 1723.2)
+2026-03-26 00:29:49,438 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:49,474 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (9584.64, 9784.32) in 0.11s (rate: 1781.1)
+2026-03-26 00:29:49,514 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (9384.96, 9584.64) in 0.1s (rate: 1951.7)
+2026-03-26 00:29:49,538 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:49,611 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:49,621 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (9584.64, 9784.32) in 0.14s (rate: 1383.4)
+2026-03-26 00:29:49,690 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (9384.96, 9584.64) in 0.18s (rate: 1134.1)
+2026-03-26 00:29:49,735 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (9384.96, 9584.64) in 0.12s (rate: 1723.5)
+2026-03-26 00:29:49,797 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (9584.64, 9784.32) in 0.11s (rate: 1869.0)
+2026-03-26 00:29:49,840 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (9784.32, 9984.0) in 0.1s (rate: 1917.1)
+2026-03-26 00:29:49,882 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (9584.64, 9784.32) in 0.08s (rate: 2362.8)
+2026-03-26 00:29:49,924 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:49,951 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:50,008 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (9784.32, 9984.0) in 0.17s (rate: 1189.8)
+2026-03-26 00:29:50,061 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (9584.64, 9784.32) in 0.18s (rate: 1120.3)
+2026-03-26 00:29:50,105 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (9784.32, 9984.0) in 0.1s (rate: 2058.8)
+2026-03-26 00:29:50,165 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (9584.64, 9784.32) in 0.1s (rate: 1921.8)
+2026-03-26 00:29:50,206 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (9784.32, 9984.0) in 0.1s (rate: 1961.7)
+2026-03-26 00:29:50,246 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (9984.0, 10183.68) in 0.08s (rate: 2487.9)
+2026-03-26 00:29:50,290 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:50,312 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:50,389 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (9984.0, 10183.68) in 0.18s (rate: 1098.7)
+2026-03-26 00:29:50,427 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (9784.32, 9984.0) in 0.18s (rate: 1103.0)
+2026-03-26 00:29:50,490 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (9984.0, 10183.68) in 0.1s (rate: 1963.4)
+2026-03-26 00:29:50,525 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (9784.32, 9984.0) in 0.1s (rate: 2037.1)
+2026-03-26 00:29:50,587 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (9984.0, 10183.68) in 0.1s (rate: 2055.4)
+2026-03-26 00:29:50,612 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:50,639 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (10183.68, 10383.36) in 0.11s (rate: 1792.1)
+2026-03-26 00:29:50,682 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:50,705 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (10183.68, 10383.36) in 0.12s (rate: 1704.8)
+2026-03-26 00:29:50,764 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (9984.0, 10183.68) in 0.13s (rate: 1565.1)
+2026-03-26 00:29:50,806 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (10183.68, 10383.36) in 0.1s (rate: 1967.7)
+2026-03-26 00:29:50,863 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (10183.68, 10383.36) in 0.1s (rate: 2018.6)
+2026-03-26 00:29:50,911 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (9984.0, 10183.68) in 0.1s (rate: 1905.2)
+2026-03-26 00:29:50,951 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (10383.36, 10583.04) in 0.09s (rate: 2273.7)
+2026-03-26 00:29:50,962 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:51,027 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:51,036 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (10383.36, 10583.04) in 0.12s (rate: 1599.1)
+2026-03-26 00:29:51,148 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (10183.68, 10383.36) in 0.17s (rate: 1192.7)
+2026-03-26 00:29:51,160 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (10383.36, 10583.04) in 0.12s (rate: 1619.2)
+2026-03-26 00:29:51,207 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (10183.68, 10383.36) in 0.09s (rate: 2320.8)
+2026-03-26 00:29:51,259 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (10383.36, 10583.04) in 0.1s (rate: 2002.4)
+2026-03-26 00:29:51,318 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (10583.04, 10782.72) in 0.11s (rate: 1766.3)
+2026-03-26 00:29:51,355 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (10583.04, 10782.72) in 0.1s (rate: 2096.4)
+2026-03-26 00:29:51,380 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:51,402 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:51,468 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (10383.36, 10583.04) in 0.15s (rate: 1352.3)
+2026-03-26 00:29:51,510 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (10583.04, 10782.72) in 0.15s (rate: 1293.0)
+2026-03-26 00:29:51,560 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (10782.72, 10982.4) in 0.09s (rate: 2119.3)
+2026-03-26 00:29:51,617 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (10583.04, 10782.72) in 0.11s (rate: 1878.8)
+2026-03-26 00:29:51,658 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (10383.36, 10583.04) in 0.1s (rate: 2046.7)
+2026-03-26 00:29:51,724 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:51,733 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (10782.72, 10982.4) in 0.12s (rate: 1707.3)
+2026-03-26 00:29:51,801 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (10583.04, 10782.72) in 0.14s (rate: 1397.9)
+2026-03-26 00:29:51,849 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (10782.72, 10982.4) in 0.12s (rate: 1726.9)
+2026-03-26 00:29:51,899 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (10583.04, 10782.72) in 0.1s (rate: 2030.5)
+2026-03-26 00:29:51,964 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (10782.72, 10982.4) in 0.12s (rate: 1733.5)
+2026-03-26 00:29:51,999 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (10982.4, 11182.08) in 0.1s (rate: 2013.7)
+2026-03-26 00:29:52,026 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:52,053 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (10982.4, 11182.08) in 0.09s (rate: 2240.3)
+2026-03-26 00:29:52,103 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (10782.72, 10982.4) in 0.1s (rate: 1915.8)
+2026-03-26 00:29:52,103 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:52,145 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:52,196 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (10982.4, 11182.08) in 0.14s (rate: 1401.3)
+2026-03-26 00:29:52,248 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (10782.72, 10982.4) in 0.14s (rate: 1383.5)
+2026-03-26 00:29:52,293 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (11182.08, 11381.76) in 0.1s (rate: 2057.3)
+2026-03-26 00:29:52,361 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (10982.4, 11182.08) in 0.11s (rate: 1766.0)
+2026-03-26 00:29:52,414 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (11182.08, 11381.76) in 0.12s (rate: 1663.0)
+2026-03-26 00:29:52,462 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (10982.4, 11182.08) in 0.1s (rate: 1982.1)
+2026-03-26 00:29:52,481 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:52,526 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (11182.08, 11381.76) in 0.11s (rate: 1827.4)
+2026-03-26 00:29:52,548 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:52,573 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (10982.4, 11182.08) in 0.11s (rate: 1791.7)
+2026-03-26 00:29:52,632 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (11182.08, 11381.76) in 0.11s (rate: 1833.3)
+2026-03-26 00:29:52,671 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (11381.76, 11581.44) in 0.1s (rate: 2038.4)
+2026-03-26 00:29:52,721 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:52,722 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (11381.76, 11581.44) in 0.09s (rate: 2222.1)
+2026-03-26 00:29:52,784 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:52,788 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (11182.08, 11381.76) in 0.12s (rate: 1733.0)
+2026-03-26 00:29:52,817 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:52,845 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (11381.76, 11581.44) in 0.12s (rate: 1620.9)
+2026-03-26 00:29:52,875 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:52,894 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (11182.08, 11381.76) in 0.11s (rate: 1859.6)
+2026-03-26 00:29:52,926 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:52,949 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (11381.76, 11581.44) in 0.1s (rate: 1925.4)
+2026-03-26 00:29:52,998 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (11581.44, 11781.12) in 0.1s (rate: 1915.9)
+2026-03-26 00:29:53,011 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:53,078 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (11581.44, 11781.12) in 0.13s (rate: 1554.8)
+2026-03-26 00:29:53,091 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:53,107 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:53,164 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (11381.76, 11581.44) in 0.16s (rate: 1215.8)
+2026-03-26 00:29:53,201 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (11581.44, 11781.12) in 0.12s (rate: 1627.3)
+2026-03-26 00:29:53,218 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:53,244 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (11381.76, 11581.44) in 0.08s (rate: 2466.7)
+2026-03-26 00:29:53,296 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:53,304 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (11581.44, 11781.12) in 0.1s (rate: 1957.3)
+2026-03-26 00:29:53,346 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (11781.12, 11980.8) in 0.1s (rate: 1948.9)
+2026-03-26 00:29:53,388 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:53,416 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:53,508 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (11781.12, 11980.8) in 0.21s (rate: 973.5)
+2026-03-26 00:29:53,509 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (11581.44, 11781.12) in 0.16s (rate: 1230.1)
+2026-03-26 00:29:53,535 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:53,592 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (11781.12, 11980.8) in 0.08s (rate: 2386.5)
+2026-03-26 00:29:53,658 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (11581.44, 11781.12) in 0.15s (rate: 1344.5)
+2026-03-26 00:29:53,739 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (11781.12, 11980.8) in 0.11s (rate: 1831.8)
+2026-03-26 00:29:53,750 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (11980.8, 12180.48) in 0.09s (rate: 2163.6)
+2026-03-26 00:29:53,782 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:53,812 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (11980.8, 12180.48) in 0.11s (rate: 1800.9)
+2026-03-26 00:29:53,881 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (11980.8, 12180.48) in 0.13s (rate: 1527.1)
+2026-03-26 00:29:53,932 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (11781.12, 11980.8) in 0.12s (rate: 1670.1)
+2026-03-26 00:29:53,990 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (11980.8, 12180.48) in 0.11s (rate: 1842.6)
+2026-03-26 00:29:54,044 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (11781.12, 11980.8) in 0.11s (rate: 1787.0)
+2026-03-26 00:29:54,116 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (12180.48, 12380.16) in 0.13s (rate: 1588.7)
+2026-03-26 00:29:54,160 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (12180.48, 12380.16) in 0.12s (rate: 1716.9)
+2026-03-26 00:29:54,218 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (12180.48, 12380.16) in 0.1s (rate: 1944.5)
+2026-03-26 00:29:54,236 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:54,274 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (11980.8, 12180.48) in 0.11s (rate: 1755.9)
+2026-03-26 00:29:54,322 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (12180.48, 12380.16) in 0.1s (rate: 1919.1)
+2026-03-26 00:29:54,351 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:54,384 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (11980.8, 12180.48) in 0.11s (rate: 1821.4)
+2026-03-26 00:29:54,409 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:54,431 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (12380.16, 12579.84) in 0.11s (rate: 1863.7)
+2026-03-26 00:29:54,490 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (12380.16, 12579.84) in 0.11s (rate: 1891.6)
+2026-03-26 00:29:54,547 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (12380.16, 12579.84) in 0.12s (rate: 1724.7)
+2026-03-26 00:29:54,589 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (12180.48, 12380.16) in 0.1s (rate: 2007.8)
+2026-03-26 00:29:54,631 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (12380.16, 12579.84) in 0.08s (rate: 2374.9)
+2026-03-26 00:29:54,662 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:54,692 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:54,779 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (12180.48, 12380.16) in 0.19s (rate: 1053.0)
+2026-03-26 00:29:54,779 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (12579.84, 12779.52) in 0.15s (rate: 1349.6)
+2026-03-26 00:29:54,805 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:54,860 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (12579.84, 12779.52) in 0.08s (rate: 2464.3)
+2026-03-26 00:29:54,908 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (12579.84, 12779.52) in 0.13s (rate: 1556.0)
+2026-03-26 00:29:54,964 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (12380.16, 12579.84) in 0.1s (rate: 1925.9)
+2026-03-26 00:29:54,999 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (12579.84, 12779.52) in 0.09s (rate: 2247.6)
+2026-03-26 00:29:55,025 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:55,063 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:55,112 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (12779.52, 12979.2) in 0.15s (rate: 1347.0)
+2026-03-26 00:29:55,166 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (12380.16, 12579.84) in 0.17s (rate: 1179.7)
+2026-03-26 00:29:55,251 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (12779.52, 12979.2) in 0.1s (rate: 1925.4)
+2026-03-26 00:29:55,280 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (12579.84, 12779.52) in 0.11s (rate: 1863.6)
+2026-03-26 00:29:55,316 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (12779.52, 12979.2) in 0.1s (rate: 2004.0)
+2026-03-26 00:29:55,356 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (12779.52, 12979.2) in 0.08s (rate: 2421.0)
+2026-03-26 00:29:55,386 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:55,421 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:55,467 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (12979.2, 13178.88) in 0.15s (rate: 1319.6)
+2026-03-26 00:29:55,528 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (12979.2, 13178.88) in 0.17s (rate: 1162.5)
+2026-03-26 00:29:55,594 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (12579.84, 12779.52) in 0.13s (rate: 1577.3)
+2026-03-26 00:29:55,627 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (12979.2, 13178.88) in 0.1s (rate: 2031.3)
+2026-03-26 00:29:55,691 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (12779.52, 12979.2) in 0.1s (rate: 2066.4)
+2026-03-26 00:29:55,737 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (12979.2, 13178.88) in 0.11s (rate: 1809.5)
+2026-03-26 00:29:55,768 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:55,811 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (13178.88, 13378.56) in 0.12s (rate: 1686.6)
+2026-03-26 00:29:55,870 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (12779.52, 12979.2) in 0.13s (rate: 1525.4)
+2026-03-26 00:29:55,915 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (13178.88, 13378.56) in 0.11s (rate: 1887.7)
+2026-03-26 00:29:55,980 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (12979.2, 13178.88) in 0.11s (rate: 1784.1)
+2026-03-26 00:29:56,024 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (13178.88, 13378.56) in 0.11s (rate: 1842.1)
+2026-03-26 00:29:56,054 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:56,077 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (13178.88, 13378.56) in 0.1s (rate: 2065.6)
+2026-03-26 00:29:56,118 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:56,144 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (13378.56, 13578.24) in 0.12s (rate: 1663.0)
+2026-03-26 00:29:56,169 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:56,193 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (12979.2, 13178.88) in 0.12s (rate: 1724.5)
+2026-03-26 00:29:56,253 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (13378.56, 13578.24) in 0.11s (rate: 1845.0)
+2026-03-26 00:29:56,313 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (13378.56, 13578.24) in 0.12s (rate: 1702.4)
+2026-03-26 00:29:56,355 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (13378.56, 13578.24) in 0.1s (rate: 2004.8)
+2026-03-26 00:29:56,399 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (13178.88, 13378.56) in 0.09s (rate: 2257.0)
+2026-03-26 00:29:56,424 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:56,456 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:56,549 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (13578.24, 13777.92) in 0.16s (rate: 1220.2)
+2026-03-26 00:29:56,558 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (13178.88, 13378.56) in 0.16s (rate: 1260.3)
+2026-03-26 00:29:56,615 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (13578.24, 13777.92) in 0.1s (rate: 2012.1)
+2026-03-26 00:29:56,665 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (13578.24, 13777.92) in 0.11s (rate: 1877.0)
+2026-03-26 00:29:56,732 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (13578.24, 13777.92) in 0.12s (rate: 1712.7)
+2026-03-26 00:29:56,758 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (13378.56, 13578.24) in 0.09s (rate: 2158.5)
+2026-03-26 00:29:56,816 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:56,843 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:56,937 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (13777.92, 13977.6) in 0.17s (rate: 1197.4)
+2026-03-26 00:29:56,946 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (13378.56, 13578.24) in 0.19s (rate: 1058.0)
+2026-03-26 00:29:57,042 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (13777.92, 13977.6) in 0.1s (rate: 2088.0)
+2026-03-26 00:29:57,046 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (13777.92, 13977.6) in 0.15s (rate: 1366.5)
+2026-03-26 00:29:57,119 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (13777.92, 13977.6) in 0.08s (rate: 2581.8)
+2026-03-26 00:29:57,163 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (13578.24, 13777.92) in 0.12s (rate: 1697.8)
+2026-03-26 00:29:57,170 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:57,190 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:57,254 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (13977.6, 14177.28) in 0.13s (rate: 1482.4)
+2026-03-26 00:29:57,302 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (13977.6, 14177.28) in 0.14s (rate: 1434.2)
+2026-03-26 00:29:57,361 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (13578.24, 13777.92) in 0.1s (rate: 2016.0)
+2026-03-26 00:29:57,423 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (13977.6, 14177.28) in 0.12s (rate: 1672.4)
+2026-03-26 00:29:57,462 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (13977.6, 14177.28) in 0.1s (rate: 1940.3)
+2026-03-26 00:29:57,521 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:57,527 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (13777.92, 13977.6) in 0.1s (rate: 1998.4)
+2026-03-26 00:29:57,578 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:57,590 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (14177.28, 14376.96) in 0.13s (rate: 1492.4)
+2026-03-26 00:29:57,609 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:57,643 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (14177.28, 14376.96) in 0.12s (rate: 1647.3)
+2026-03-26 00:29:57,700 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (14177.28, 14376.96) in 0.11s (rate: 1876.0)
+2026-03-26 00:29:57,741 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (13777.92, 13977.6) in 0.1s (rate: 2052.2)
+2026-03-26 00:29:57,802 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (14177.28, 14376.96) in 0.11s (rate: 1899.5)
+2026-03-26 00:29:57,844 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:57,844 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (13977.6, 14177.28) in 0.1s (rate: 1929.8)
+2026-03-26 00:29:57,911 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (14376.96, 14576.64) in 0.11s (rate: 1844.3)
+2026-03-26 00:29:57,926 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:57,954 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:58,005 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (14376.96, 14576.64) in 0.16s (rate: 1240.9)
+2026-03-26 00:29:58,060 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (14376.96, 14576.64) in 0.15s (rate: 1340.3)
+2026-03-26 00:29:58,142 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (14177.28, 14376.96) in 0.1s (rate: 2015.3)
+2026-03-26 00:29:58,165 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (13977.6, 14177.28) in 0.1s (rate: 1965.9)
+2026-03-26 00:29:58,189 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:58,211 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (14376.96, 14576.64) in 0.11s (rate: 1887.2)
+2026-03-26 00:29:58,260 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (14576.64, 14776.32) in 0.1s (rate: 2035.5)
+2026-03-26 00:29:58,277 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:58,323 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:58,359 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (14576.64, 14776.32) in 0.15s (rate: 1355.1)
+2026-03-26 00:29:58,409 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (14177.28, 14376.96) in 0.15s (rate: 1348.7)
+2026-03-26 00:29:58,489 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (14576.64, 14776.32) in 0.13s (rate: 1539.8)
+2026-03-26 00:29:58,530 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (14376.96, 14576.64) in 0.12s (rate: 1638.9)
+2026-03-26 00:29:58,568 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:58,587 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (14576.64, 14776.32) in 0.1s (rate: 2024.3)
+2026-03-26 00:29:58,630 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:29:58,633 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (14776.32, 14976.0) in 0.1s (rate: 1981.3)
+2026-03-26 00:29:58,668 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:58,749 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (14776.32, 14976.0) in 0.13s (rate: 1565.3)
+2026-03-26 00:29:58,765 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (14776.32, 14976.0) in 0.13s (rate: 1557.8)
+2026-03-26 00:29:58,811 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (14376.96, 14576.64) in 0.1s (rate: 2077.8)
+2026-03-26 00:29:58,865 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (14576.64, 14776.32) in 0.11s (rate: 1891.8)
+2026-03-26 00:29:58,907 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:58,907 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (14776.32, 14976.0) in 0.1s (rate: 2091.5)
+2026-03-26 00:29:58,968 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (14976.0, 15175.68) in 0.1s (rate: 1965.2)
+2026-03-26 00:29:58,988 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:59,013 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:59,107 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (14576.64, 14776.32) in 0.17s (rate: 1180.6)
+2026-03-26 00:29:59,108 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (14976.0, 15175.68) in 0.14s (rate: 1423.3)
+2026-03-26 00:29:59,176 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (14976.0, 15175.68) in 0.1s (rate: 2014.9)
+2026-03-26 00:29:59,227 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (14976.0, 15175.68) in 0.12s (rate: 1680.0)
+2026-03-26 00:29:59,255 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:29:59,266 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (14776.32, 14976.0) in 0.09s (rate: 2196.9)
+2026-03-26 00:29:59,313 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (15175.68, 15375.36) in 0.09s (rate: 2313.8)
+2026-03-26 00:29:59,369 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:29:59,377 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:59,497 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (15175.68, 15375.36) in 0.18s (rate: 1083.0)
+2026-03-26 00:29:59,508 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (14776.32, 14976.0) in 0.24s (rate: 825.2)
+2026-03-26 00:29:59,591 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (15175.68, 15375.36) in 0.09s (rate: 2147.3)
+2026-03-26 00:29:59,619 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (15175.68, 15375.36) in 0.11s (rate: 1829.9)
+2026-03-26 00:29:59,669 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (14976.0, 15175.68) in 0.08s (rate: 2536.9)
+2026-03-26 00:29:59,722 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (15375.36, 15575.04) in 0.1s (rate: 1916.7)
+2026-03-26 00:29:59,726 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:29:59,812 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (14976.0, 15175.68) in 0.14s (rate: 1400.3)
+2026-03-26 00:29:59,856 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (15375.36, 15575.04) in 0.13s (rate: 1488.5)
+2026-03-26 00:29:59,907 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (15375.36, 15575.04) in 0.1s (rate: 2101.0)
+2026-03-26 00:29:59,963 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (15375.36, 15575.04) in 0.11s (rate: 1889.7)
+2026-03-26 00:30:00,029 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (15175.68, 15375.36) in 0.12s (rate: 1676.3)
+2026-03-26 00:30:00,062 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:00,076 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (15575.04, 15774.72) in 0.11s (rate: 1749.4)
+2026-03-26 00:30:00,138 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (15175.68, 15375.36) in 0.11s (rate: 1799.4)
+2026-03-26 00:30:00,156 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:00,185 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (15575.04, 15774.72) in 0.11s (rate: 1840.9)
+2026-03-26 00:30:00,255 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (15575.04, 15774.72) in 0.12s (rate: 1724.8)
+2026-03-26 00:30:00,299 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (15375.36, 15575.04) in 0.11s (rate: 1815.6)
+2026-03-26 00:30:00,359 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (15575.04, 15774.72) in 0.11s (rate: 1893.6)
+2026-03-26 00:30:00,397 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (15774.72, 15974.4) in 0.1s (rate: 1958.6)
+2026-03-26 00:30:00,419 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:30:00,439 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:30:00,526 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (15774.72, 15974.4) in 0.17s (rate: 1195.3)
+2026-03-26 00:30:00,565 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (15375.36, 15575.04) in 0.17s (rate: 1193.0)
+2026-03-26 00:30:00,616 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (15575.04, 15774.72) in 0.09s (rate: 2221.6)
+2026-03-26 00:30:00,715 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (15774.72, 15974.4) in 0.09s (rate: 2229.1)
+2026-03-26 00:30:00,726 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (15774.72, 15974.4) in 0.16s (rate: 1249.7)
+2026-03-26 00:30:00,769 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (15974.4, 16174.08) in 0.06s (rate: 3203.6)
+2026-03-26 00:30:00,780 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:30:00,810 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:00,865 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (15974.4, 16174.08) in 0.14s (rate: 1455.2)
+2026-03-26 00:30:00,921 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (15575.04, 15774.72) in 0.15s (rate: 1316.3)
+2026-03-26 00:30:00,967 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (15974.4, 16174.08) in 0.1s (rate: 1901.9)
+2026-03-26 00:30:01,015 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (15974.4, 16174.08) in 0.09s (rate: 2130.1)
+2026-03-26 00:30:01,087 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (15774.72, 15974.4) in 0.12s (rate: 1724.4)
+2026-03-26 00:30:01,121 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (16174.08, 16373.76) in 0.11s (rate: 1870.4)
+2026-03-26 00:30:01,172 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (16174.08, 16373.76) in 0.08s (rate: 2391.4)
+2026-03-26 00:30:01,194 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:30:01,194 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:30:01,253 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (15774.72, 15974.4) in 0.13s (rate: 1527.8)
+2026-03-26 00:30:01,306 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (16174.08, 16373.76) in 0.14s (rate: 1435.4)
+2026-03-26 00:30:01,361 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (16174.08, 16373.76) in 0.11s (rate: 1840.7)
+2026-03-26 00:30:01,420 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (16373.76, 16573.44) in 0.11s (rate: 1821.4)
+2026-03-26 00:30:01,438 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:30:01,464 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (15974.4, 16174.08) in 0.1s (rate: 1943.0)
+2026-03-26 00:30:01,518 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (16373.76, 16573.44) in 0.1s (rate: 1940.5)
+2026-03-26 00:30:01,544 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:30:01,545 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:30:01,658 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (15974.4, 16174.08) in 0.19s (rate: 1031.9)
+2026-03-26 00:30:01,664 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (16373.76, 16573.44) in 0.15s (rate: 1377.0)
+2026-03-26 00:30:01,774 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (16373.76, 16573.44) in 0.12s (rate: 1723.9)
+2026-03-26 00:30:01,786 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (16174.08, 16373.76) in 0.12s (rate: 1703.5)
+2026-03-26 00:30:01,865 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (16573.44, 16773.12) in 0.09s (rate: 2188.3)
+2026-03-26 00:30:01,894 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:01,909 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (16573.44, 16773.12) in 0.12s (rate: 1641.2)
+2026-03-26 00:30:01,986 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (16174.08, 16373.76) in 0.12s (rate: 1653.1)
+2026-03-26 00:30:02,034 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (16573.44, 16773.12) in 0.13s (rate: 1524.2)
+2026-03-26 00:30:02,094 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (16573.44, 16773.12) in 0.1s (rate: 1999.8)
+2026-03-26 00:30:02,132 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (16373.76, 16573.44) in 0.1s (rate: 2045.1)
+2026-03-26 00:30:02,197 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (16773.12, 16972.8) in 0.11s (rate: 1798.4)
+2026-03-26 00:30:02,222 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:02,238 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (16773.12, 16972.8) in 0.11s (rate: 1877.9)
+2026-03-26 00:30:02,301 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (16373.76, 16573.44) in 0.1s (rate: 1915.4)
+2026-03-26 00:30:02,353 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (16773.12, 16972.8) in 0.11s (rate: 1745.0)
+2026-03-26 00:30:02,403 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (16972.8, 17172.48) in 0.1s (rate: 1962.3)
+2026-03-26 00:30:02,490 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (16773.12, 16972.8) in 0.14s (rate: 1463.5)
+2026-03-26 00:30:02,512 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (16573.44, 16773.12) in 0.11s (rate: 1837.3)
+2026-03-26 00:30:02,550 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:02,573 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (16972.8, 17172.48) in 0.08s (rate: 2406.4)
+2026-03-26 00:30:02,624 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (16573.44, 16773.12) in 0.11s (rate: 1774.5)
+2026-03-26 00:30:02,689 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (16972.8, 17172.48) in 0.12s (rate: 1726.0)
+2026-03-26 00:30:02,745 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (17172.48, 17372.16) in 0.12s (rate: 1661.8)
+2026-03-26 00:30:02,785 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:02,785 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (16972.8, 17172.48) in 0.1s (rate: 2061.3)
+2026-03-26 00:30:02,812 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:30:02,856 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (16773.12, 16972.8) in 0.11s (rate: 1799.1)
+2026-03-26 00:30:02,913 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (17172.48, 17372.16) in 0.13s (rate: 1594.5)
+2026-03-26 00:30:02,965 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (17172.48, 17372.16) in 0.11s (rate: 1837.5)
+2026-03-26 00:30:02,982 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:03,017 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (16773.12, 16972.8) in 0.11s (rate: 1891.8)
+2026-03-26 00:30:03,068 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (17372.16, 17571.84) in 0.1s (rate: 1938.3)
+2026-03-26 00:30:03,084 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:30:03,149 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:30:03,150 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (17172.48, 17372.16) in 0.13s (rate: 1585.0)
+2026-03-26 00:30:03,172 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:30:03,209 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (16972.8, 17172.48) in 0.14s (rate: 1430.3)
+2026-03-26 00:30:03,308 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (17372.16, 17571.84) in 0.16s (rate: 1213.0)
+2026-03-26 00:30:03,310 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (17372.16, 17571.84) in 0.1s (rate: 1959.6)
+2026-03-26 00:30:03,349 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:03,403 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (16972.8, 17172.48) in 0.09s (rate: 2111.2)
+2026-03-26 00:30:03,469 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (17571.84, 17771.52) in 0.16s (rate: 1260.4)
+2026-03-26 00:30:03,514 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (17372.16, 17571.84) in 0.11s (rate: 1785.2)
+2026-03-26 00:30:03,534 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:30:03,560 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (17172.48, 17372.16) in 0.09s (rate: 2192.8)
+2026-03-26 00:30:03,591 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:03,625 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (17571.84, 17771.52) in 0.11s (rate: 1803.1)
+2026-03-26 00:30:03,687 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (17571.84, 17771.52) in 0.13s (rate: 1576.9)
+2026-03-26 00:30:03,736 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (17172.48, 17372.16) in 0.11s (rate: 1826.1)
+2026-03-26 00:30:03,755 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:30:03,777 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (17771.52, 17971.2) in 0.09s (rate: 2214.5)
+2026-03-26 00:30:03,817 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:03,838 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (17571.84, 17771.52) in 0.1s (rate: 1939.8)
+2026-03-26 00:30:03,900 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (17372.16, 17571.84) in 0.12s (rate: 1633.0)
+2026-03-26 00:30:03,928 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:03,953 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (17771.52, 17971.2) in 0.11s (rate: 1740.4)
+2026-03-26 00:30:04,019 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (17771.52, 17971.2) in 0.12s (rate: 1669.8)
+2026-03-26 00:30:04,062 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (17372.16, 17571.84) in 0.11s (rate: 1827.2)
+2026-03-26 00:30:04,100 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (17971.2, 18170.88) in 0.08s (rate: 2467.6)
+2026-03-26 00:30:04,130 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:30:04,153 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:30:04,217 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (17571.84, 17771.52) in 0.15s (rate: 1294.0)
+2026-03-26 00:30:04,271 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (17771.52, 17971.2) in 0.17s (rate: 1180.5)
+2026-03-26 00:30:04,324 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (17971.2, 18170.88) in 0.11s (rate: 1896.1)
+2026-03-26 00:30:04,393 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (18170.88, 18370.56) in 0.12s (rate: 1639.7)
+2026-03-26 00:30:04,441 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (17971.2, 18170.88) in 0.12s (rate: 1681.8)
+2026-03-26 00:30:04,475 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (17571.84, 17771.52) in 0.08s (rate: 2412.5)
+2026-03-26 00:30:04,523 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:30:04,544 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:30:04,653 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (18170.88, 18370.56) in 0.16s (rate: 1281.3)
+2026-03-26 00:30:04,653 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (17971.2, 18170.88) in 0.19s (rate: 1045.6)
+2026-03-26 00:30:04,721 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (18370.56, 18570.24) in 0.08s (rate: 2384.2)
+2026-03-26 00:30:04,754 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (17771.52, 17971.2) in 0.12s (rate: 1633.8)
+2026-03-26 00:30:04,874 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (18170.88, 18370.56) in 0.14s (rate: 1463.9)
+2026-03-26 00:30:04,877 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (17771.52, 17971.2) in 0.12s (rate: 1628.4)
+2026-03-26 00:30:04,898 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:04,933 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (18170.88, 18370.56) in 0.08s (rate: 2510.4)
+2026-03-26 00:30:05,018 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (17971.2, 18170.88) in 0.13s (rate: 1527.5)
+2026-03-26 00:30:05,055 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (18570.24, 18769.92) in 0.12s (rate: 1625.3)
+2026-03-26 00:30:05,111 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (18370.56, 18570.24) in 0.1s (rate: 1930.6)
+2026-03-26 00:30:05,157 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (18370.56, 18570.24) in 0.1s (rate: 1966.5)
+2026-03-26 00:30:05,175 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:30:05,226 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (17971.2, 18170.88) in 0.11s (rate: 1738.0)
+2026-03-26 00:30:05,250 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:05,272 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (18370.56, 18570.24) in 0.11s (rate: 1744.8)
+2026-03-26 00:30:05,333 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (18769.92, 18969.6) in 0.11s (rate: 1872.8)
+2026-03-26 00:30:05,380 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (18170.88, 18370.56) in 0.11s (rate: 1866.9)
+2026-03-26 00:30:05,442 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (18570.24, 18769.92) in 0.11s (rate: 1835.3)
+2026-03-26 00:30:05,484 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:05,492 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (18570.24, 18769.92) in 0.11s (rate: 1785.4)
+2026-03-26 00:30:05,538 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (18170.88, 18370.56) in 0.1s (rate: 2087.4)
+2026-03-26 00:30:05,552 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:30:05,590 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:30:05,631 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (18570.24, 18769.92) in 0.14s (rate: 1436.9)
+2026-03-26 00:30:05,694 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (18969.6, 19169.28) in 0.16s (rate: 1283.6)
+2026-03-26 00:30:05,741 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (18370.56, 18570.24) in 0.11s (rate: 1804.3)
+2026-03-26 00:30:05,791 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (18769.92, 18969.6) in 0.1s (rate: 2041.3)
+2026-03-26 00:30:05,841 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (18769.92, 18969.6) in 0.1s (rate: 2000.8)
+2026-03-26 00:30:05,876 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:30:05,896 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (18370.56, 18570.24) in 0.1s (rate: 1913.9)
+2026-03-26 00:30:05,958 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (18769.92, 18969.6) in 0.12s (rate: 1708.7)
+2026-03-26 00:30:05,958 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:30:05,979 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:30:06,033 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (19169.28, 19368.96) in 0.14s (rate: 1461.3)
+2026-03-26 00:30:06,080 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (18570.24, 18769.92) in 0.12s (rate: 1631.8)
+2026-03-26 00:30:06,135 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (18969.6, 19169.28) in 0.1s (rate: 1955.0)
+2026-03-26 00:30:06,169 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:06,178 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (18969.6, 19169.28) in 0.1s (rate: 2033.8)
+2026-03-26 00:30:06,222 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (18570.24, 18769.92) in 0.09s (rate: 2299.9)
+2026-03-26 00:30:06,277 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:30:06,301 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:30:06,389 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (19368.96, 19568.64) in 0.17s (rate: 1198.9)
+2026-03-26 00:30:06,407 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (18969.6, 19169.28) in 0.23s (rate: 874.7)
+2026-03-26 00:30:06,462 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (19169.28, 19368.96) in 0.07s (rate: 2741.0)
+2026-03-26 00:30:06,558 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (19169.28, 19368.96) in 0.1s (rate: 2082.8)
+2026-03-26 00:30:06,568 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (18769.92, 18969.6) in 0.16s (rate: 1285.7)
+2026-03-26 00:30:06,627 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (18769.92, 18969.6) in 0.06s (rate: 3084.8)
+2026-03-26 00:30:06,628 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:30:06,647 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:06,743 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (19169.28, 19368.96) in 0.12s (rate: 1663.6)
+2026-03-26 00:30:06,744 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (19568.64, 19768.32) in 0.18s (rate: 1101.1)
+2026-03-26 00:30:06,851 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (18969.6, 19169.28) in 0.11s (rate: 1859.9)
+2026-03-26 00:30:06,860 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (19368.96, 19568.64) in 0.12s (rate: 1727.3)
+2026-03-26 00:30:06,982 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (18969.6, 19169.28) in 0.12s (rate: 1674.5)
+2026-03-26 00:30:06,982 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (19368.96, 19568.64) in 0.13s (rate: 1552.7)
+2026-03-26 00:30:07,018 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:07,065 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (19768.32, 19968.0) in 0.09s (rate: 2322.4)
+2026-03-26 00:30:07,117 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (19568.64, 19768.32) in 0.14s (rate: 1461.7)
+2026-03-26 00:30:07,166 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (19368.96, 19568.64) in 0.1s (rate: 1980.0)
+2026-03-26 00:30:07,222 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (19169.28, 19368.96) in 0.11s (rate: 1895.2)
+2026-03-26 00:30:07,245 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:07,269 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (19568.64, 19768.32) in 0.1s (rate: 1953.2)
+2026-03-26 00:30:07,339 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (19169.28, 19368.96) in 0.12s (rate: 1720.3)
+2026-03-26 00:30:07,363 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:07,386 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (19968.0, 20167.68) in 0.12s (rate: 1704.8)
+2026-03-26 00:30:07,416 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:30:07,442 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (19768.32, 19968.0) in 0.1s (rate: 1930.4)
+2026-03-26 00:30:07,464 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:07,503 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (19568.64, 19768.32) in 0.12s (rate: 1707.7)
+2026-03-26 00:30:07,553 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (19368.96, 19568.64) in 0.11s (rate: 1803.3)
+2026-03-26 00:30:07,613 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (19768.32, 19968.0) in 0.11s (rate: 1811.2)
+2026-03-26 00:30:07,652 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (19368.96, 19568.64) in 0.1s (rate: 2033.0)
+2026-03-26 00:30:07,681 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:07,711 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (20167.68, 20367.36) in 0.09s (rate: 2156.1)
+2026-03-26 00:30:07,782 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (19968.0, 20167.68) in 0.13s (rate: 1555.0)
+2026-03-26 00:30:07,802 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:07,825 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (19768.32, 19968.0) in 0.12s (rate: 1688.6)
+2026-03-26 00:30:07,867 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (19568.64, 19768.32) in 0.09s (rate: 2291.5)
+2026-03-26 00:30:07,880 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:30:07,914 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:07,961 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (19568.64, 19768.32) in 0.14s (rate: 1465.9)
+2026-03-26 00:30:08,004 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (19968.0, 20167.68) in 0.13s (rate: 1490.1)
+2026-03-26 00:30:08,063 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (20367.36, 20567.04) in 0.1s (rate: 1960.7)
+2026-03-26 00:30:08,118 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (20167.68, 20367.36) in 0.12s (rate: 1721.8)
+2026-03-26 00:30:08,143 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:08,163 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (19968.0, 20167.68) in 0.1s (rate: 2006.8)
+2026-03-26 00:30:08,203 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (19768.32, 19968.0) in 0.09s (rate: 2348.6)
+2026-03-26 00:30:08,267 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:30:08,268 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.1s
+2026-03-26 00:30:08,389 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (20167.68, 20367.36) in 0.19s (rate: 1072.0)
+2026-03-26 00:30:08,401 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (19768.32, 19968.0) in 0.24s (rate: 839.0)
+2026-03-26 00:30:08,481 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (20367.36, 20567.04) in 0.09s (rate: 2179.9)
+2026-03-26 00:30:08,544 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (20567.04, 20766.72) in 0.14s (rate: 1407.4)
+2026-03-26 00:30:08,598 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (20167.68, 20367.36) in 0.12s (rate: 1707.4)
+2026-03-26 00:30:08,642 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:08,643 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (19968.0, 20167.68) in 0.1s (rate: 2016.0)
+2026-03-26 00:30:08,666 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:30:08,716 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (20367.36, 20567.04) in 0.12s (rate: 1703.5)
+2026-03-26 00:30:08,767 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (19968.0, 20167.68) in 0.12s (rate: 1599.5)
+2026-03-26 00:30:08,817 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (20367.36, 20567.04) in 0.1s (rate: 1974.5)
+2026-03-26 00:30:08,866 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (20766.72, 20966.4) in 0.1s (rate: 2020.4)
+2026-03-26 00:30:08,885 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:30:08,911 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (20567.04, 20766.72) in 0.09s (rate: 2119.7)
+2026-03-26 00:30:08,961 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (20167.68, 20367.36) in 0.09s (rate: 2103.9)
+2026-03-26 00:30:08,974 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:30:08,987 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:30:09,050 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (20567.04, 20766.72) in 0.14s (rate: 1437.4)
+2026-03-26 00:30:09,101 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (20567.04, 20766.72) in 0.14s (rate: 1435.3)
+2026-03-26 00:30:09,160 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (20966.4, 21166.08) in 0.11s (rate: 1825.1)
+2026-03-26 00:30:09,208 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (20167.68, 20367.36) in 0.11s (rate: 1876.5)
+2026-03-26 00:30:09,259 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (20766.72, 20966.4) in 0.1s (rate: 2016.4)
+2026-03-26 00:30:09,318 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (20367.36, 20567.04) in 0.11s (rate: 1803.5)
+2026-03-26 00:30:09,372 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (20766.72, 20966.4) in 0.11s (rate: 1771.6)
+2026-03-26 00:30:09,403 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:09,436 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (20766.72, 20966.4) in 0.12s (rate: 1688.8)
+2026-03-26 00:30:09,456 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:30:09,490 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (20367.36, 20567.04) in 0.12s (rate: 1690.5)
+2026-03-26 00:30:09,578 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (20966.4, 21166.08) in 0.14s (rate: 1409.0)
+2026-03-26 00:30:09,581 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (21166.08, 21365.76) in 0.09s (rate: 2192.8)
+2026-03-26 00:30:09,642 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.1s
+2026-03-26 00:30:09,662 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (20567.04, 20766.72) in 0.08s (rate: 2410.7)
+2026-03-26 00:30:09,708 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (20966.4, 21166.08) in 0.13s (rate: 1579.4)
+2026-03-26 00:30:09,731 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:09,767 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (20966.4, 21166.08) in 0.11s (rate: 1888.8)
+2026-03-26 00:30:09,793 [DEBUG] analyzer 0: BUFFER BOTTLENECK: analyzer 0 received assignment after 0.0s
+2026-03-26 00:30:09,812 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (20567.04, 20766.72) in 0.1s (rate: 1925.4)
+2026-03-26 00:30:09,879 [Level 15] analyzer 0: analyzed files/1_137/250704_0000..mp3, chunk (21166.08, 21365.76) in 0.11s (rate: 1784.3)
+2026-03-26 00:30:09,880 [INFO] streamer 2: terminating
+2026-03-26 00:30:09,914 [Level 15] analyzer GPU: analyzed files/1_59/250704_0000..mp3, chunk (21365.76, 21565.44) in 0.1s (rate: 1952.5)
+2026-03-26 00:30:09,955 [DEBUG] analyzer GPU: BUFFER BOTTLENECK: analyzer GPU received assignment after 0.0s
+2026-03-26 00:30:10,037 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (20766.72, 20966.4) in 0.12s (rate: 1627.9)
+2026-03-26 00:30:10,111 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (21166.08, 21365.76) in 0.07s (rate: 2703.9)
+2026-03-26 00:30:10,143 [INFO] streamer 1: terminating
+2026-03-26 00:30:10,185 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (21166.08, 21365.76) in 0.07s (rate: 2704.2)
+2026-03-26 00:30:10,258 [INFO] streamer 5: terminating
+2026-03-26 00:30:10,264 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (20766.72, 20966.4) in 0.08s (rate: 2546.0)
+2026-03-26 00:30:10,333 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (21365.76, 21565.44) in 0.07s (rate: 2867.7)
+2026-03-26 00:30:10,343 [INFO] streamer 0: terminating
+2026-03-26 00:30:10,551 [Level 15] analyzer GPU: analyzed files/1_137/250704_0000..mp3, chunk (21565.44, 21600.01) in 0.22s (rate: 158.9)
+2026-03-26 00:30:10,562 [Level 15] analyzer 0: analyzed files/1_59/250704_0000..mp3, chunk (21565.44, 21600.01) in 0.68s (rate: 50.6)
+2026-03-26 00:30:10,601 [Level 15] analyzer GPU: analyzed files/1_37/250704_0000..mp3, chunk (21365.76, 21565.44) in 0.05s (rate: 3962.7)
+2026-03-26 00:30:10,615 [Level 15] analyzer 0: analyzed files/1_37/250704_0000..mp3, chunk (21565.44, 21600.01) in 0.05s (rate: 660.9)
+2026-03-26 00:30:10,664 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (20966.4, 21166.08) in 0.06s (rate: 3185.2)
+2026-03-26 00:30:10,708 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (20966.4, 21166.08) in 0.09s (rate: 2135.8)
+2026-03-26 00:30:10,746 [Level 15] analyzer GPU: analyzed files/1_82/250704_0000..mp3, chunk (21365.76, 21565.44) in 0.08s (rate: 2448.0)
+2026-03-26 00:30:10,759 [Level 15] analyzer 0: analyzed files/1_82/250704_0000..mp3, chunk (21565.44, 21600.01) in 0.05s (rate: 688.2)
+2026-03-26 00:30:10,817 [Level 15] analyzer GPU: analyzed files/1_104/250704_0000..mp3, chunk (21166.08, 21365.76) in 0.07s (rate: 2794.3)
+2026-03-26 00:30:10,847 [INFO] streamer 4: terminating
+2026-03-26 00:30:10,857 [Level 15] analyzer 0: analyzed files/1_109/250704_0000..mp3, chunk (21166.08, 21365.76) in 0.1s (rate: 2025.8)
+2026-03-26 00:30:10,900 [INFO] streamer 3: terminating
+2026-03-26 00:30:10,901 [DEBUG] coordinator: streamers done
+2026-03-26 00:30:10,908 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (21365.76, 21565.44) in 0.09s (rate: 2211.5)
+2026-03-26 00:30:10,946 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (21365.76, 21565.44) in 0.09s (rate: 2264.5)
+2026-03-26 00:30:10,955 [Level 15] analyzer GPU: analyzed files/1_109/250704_0000..mp3, chunk (21565.44, 21600.01) in 0.05s (rate: 731.2)
+2026-03-26 00:30:10,966 [Level 15] analyzer 0: analyzed files/1_104/250704_0000..mp3, chunk (21565.44, 21600.01) in 0.02s (rate: 1729.4)
+2026-03-26 00:30:11,958 [DEBUG] analyzer GPU: all streamers done; terminating
+2026-03-26 00:30:11,968 [DEBUG] analyzer 0: all streamers done; terminating
+2026-03-26 00:30:11,969 [DEBUG] coordinator: analyzers done
+2026-03-26 00:30:15,969 [DEBUG] writer: all analyzers done; terminating
+2026-03-26 00:30:15,970 [DEBUG] coordinator: writer done
+2026-03-26 00:30:15,970 [INFO] Analysis complete
+2026-03-26 00:30:15,970 [INFO] Cleaning up results for files/1_82/250704_0000..mp3
+2026-03-26 00:30:16,026 [INFO] Cleaning up results for files/1_109/250704_0000..mp3
+2026-03-26 00:30:16,454 [INFO] Cleaning up results for files/1_37/250704_0000..mp3
+2026-03-26 00:30:16,504 [INFO] Cleaning up results for files/1_137/250704_0000..mp3
+2026-03-26 00:30:16,554 [INFO] Cleaning up results for files/1_59/250704_0000..mp3
+2026-03-26 00:30:16,606 [INFO] Cleaning up results for files/1_104/250704_0000..mp3
+2026-03-26 00:30:16,658 [INFO] 
+All files analyzed and cleaned.
+Total analysis time: 53.98s
+2026-03-26 00:30:16,658 [DEBUG] logger closing
