@@ -25,17 +25,15 @@ A brief description of what the changes were and why this approach was used. Kee
 
 At the end of each iteration, write a brief note for the next agent context. What did you learn? What do you think is worth trying next? What dead ends should be avoided? This file is your main channel of communication with future iterations.
 
-## [timestamp].log
+## tuning/
 
-Contains print statements from every step of the analysis. This file will be over 1,000 lines long; do not read it fully into context. You may be able to spot buffer bottlenecks reported within the first 100 lines or so. Could also give more granular information about the times reported by different workers.
+Contains one subdirectory per settings combination tried during the auto-tune sweep. Each subdir has its own `settings.json`, `profile.csv`, and `[timestamp].log`. The best combo's `settings.json` and `profile.csv` are promoted to the parent directory.
+
+Log files can be over 1,000 lines long; do not read them fully into context. The first ~100 lines may reveal buffer bottlenecks; later lines give granular per-worker timing.
 
 ## scratch/
 
 Feel free to create a scratchwork directory if you need to conduct some troubleshooting or in-depth analyses.
-
-## tuning/
-
-Contains one subdirectory per settings combination tried during the auto-tune sweep. Each subdir has its own `settings.json` and `profile.csv`. The best combo's files are promoted to the parent directory.
 
 ## tuning_results.json
 
@@ -43,17 +41,21 @@ All combos ranked by `overall_s`, with the winner flagged as `best_combo`.
 
 ## files/
 
-This folder only exists temporarily, until the results of the analysis can be checked against the baseline to make sure there are no numerical discrepancies.
+Found inside each tuning combo subdir (`tuning/<combo>/files/`), not at the test root. Contains the analysis output for that combo. Deleted automatically after a successful results check. Remains on disk only if a results mismatch is detected (for forensic inspection).
 
 ## Comparing tests
 
-To compare all tests and see how they rank against each other, run:
+To compare tests and see how they rank against each other, run:
 
 ```
 .venv/bin/python -c "from eval import compare_tests; from pathlib import Path; compare_tests(Path('eval_out'))"
 ```
 
-This prints all tests ranked by overall time, relative to the best performer.
+This prints tests ranked by overall time, relative to the best performer. By default, only the top 3 results are shown. With many tests, pass `n=<large_number>` to see more:
+
+```
+.venv/bin/python -c "from eval import compare_tests; from pathlib import Path; compare_tests(Path('eval_out'), n=50)"
+```
 
 To compare the autotune combos within a single run:
 
@@ -91,8 +93,8 @@ You can also take some steps in advance of the optimization like profiling GPU u
 
 ## 04. Name optimization
 
-Give a name to your optimization. It should be short, informative, unique to the prior tests, and appropriate for a directory name (e.g. use underscores over spaces)
-Your test name must be prefixed with the next number in the testing sequence, e.g. "09_cast_samples"
+Give a name to your optimization. It should be short, informative, unique to the prior tests, and appropriate for a directory name (e.g. use underscores over spaces).
+Prefix the test name with the next number in the testing sequence, e.g. "09_cast_samples". This is a naming convention (not enforced by code) that keeps the eval_out directory ordered.
 
 ## 05. Apply optimization
 
@@ -100,7 +102,7 @@ Modify the codebase as you see fit for optimization.
 
 ### ***Allowed***
 
-* Generating derivative models, e.g. ONXX models
+* Generating derivative models, e.g. ONNX models
 * Changing settings (see the Settings section above)
 * Installing new dependencies
 
@@ -114,32 +116,37 @@ You may not change the input audio files in any way.
 
 ## 06. Run evaluation
 
-Run eval.py with just your test name (and optionally a model name):
+Run eval.py with your test name and model name:
 
 ```
-.venv/bin/python eval.py --test-name <your_test_name> [--model <model_name>]
+.venv/bin/python eval.py --test-name <your_test_name> --model <model_name>
 ```
 
-eval.py automatically sweeps 18 settings combinations and promotes the best to `eval_out/<your_test_name>/`. The output is very verbose; do not include it in your context.
+Available models are directories under `models/`. eval.py automatically sweeps 6 settings combinations and promotes the best to `eval_out/<your_test_name>/`. The output is very verbose; do not include it in your context.
 
-The sweep takes ~20 minutes. Set a timeout for 30 minutes. If the tests aren't finished by then, check any existing results and make a manual verdict (likely SLOWER).
+The sweep takes ~5 minutes. Set a timeout for 10 minutes. If the tests aren't finished by then, check any existing results and make a manual verdict (likely SLOWER).
 
 ## 07. Verdict
 
-After eval.py finishes, it prints a rankings table showing all tests relative to the best  performer. The `delta_%` column gives your verdict:
+After eval.py finishes, it prints a rankings table and automatically prints the verdict:
 
-- **FASTER**: delta_% < -5%
-- **SLOWER**: delta_% > +5%
+```
+Final verdict: FASTER/SLOWER/NEUTRAL  (+X.X% vs <best_test>)
+```
+
+Verdicts:
+- **FASTER**: your test is >5% faster than the current best
+- **SLOWER**: your test is >5% slower than the current best
 - **NEUTRAL**: within ±5%
-- **BADRESULTS**: results check failed (printed during the run)
+- **BADRESULTS**: results check failed. This is NOT printed in the "Final verdict:" line — instead `=== RESULTS MISMATCH ===` is printed during the run for each failing combo, and "No eligible results to promote" is printed at the end if all combos failed. In that case there is no Final verdict line at all.
+
+The rankings table shows per-phase % differences vs. the best performer across columns (`overall`, `inference`, `read`, `resample`, `format`, `write`). Note that very quick phases have noisy % changes — the only metric that determines the verdict is `overall`.
 
 You can re-run the comparison at any time:
 
 ```
 .venv/bin/python -c "from eval import compare_tests; from pathlib import Path; compare_tests(Path('eval_out'), '<your_test_name>')"
 ```
-
-Note that very quick phases have noisy % changes. +430% might just be noise if the step previously took 0.0002s. The only metric that determines the verdict is `overall`.
 
 ## 08. Commit
 
