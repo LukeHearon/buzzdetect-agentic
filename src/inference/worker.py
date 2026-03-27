@@ -48,9 +48,6 @@ class WorkerInferer:
             else:
                 for gpu in gpus:
                     tf.config.experimental.set_memory_growth(gpu, True)
-                # Enable FP16 mixed precision for faster GPU inference
-                tf.keras.mixed_precision.set_global_policy('mixed_float16')
-                self.log("FP16 mixed precision enabled", 'INFO')
 
             if len(gpus) > 1:
                 self.log("Use of multiple GPUs is untested", 'WARNING')
