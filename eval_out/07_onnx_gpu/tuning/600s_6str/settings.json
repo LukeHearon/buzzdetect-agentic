@@ -1,7 +1,0 @@
-{
-  "model": "model_general_v3_ort",
-  "chunklength": 600,
-  "n_streamers": 6,
-  "analyzers_cpu": 0,
-  "gpu": true
-}
