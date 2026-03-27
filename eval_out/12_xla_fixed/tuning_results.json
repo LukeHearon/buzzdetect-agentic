@@ -1,0 +1,89 @@
+{
+  "best_combo": "200s_6str",
+  "combos": [
+    {
+      "name": "200s_6str",
+      "settings": {
+        "chunklength": 200,
+        "n_streamers": 6,
+        "analyzers_cpu": 0,
+        "gpu": true,
+        "model": "model_general_v3_xla"
+      },
+      "success": true,
+      "results_bad": false,
+      "overall_s": 19.743786,
+      "rank": 1
+    },
+    {
+      "name": "600s_6str",
+      "settings": {
+        "chunklength": 600,
+        "n_streamers": 6,
+        "analyzers_cpu": 0,
+        "gpu": true,
+        "model": "model_general_v3_xla"
+      },
+      "success": true,
+      "results_bad": false,
+      "overall_s": 19.796442,
+      "rank": 2
+    },
+    {
+      "name": "1200s_3str",
+      "settings": {
+        "chunklength": 1200,
+        "n_streamers": 3,
+        "analyzers_cpu": 0,
+        "gpu": true,
+        "model": "model_general_v3_xla"
+      },
+      "success": true,
+      "results_bad": false,
+      "overall_s": 20.975389,
+      "rank": 3
+    },
+    {
+      "name": "1200s_6str",
+      "settings": {
+        "chunklength": 1200,
+        "n_streamers": 6,
+        "analyzers_cpu": 0,
+        "gpu": true,
+        "model": "model_general_v3_xla"
+      },
+      "success": true,
+      "results_bad": false,
+      "overall_s": 21.00278,
+      "rank": 4
+    },
+    {
+      "name": "600s_3str",
+      "settings": {
+        "chunklength": 600,
+        "n_streamers": 3,
+        "analyzers_cpu": 0,
+        "gpu": true,
+        "model": "model_general_v3_xla"
+      },
+      "success": true,
+      "results_bad": false,
+      "overall_s": 22.953853,
+      "rank": 5
+    },
+    {
+      "name": "200s_3str",
+      "settings": {
+        "chunklength": 200,
+        "n_streamers": 3,
+        "analyzers_cpu": 0,
+        "gpu": true,
+        "model": "model_general_v3_xla"
+      },
+      "success": true,
+      "results_bad": false,
+      "overall_s": 28.051737,
+      "rank": 6
+    }
+  ]
+}

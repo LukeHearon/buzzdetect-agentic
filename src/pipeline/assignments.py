@@ -2,7 +2,6 @@ import os
 from dataclasses import dataclass
 
 import numpy as np
-import tensorflow as tf
 
 import src.config as cfg
 from src.pipeline.loglevels import loglevels
@@ -34,7 +33,7 @@ class AssignChunk:
     file : AssignFile
     chunk: tuple[float, float] | None = None
     samples: np.ndarray = None
-    results: tf.Tensor = None
+    results: object = None
 
 
 @dataclass

@@ -1,7 +1,6 @@
 from _queue import Empty
 
 import numpy as np
-import tensorflow as tf
 
 from src.inference.models import load_model
 from src.pipeline.assignments import AssignChunk, AssignLog
@@ -34,6 +33,7 @@ class WorkerInferer:
         self.coordinator.q_log.put(AssignLog(message=f'analyzer {self.id_analyzer}: {msg}', level_str=level_str))
 
     def _managememory(self):
+        import tensorflow as tf
         if self.processor == 'CPU':
             tf.config.set_visible_devices([], 'GPU')
             visible_devices = tf.config.get_visible_devices()
