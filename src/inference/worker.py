@@ -86,7 +86,6 @@ class WorkerInferer:
 
     def run(self):
         self.log('launching', 'INFO')
-        tf.config.optimizer.set_jit(True)
         self.model.initialize()
         self._prewarm_model()
 
