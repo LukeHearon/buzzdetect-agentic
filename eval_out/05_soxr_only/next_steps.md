@@ -22,4 +22,4 @@ The fullqueue wait time (90% of overall in cumulative terms) shows streamers are
 
 ## What to avoid
 - More audio I/O threading (04_soxr_pipelining showed this is counterproductive)
-- ONNX (01_onnx was +11.5% SLOWER — TensorFlow GPU is faster than ONNX CPU)
+- ONNX on GPU (01_onnx was +11.5% SLOWER — used CUDAExecutionProvider with a combined YAMNet+classifier ONNX model; TF native GPU is faster. Not a CPU vs GPU issue.)

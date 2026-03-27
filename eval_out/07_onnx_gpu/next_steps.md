@@ -1,13 +1,22 @@
 # Next Steps after 07_onnx_gpu
 
 ## Result
-SLOWER (+15.8%). ONNX Runtime CUDA EP was 40.6% slower on inference vs TF native GPU.
+SLOWER (+15.8%). ORT CUDA EP was 40.6% slower on inference vs TF native GPU.
 
-## Why it was slower
-TF 2.x with SavedModels runs on GPU using XLA-compiled kernels and cuDNN — already
-highly optimized for the specific ops in YAMNet (STFT, MelSpectrogram, depthwise conv).
-ORT CUDA EP can't match this for models originally trained and optimized in TF.
-Additionally, there's overhead converting between TF and ORT memory representations.
+## Correction: 01_onnx was already GPU
+The 05_soxr_only next_steps.md incorrectly described 01_onnx as "ONNX CPU." It was
+not — 01_onnx used `model_general_v3_onnx` with `CUDAExecutionProvider` and `gpu: true`,
+running a single combined ONNX model (YAMNet + classifier fused) on GPU. It was +11.5%
+SLOWER than baseline. 07_onnx_gpu replicated that approach but *worse* — two separate
+ORT sessions with an extra numpy handoff between them added overhead.
+
+## Why ORT is slower than TF native on these models
+TF 2.x with SavedModels uses XLA-compiled kernels and cuDNN ops already tuned for
+YAMNet's STFT/MelSpectrogram/depthwise-conv graph. ORT CUDA EP does not match this
+for models that were trained and shaped around TF's graph execution. This holds whether
+the ONNX model is split (07_onnx_gpu) or fused (01_onnx).
+
+## Bottom line: ONNX on GPU is a dead end for this model
 
 ## What to try next
 
