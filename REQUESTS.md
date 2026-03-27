@@ -4,19 +4,14 @@ Dependencies that would unlock specific optimizations, in priority order.
 
 ---
 
-## 1. TensorFlow built with TensorRT support (highest priority)
+## ~~1. TensorFlow built with TensorRT support~~ — ruled out
 
-**What:** A TF build where `tf.python.compiler.tensorrt` actually works — i.e., `TrtGraphConverterV2` doesn't raise `RuntimeError: Tensorflow has not been built with TensorRT support`.
-
-**Why:** TF-TRT rewrites the SavedModel graph with fused TRT kernels. This is the only approach that optimizes the existing TF models *at the graph level* without switching runtimes. It's the highest-potential inference speedup available for these models on a CUDA GPU.
-
-**How to get it:** Either install a pre-built wheel like `tensorflow-gpu` that includes TRT support, or rebuild TF with `-Dtensorrt=true`. Alternatively, a Docker image like `nvcr.io/nvidia/tensorflow` ships with this already compiled in.
-
-**Note:** The `tensorrt` Python package (10.16.0.72) is now installed in the venv. The missing piece is TF's own compiled-in TRT integration.
+TF-TRT requires a per-GPU-architecture TF build and produces non-portable TRT engines.
+This project must be deployable without per-GPU builds. **Do not pursue.**
 
 ---
 
-## 2. `cupy` (lower priority)
+## 1. `cupy` (lower priority)
 
 **What:** `pip install cupy-cuda12x`
 

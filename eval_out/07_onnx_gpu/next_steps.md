@@ -16,17 +16,13 @@ YAMNet's STFT/MelSpectrogram/depthwise-conv graph. ORT CUDA EP does not match th
 for models that were trained and shaped around TF's graph execution. This holds whether
 the ONNX model is split (07_onnx_gpu) or fused (01_onnx).
 
-## Bottom line: ONNX on GPU is a dead end for this model
 
 ## What to try next
 
-### TF-TRT (highest potential — needs TF built with TRT support)
-TF was not compiled with TensorRT support (`RuntimeError: Tensorflow has not been built
-with TensorRT support`). The `tensorrt` Python package (10.16.0.72) IS now installed,
-but TF-TRT also requires TF itself to be compiled with `-Dtensorrt=true`. A pre-built
-`tensorflow-gpu` wheel or an NVIDIA Docker image (e.g. `nvcr.io/nvidia/tensorflow`) would
-unblock this. See REQUESTS.md. This is the highest-priority next step if the dependency
-can be satisfied — it rewrites the TF graph with fused TRT kernels at the SavedModel level.
+### ~~TF-TRT~~ — ruled out
+TF-TRT requires TF compiled with TensorRT support, and TRT engines are GPU-architecture-
+specific. This project needs to be portable and deployable without per-GPU builds.
+TF-TRT is untenable. Do not pursue.
 
 ### XLA JIT compilation
 `tf.config.optimizer.set_jit(True)` enables XLA JIT globally — it recompiles TF ops into
