@@ -1,5 +1,3 @@
-import queue
-import threading
 import time
 from queue import Full
 
@@ -54,16 +52,13 @@ class WorkerStreamer:
 
         self.log(msg, level)
 
-    def _run_io_stage(self, a_file: AssignFile, local_q: queue.Queue):
-        """Stage 1: read + resample. Puts (chunk, samples, abort_file) tuples into local_q,
-        then a None sentinel when done."""
+
+    def stream_to_queue(self, a_file: AssignFile):
         track = sf.SoundFile(a_file.path_audio)
         samplerate_native = track.samplerate
 
-        for chunk in a_file.chunklist:
-            if self.coordinator.event_exitanalysis.is_set():
-                break
 
+        def queue_chunk(chunk, track, samplerate_native):
             sample_from = int(chunk[0] * samplerate_native)
             sample_to = int(chunk[1] * samplerate_native)
             read_size = sample_to - sample_from
@@ -79,52 +74,12 @@ class WorkerStreamer:
                 if n_samples < read_size:
                     self.handle_bad_read(track, a_file)
                     chunk = (chunk[0], round(chunk[0] + (n_samples/track.samplerate), 1))
-                    abort_file = True
+                    abort_stream = True
                 else:
-                    abort_file = False
+                    abort_stream = False
 
             with self.coordinator.profiler.phase('audio_io/resampling'):
                 samples = soxr.resample(samples, samplerate_native, self.resample_rate, quality='HQ')
-
-            # Enqueue to local buffer; loop with timeout to respect exit event
-            while not self.coordinator.event_exitanalysis.is_set():
-                try:
-                    local_q.put((chunk, samples, abort_file), timeout=0.5)
-                    break
-                except queue.Full:
-                    continue
-
-            if abort_file or self.coordinator.event_exitanalysis.is_set():
-                break
-
-        # Signal completion. Loop handles the case where local_q is full after
-        # the convert stage has exited (exit event): drain one item to make room.
-        while True:
-            try:
-                local_q.put(None, timeout=0.5)
-                break
-            except queue.Full:
-                try:
-                    local_q.get_nowait()
-                except queue.Empty:
-                    pass
-
-    def _run_convert_stage(self, a_file: AssignFile, local_q: queue.Queue):
-        """Stage 2: apply prepfunc + enqueue to q_analyze. Returns when it sees the None sentinel
-        or when the exit event is set."""
-        while True:
-            if self.coordinator.event_exitanalysis.is_set():
-                return
-
-            try:
-                item = local_q.get(timeout=0.5)
-            except queue.Empty:
-                continue
-
-            if item is None:
-                return
-
-            chunk, samples, abort_file = item
 
             if self.prepfunc is not None:
                 samples = self.prepfunc(samples)
@@ -142,45 +97,18 @@ class WorkerStreamer:
                     break
                 except Full:
                     continue
+            return abort_stream
 
-            if abort_file:
-                # IO stage broke after this chunk; only None remains in local_q.
-                # Drain it so io_thread can finish, then stop processing this file.
-                while True:
-                    try:
-                        remaining = local_q.get(timeout=0.5)
-                        if remaining is None:
-                            break
-                    except queue.Empty:
-                        if self.coordinator.event_exitanalysis.is_set():
-                            break
-                return
+        for chunk in a_file.chunklist:
+            abort_stream = queue_chunk(chunk, track, samplerate_native)
+            if abort_stream:
+                return True # Note! This is whether to continue to *next file*, the abort for this file is handled by return
+                # need to refactor to make clearer...a lot of these methods could be independent functions
 
-    def stream_to_queue(self, a_file: AssignFile):
-        local_q = queue.Queue(maxsize=2)
+            if self.coordinator.event_exitanalysis.is_set():
+                self.log("exit event set, terminating", 'DEBUG')
+                return False
 
-        io_thread = threading.Thread(
-            target=self._run_io_stage,
-            args=(a_file, local_q),
-            daemon=True,
-        )
-        io_thread.start()
-
-        # This thread runs the convert stage while the io_thread runs Stage 1.
-        self._run_convert_stage(a_file, local_q)
-
-        # If convert exited early (exit event), drain local_q so io_thread's
-        # put() can unblock and finish.
-        while True:
-            try:
-                local_q.get_nowait()
-            except queue.Empty:
-                break
-
-        io_thread.join()
-
-        if self.coordinator.event_exitanalysis.is_set():
-            return False
         return True
 
     def _prewarm_resample(self):
