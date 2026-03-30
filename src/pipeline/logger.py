@@ -22,7 +22,10 @@ class WorkerLogger:
         self.coordinator = coordinator
         self.verbosity_print_int = loglevels[verbosity_print]
 
-        self.log = logging.getLogger('buzzdetect')
+        # Use path_log as the logger name so concurrent combo runs each get their
+        # own logger instance and don't share handlers.
+        self.log = logging.getLogger(path_log)
+        self.log.propagate = False
         self.log.setLevel('DEBUG')
 
         self.format_file = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
@@ -52,5 +55,8 @@ class WorkerLogger:
             a_log = self.coordinator.q_log.get()
 
         self.write_log(AssignLog(message='logger closing', level_str='DEBUG'))
+        self.handle_file.close()
+        self.log.removeHandler(self.handle_file)
+        self.log.removeHandler(self.handle_console)
 
 
