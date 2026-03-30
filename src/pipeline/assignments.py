@@ -1,8 +1,6 @@
 import os
 from dataclasses import dataclass
 
-import numpy as np
-
 import src.config as cfg
 from src.pipeline.loglevels import loglevels
 from src.utils import build_ident
@@ -32,7 +30,7 @@ class AssignFile:
 class AssignChunk:
     file : AssignFile
     chunk: tuple[float, float] | None = None
-    samples: np.ndarray = None
+    samples: object = None  # numpy array or pre-converted tensor (e.g. tf.Tensor)
     results: object = None
 
 

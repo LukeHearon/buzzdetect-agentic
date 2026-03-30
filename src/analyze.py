@@ -74,6 +74,12 @@ class Analyzer:
             framehop_prop=framehop_prop,
             initialize=False
         )
+        # Set up prepfunc before any threads start. This imports any required
+        # libraries (e.g. TF) in the calling thread so streamer threads never
+        # race on a first-import. initialize_prepfunc() is a no-op for embedders
+        # that don't use prepfunc.
+        self.model.embedder.initialize_prepfunc()
+
         self.chunklength = self._setup_chunklength(chunklength)
         self.classes_out = self._setup_classes_out(classes_out)
         self.threshold = self._setup_threshold(precision)
@@ -181,6 +187,7 @@ class Analyzer:
                     'workerclass': WorkerStreamer,
                     'id_streamer': s,
                     'resample_rate': self.model.embedder.samplerate,
+                    'prepfunc': self.model.embedder.prepfunc,
                     'coordinator': self.coordinator,
                 }
             )

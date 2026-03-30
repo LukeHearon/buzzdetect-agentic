@@ -15,11 +15,13 @@ class WorkerStreamer:
     def __init__(self,
                  id_streamer,
                  resample_rate: float,
-                 coordinator: Coordinator, ):
+                 coordinator: Coordinator,
+                 prepfunc=None, ):
 
         self.id_streamer = id_streamer
         self.resample_rate = resample_rate
         self.coordinator = coordinator
+        self.prepfunc = prepfunc
         self._enqueue_skipped_first = False
 
     def __call__(self):
@@ -78,6 +80,9 @@ class WorkerStreamer:
 
             with self.coordinator.profiler.phase('audio_io/resampling'):
                 samples = soxr.resample(samples, samplerate_native, self.resample_rate, quality='HQ')
+
+            if self.prepfunc is not None:
+                samples = self.prepfunc(samples)
 
             a_chunk = AssignChunk(file=a_file, chunk=chunk, samples=samples)
             t_wait_start = time.perf_counter()

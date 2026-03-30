@@ -2,6 +2,7 @@ import os
 
 from src.inference.embedding import BaseEmbedder
 
+
 class YamnetK2(BaseEmbedder):
     # Class attributes - no config file needed!
     embeddername = "yamnet"
@@ -11,7 +12,15 @@ class YamnetK2(BaseEmbedder):
     n_embeddings = 1024
     dtype_in = 'float32'
 
+    def initialize_prepfunc(self):
+        """Import TF and set prepfunc. Called in the main thread before streamers
+        launch so there is no concurrent first-import race in worker threads."""
+        import tensorflow as tf
+        self.prepfunc = tf.constant
+
     def initialize(self):
+        self.initialize_prepfunc()
+
         from keras.layers import TFSMLayer
         if self.framehop_prop == 1:
             dir_model = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'models/yamnet_wholehop')

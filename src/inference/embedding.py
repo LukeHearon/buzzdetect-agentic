@@ -16,6 +16,11 @@ class BaseEmbedder(ABC):
     digits_time: int = None  # how many digits should timestamps be rounded to? Should be equal to framelength digits
     dtype_in: str = None
 
+    # Optional sample preparation function for streamer pre-processing.
+    # If set, WorkerStreamer calls this on raw numpy samples before enqueuing,
+    # offloading format conversion (e.g. tf.constant) out of the GPU worker.
+    prepfunc: callable = None
+
     def __init__(self, framehop_prop):
         """Initialize embedder with framehop defined as a proportion
 
@@ -25,6 +30,12 @@ class BaseEmbedder(ABC):
         self.framehop_prop = framehop_prop
         self.framehop_s = self.framelength_s * framehop_prop
         self.model = None
+
+    def initialize_prepfunc(self):
+        """Import any libraries needed by prepfunc and set self.prepfunc.
+        Called in the main thread before worker threads launch so there is no
+        concurrent first-import race. Override in subclasses that use prepfunc."""
+        pass
 
     @abstractmethod
     def initialize(self):
