@@ -85,9 +85,9 @@ Run `ls eval_out/` and review the description.md of any test that sounds related
 
 ## 03. Come up with an optimization
 
-At the start of each iteration, you will be at the current best version of the code. If the last test was better than the one before it, it becomes the new starting point. Generally, we want to build in this direction. However, if you feel that we've become stuck in a local optimum, feel free to try something radically different. Checkout a previous commit and make changes from there. At worst, we'll just revert to the previous optimum.
+**Follow the most recent `next_steps.md` recommendation.** Read the `next_steps.md` from the most recent test and implement what it recommends. This is the primary directive — the previous agent left that note specifically to guide you.
 
-You can use any previous results as inspiration, or go in a completely different direction. You might want to build off of previous SUCCESSes, try to correct a FAILURE that had a good idea behind it, tune the settings on a NEUTRAL, combine multiple prior SUCCESSes, etc. Make sure we keep exploring, though, so if a lot of the tests are just iterating off of each other, come up with a brand new direction.
+If the most recent `next_steps.md` has no clear actionable recommendation, or if that approach has already been tried, then use your judgment: build off previous SUCCESSes, try to correct a FAILURE that had a good idea behind it, or go in a new direction if things seem stuck.
 
 You can also take some steps in advance of the optimization like profiling GPU usage or running a quick profile on the short audio file in audio_in. Take your time before deciding on an optimization.
 
@@ -153,6 +153,10 @@ You can re-run the comparison at any time:
 **No matter the verdict**, commit. The commit message should start with the verdict (FASTER/SLOWER/NEUTRAL/BADRESULTS), then give a brief breakdown of the results.
 
 If the verdict was BADRESULTS or SLOWER, revert the commit before finishing.
+
+### Iterative tests that build on each other
+
+Sometimes an optimization requires several attempts to get right — each attempt fixes a bug revealed by the previous run, all converging on a single final result. In this case, commit everything together under the **final verdict** rather than committing and reverting each intermediate step. The intermediate eval_out directories serve as documentation of the iterative process. Only revert if the final verdict is SLOWER or BADRESULTS.
 
 ## 09. Leave notes
 
