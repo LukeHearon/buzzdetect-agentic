@@ -38,7 +38,7 @@ is often faster than full TF on lower-end GPUs for inference-only workloads. Req
 ### Batching strategy
 Profile whether the GPU is actually saturated (GPU util %) during inference. `nvidia-smi dmon`
 during a run would show this. If utilization is below ~80%, larger chunk sizes (already swept
-by auto-tune up to 1200s) or overlapping inference with I/O could help.
+by auto-tune up to 1200s) or overlapping inference with I/O could help. Warning: chunk sizes above 1400 have caused OOM errors on the GPU before, which is why eval.py limits chunk length. If you suspect that higher chunk lengths would be better and VRAM would allow it, report this to the user and make a note in next steps.
 
 ### Pruning/distillation
 If the model can be made smaller (fewer parameters) without affecting results, inference
