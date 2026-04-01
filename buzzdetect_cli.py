@@ -46,9 +46,9 @@ def main():
                         help='Number of parallel CPU workers',
                         required=False, default=1, type=int)
 
-    parser.add_argument('--analyzer_gpu', 
-                        help='Whether to launch a GPU worker for analysis',
-                        required=False, default=False, type=str2bool)
+    parser.add_argument('--analyzers_gpu',
+                        help='Number of GPU workers to launch for analysis',
+                        required=False, default=0, type=int)
 
     parser.add_argument('--n_streamers', 
                         help='The number of simultaneous workers to read audio files. If None, attempts to calculate a reasonable number of workers. If using GPU, you may need to significantly increase this number to keep the GPU fed.',
@@ -104,7 +104,7 @@ def main():
         framehop_prop=args.framehop_prop,
         chunklength=args.chunklength,
         analyzers_cpu=args.analyzers_cpu,
-        analyzer_gpu=args.analyzer_gpu,
+        analyzers_gpu=args.analyzers_gpu,
         n_streamers=args.n_streamers,
         stream_buffer_depth=args.stream_buffer_depth,
         dir_audio=args.dir_audio,
