@@ -1,0 +1,89 @@
+{
+  "best_combo": "200s_6str",
+  "combos": [
+    {
+      "name": "200s_6str",
+      "settings": {
+        "chunklength": 200,
+        "n_streamers": 6,
+        "analyzers_cpu": 0,
+        "gpu": true,
+        "model": "model_general_v3"
+      },
+      "success": true,
+      "results_bad": false,
+      "overall_s": 23.440718,
+      "rank": 1
+    },
+    {
+      "name": "600s_6str",
+      "settings": {
+        "chunklength": 600,
+        "n_streamers": 6,
+        "analyzers_cpu": 0,
+        "gpu": true,
+        "model": "model_general_v3"
+      },
+      "success": true,
+      "results_bad": false,
+      "overall_s": 26.16195,
+      "rank": 2
+    },
+    {
+      "name": "1200s_6str",
+      "settings": {
+        "chunklength": 1200,
+        "n_streamers": 6,
+        "analyzers_cpu": 0,
+        "gpu": true,
+        "model": "model_general_v3"
+      },
+      "success": true,
+      "results_bad": false,
+      "overall_s": 26.287561,
+      "rank": 3
+    },
+    {
+      "name": "600s_3str",
+      "settings": {
+        "chunklength": 600,
+        "n_streamers": 3,
+        "analyzers_cpu": 0,
+        "gpu": true,
+        "model": "model_general_v3"
+      },
+      "success": true,
+      "results_bad": false,
+      "overall_s": 39.232595,
+      "rank": 4
+    },
+    {
+      "name": "1200s_3str",
+      "settings": {
+        "chunklength": 1200,
+        "n_streamers": 3,
+        "analyzers_cpu": 0,
+        "gpu": true,
+        "model": "model_general_v3"
+      },
+      "success": true,
+      "results_bad": false,
+      "overall_s": 44.535315,
+      "rank": 5
+    },
+    {
+      "name": "200s_3str",
+      "settings": {
+        "chunklength": 200,
+        "n_streamers": 3,
+        "analyzers_cpu": 0,
+        "gpu": true,
+        "model": "model_general_v3"
+      },
+      "success": true,
+      "results_bad": false,
+      "overall_s": 56.709401,
+      "rank": 6
+    }
+  ]
+}
