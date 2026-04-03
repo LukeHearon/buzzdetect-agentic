@@ -10,7 +10,7 @@ from src.pipeline.coordination import Coordinator
 from src.pipeline.logger import WorkerLogger
 from src.pipeline.assignments import AssignLog
 from src.stream.worker import WorkerStreamer
-from src.utils import Timer, Profiler
+from src.utils import Timer, Profiler, setup_chunklength
 from src.write.thresholds import calculate_threshold
 from src.write.worker import WorkerWriter
 
@@ -101,15 +101,11 @@ class Analyzer:
         print(f'DEBUG, ANALYZER: {msg}')
 
     def _setup_chunklength(self, chunklength):
-        # Round chunklength to nearest frame for seamless processing
-        chunklength = round(
-            chunklength / self.model.embedder.framelength_s
-        ) * self.model.embedder.framelength_s
-        chunklength = round(chunklength, self.model.embedder.digits_time)
-        if chunklength < self.model.embedder.framelength_s:
-            chunklength = self.model.embedder.framelength_s
-
-        return chunklength
+        return setup_chunklength(
+            chunklength,
+            self.model.embedder.framelength_s,
+            self.model.embedder.digits_time,
+        )
 
     # Setup methods
     #

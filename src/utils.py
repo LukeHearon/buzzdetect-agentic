@@ -174,6 +174,15 @@ class Profiler:
                 })
 
 
+def setup_chunklength(chunklength, framelength_s, digits_time):
+    """Round chunklength to the nearest whole number of frames."""
+    chunklength = round(chunklength / framelength_s) * framelength_s
+    chunklength = round(chunklength, digits_time)
+    if chunklength < framelength_s:
+        chunklength = framelength_s
+    return chunklength
+
+
 def search_dir(dir_in, extensions=None):
     if extensions is not None and not (extensions.__class__ is list and extensions[0].__class__ is str):
         raise ValueError("input extensions should be None, or list of strings")
