@@ -7,17 +7,9 @@ import shutil
 import sys
 from pathlib import Path
 
-# Reduce TensorFlow and other verbose logs where possible
-os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
+import eval_utils
 
 baseline_files_dir = Path("baseline_results")
-
-try:
-    from src.analyze import analyze
-except Exception as e:
-    print(f"Failed to import analyze from src.analyze: {e}", file=sys.stderr)
-    sys.exit(1)
-
 
 # Grid swept on every run. All combinations are tried; the best overall runtime
 # is promoted to the top-level output directory.
@@ -46,19 +38,6 @@ DISPLAY_PHASES = [
 ]
 
 
-def _read_profile(profile_path: Path) -> dict[str, float]:
-    """Return {phase: mean_s} for all phases in a profile CSV."""
-    if not profile_path.exists():
-        return {}
-    with profile_path.open(newline="") as f:
-        return {row["phase"]: float(row["mean_s"]) for row in csv.DictReader(f)}
-
-
-def _read_overall_time(profile_path: Path):
-    """Return the overall mean_s from a profile CSV, or None if unavailable."""
-    return _read_profile(profile_path).get("overall")
-
-
 def compare_tests(dir: Path, reference: str | None = None, n: int = 3) -> list[dict]:
     """Read profile.csv from each subdirectory of dir.
 
@@ -75,7 +54,7 @@ def compare_tests(dir: Path, reference: str | None = None, n: int = 3) -> list[d
     for sub in sorted(dir.iterdir()):
         if not sub.is_dir():
             continue
-        phases = _read_profile(sub / "profile.csv")
+        phases = eval_utils.read_profile(sub / "profile.csv")
         if "overall" in phases:
             entries.append({"name": sub.name, "overall_s": phases["overall"], "phases": phases})
 
@@ -162,7 +141,6 @@ def _check_results_match(current_files_dir: Path):
 
     Returns a list of mismatch descriptions (empty = all match).
     """
-
     baseline_csvs = sorted(baseline_files_dir.rglob("*_buzzdetect.csv"))
     if not baseline_csvs:
         return []
@@ -198,76 +176,14 @@ def _check_results_match(current_files_dir: Path):
     return mismatches
 
 
-def _run_single(dir_out: Path, model: str, chunklength: float, n_streamers: int,
-                analyzers_cpu: int, gpu: bool,
-                dir_audio: Path, label: str = "", silent_profile=False) -> dict:
-    """Run one analysis pass into dir_out. Returns {success, results_bad}."""
-    os.makedirs(dir_out, exist_ok=True)
-
-    settings = {
-        "model": model,
-        "chunklength": chunklength,
-        "n_streamers": n_streamers,
-        "analyzers_cpu": analyzers_cpu,
-        "gpu": gpu,
-    }
-    with (dir_out / "settings.json").open("w") as f:
-        json.dump(settings, f, indent=2)
-
-    profile_path = str(dir_out / "profile.csv")
-    prefix = f"[{label}] " if label else ""
-    print(f"\n{prefix}chunk={chunklength}s  streamers={n_streamers} "
-          f"  cpu={analyzers_cpu}  gpu={gpu}  model={model}")
-
-    try:
-        analyze(
-            modelname=model,
-            classes_out=["ins_buzz"],
-            framehop_prop=1,
-            chunklength=chunklength,
-            analyzers_cpu=analyzers_cpu,
-            analyzer_gpu=gpu,
-            n_streamers=n_streamers,
-            stream_buffer_depth=6,
-            dir_audio=str(dir_audio),
-            dir_out=str(dir_out),
-            verbosity_print='WARNING',
-            log_progress=False,
-            event_stopanalysis=None,
-            profile=True,
-            profile_path=profile_path,
-            silent_profile=True
-        )
-        success = True
-    except Exception as e:
-        print(f"{prefix}Analysis failed: {e}", file=sys.stderr)
-        return {"success": False, "results_bad": False}
-
-    # Results correctness check (skipped when no baseline files exist yet)
-    current_files_dir = dir_out / "files"
-    results_bad = False
-    if baseline_files_dir.exists():
-        mismatches = _check_results_match(current_files_dir)
-        if mismatches:
-            print(f"\n{prefix}=== RESULTS MISMATCH ===", file=sys.stderr)
-            for m in mismatches:
-                print(m, file=sys.stderr)
-            results_bad = True
-        else:
-            print(f"{prefix}Results check passed.")
-        if not results_bad and current_files_dir.exists():
-            shutil.rmtree(current_files_dir)
-    else:
-        shutil.move(dir_out / "files", baseline_files_dir)
-
-    return {"success": success, "results_bad": results_bad}
-
-
 def _run_sweep(dir_out: Path, model: str, analyzers_cpu: int, gpu: bool,
                dir_audio: Path, test_name: str) -> int:
     """Sweep TUNE_GRID, promote winner to dir_out. Returns exit code."""
     dir_tuning = dir_out / "tuning"
     os.makedirs(dir_tuning, exist_ok=True)
+
+    analyzers_gpu = 1 if gpu else 0
+    eval_utils.ensure_xla_precompiled(model, TUNE_GRID["chunklength"], device="GPU" if gpu else "CPU")
 
     keys = list(TUNE_GRID.keys())
     combos = list(itertools.product(*TUNE_GRID.values()))
@@ -280,21 +196,47 @@ def _run_sweep(dir_out: Path, model: str, analyzers_cpu: int, gpu: bool,
         label = _combo_label(combo["chunklength"], combo["n_streamers"])
         combo_dir = dir_tuning / label
         print(f"\n── Combo {i}/{total}: {label} ──")
-        result = _run_single(
-            dir_out=combo_dir,
+        print(f"chunk={combo['chunklength']}s  streamers={combo['n_streamers']}  "
+              f"cpu={analyzers_cpu}  gpu={gpu}  model={model}")
+
+        result = eval_utils.run_combo(
+            out_dir=combo_dir,
             model=model,
-            dir_audio=dir_audio,
+            chunklength=combo["chunklength"],
+            n_streamers=combo["n_streamers"],
+            buffer_depth=6,
+            analyzers_gpu=analyzers_gpu,
             analyzers_cpu=analyzers_cpu,
-            gpu=gpu,
-            silent_profile=True,
-            **combo,
+            audio_dir=dir_audio,
+            classes_out=["ins_buzz"],
+            framehop_prop=1.0,
+            verbosity_print="WARNING",
+            log_progress=False,
         )
+
+        results_bad = False
+        if result["success"]:
+            current_files_dir = combo_dir / "files"
+            if baseline_files_dir.exists():
+                mismatches = _check_results_match(current_files_dir)
+                if mismatches:
+                    print(f"\n[{label}] === RESULTS MISMATCH ===", file=sys.stderr)
+                    for m in mismatches:
+                        print(m, file=sys.stderr)
+                    results_bad = True
+                else:
+                    print(f"[{label}] Results check passed.")
+            else:
+                shutil.move(str(current_files_dir), str(baseline_files_dir))
+
+        eval_utils.cleanup_combo(combo_dir)
+
         entry = {
             "name": label,
             "settings": {**combo, "analyzers_cpu": analyzers_cpu, "gpu": gpu, "model": model},
             "success": result["success"],
-            "results_bad": result.get("results_bad", False),
-            "overall_s": _read_overall_time(combo_dir / "profile.csv"),
+            "results_bad": results_bad,
+            "overall_s": eval_utils.read_overall_time(combo_dir / "profile.csv"),
         }
         combo_results.append(entry)
 
