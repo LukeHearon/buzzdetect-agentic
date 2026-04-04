@@ -67,8 +67,11 @@ class WorkerWriter:
 
     def write_results(self, a_chunk: AssignChunk):
         with self.coordinator.profiler.phase('write_io/formatting'):
+            results = np.asarray(a_chunk.results)
+            if a_chunk.frames_complete is not None:
+                results = results[:a_chunk.frames_complete]
             output = self.format(
-                results=np.asarray(a_chunk.results),
+                results=results,
                 time_start=a_chunk.chunk[0]
             )
 

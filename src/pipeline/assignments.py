@@ -32,6 +32,7 @@ class AssignChunk:
     chunk: tuple[float, float] | None = None
     samples: object = None  # numpy array or pre-converted tensor (e.g. tf.Tensor)
     results: object = None
+    frames_complete: int | None = None  # number of frames from real (non-padded) audio
 
 
 @dataclass

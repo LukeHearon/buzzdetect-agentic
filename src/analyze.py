@@ -175,6 +175,10 @@ class Analyzer:
 
     def _launch_streamers(self):
         """Launch streamer workers (threads or processes based on mode)."""
+        framelength_samples = round(self.model.embedder.framelength_s * self.model.embedder.samplerate)
+        framehop_samples = round(self.model.embedder.framehop_s * self.model.embedder.samplerate)
+        chunklength_samples = int(self.chunklength * self.model.embedder.samplerate)
+
         for s in range(self.coordinator.streamers_total):
             streamer = threading.Thread(
                 target=run_worker,
@@ -185,6 +189,9 @@ class Analyzer:
                     'resample_rate': self.model.embedder.samplerate,
                     'prepfunc': self.model.embedder.prepfunc,
                     'coordinator': self.coordinator,
+                    'framelength_samples': framelength_samples,
+                    'framehop_samples': framehop_samples,
+                    'chunklength_samples': chunklength_samples,
                 }
             )
             self.threads_streamers.append(streamer)

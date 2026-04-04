@@ -1,0 +1,20 @@
+{
+  "best_combo": "200s_8str_depth16",
+  "combos": [
+    {
+      "name": "200s_8str_depth16",
+      "settings": {
+        "chunklength": 200,
+        "n_streamers": 8,
+        "buffer_depth": 16,
+        "analyzers_cpu": 0,
+        "gpu": true,
+        "model": "model_general_v3_xla"
+      },
+      "success": true,
+      "results_bad": false,
+      "overall_s": 34.390409,
+      "rank": 1
+    }
+  ]
+}

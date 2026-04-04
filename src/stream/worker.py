@@ -16,12 +16,18 @@ class WorkerStreamer:
                  id_streamer,
                  resample_rate: float,
                  coordinator: Coordinator,
-                 prepfunc=None, ):
+                 prepfunc=None,
+                 framelength_samples: int = None,
+                 framehop_samples: int = None,
+                 chunklength_samples: int = None, ):
 
         self.id_streamer = id_streamer
         self.resample_rate = resample_rate
         self.coordinator = coordinator
         self.prepfunc = prepfunc
+        self.framelength_samples = framelength_samples
+        self.framehop_samples = framehop_samples
+        self.chunklength_samples = chunklength_samples
         self._enqueue_skipped_first = False
 
     def __call__(self):
@@ -81,10 +87,21 @@ class WorkerStreamer:
             with self.coordinator.profiler.phase('audio_io/resampling'):
                 samples = soxr.resample(samples, samplerate_native, self.resample_rate, quality='HQ')
 
+            if self.framelength_samples is not None and self.chunklength_samples is not None:
+                n_resampled = len(samples)
+                if n_resampled >= self.framelength_samples:
+                    frames_complete = (n_resampled - self.framelength_samples) // self.framehop_samples + 1
+                else:
+                    frames_complete = 0
+                if n_resampled < self.chunklength_samples:
+                    samples = np.pad(samples, (0, self.chunklength_samples - n_resampled))
+            else:
+                frames_complete = None
+
             if self.prepfunc is not None:
                 samples = self.prepfunc(samples)
 
-            a_chunk = AssignChunk(file=a_file, chunk=chunk, samples=samples)
+            a_chunk = AssignChunk(file=a_file, chunk=chunk, samples=samples, frames_complete=frames_complete)
             t_wait_start = time.perf_counter()
             while not self.coordinator.event_exitanalysis.is_set():
                 try:
