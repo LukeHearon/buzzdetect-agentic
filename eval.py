@@ -15,13 +15,14 @@ baseline_files_dir = Path("baseline_results")
 # is promoted to the top-level output directory.
 # Do not modify — this is managed infrastructure, not an agent tuning target.
 TUNE_GRID = {
-    "chunklength":         [200, 600, 1200],
-    "n_streamers":         [3, 6]
+    "chunklength":         [200],
+    "n_streamers":         [8],
+    "buffer_depth":        [16],
 }
 
 
-def _combo_label(chunklength, n_streamers):
-    return f"{int(chunklength)}s_{n_streamers}str"
+def _combo_label(chunklength, n_streamers, buffer_depth):
+    return f"{int(chunklength)}s_{n_streamers}str_depth{buffer_depth}"
 
 
 # Phases shown as columns in the rankings table. Edit to add/remove/reorder.
@@ -193,7 +194,7 @@ def _run_sweep(dir_out: Path, model: str, analyzers_cpu: int, gpu: bool,
     combo_results = []
     for i, vals in enumerate(combos, 1):
         combo = dict(zip(keys, vals))
-        label = _combo_label(combo["chunklength"], combo["n_streamers"])
+        label = _combo_label(combo["chunklength"], combo["n_streamers"], combo["buffer_depth"])
         combo_dir = dir_tuning / label
         print(f"\n── Combo {i}/{total}: {label} ──")
         print(f"chunk={combo['chunklength']}s  streamers={combo['n_streamers']}  "
@@ -204,7 +205,7 @@ def _run_sweep(dir_out: Path, model: str, analyzers_cpu: int, gpu: bool,
             model=model,
             chunklength=combo["chunklength"],
             n_streamers=combo["n_streamers"],
-            buffer_depth=6,
+            buffer_depth=combo["buffer_depth"],
             analyzers_gpu=analyzers_gpu,
             analyzers_cpu=analyzers_cpu,
             audio_dir=dir_audio,
@@ -227,7 +228,7 @@ def _run_sweep(dir_out: Path, model: str, analyzers_cpu: int, gpu: bool,
                 else:
                     print(f"[{label}] Results check passed.")
             else:
-                shutil.move(str(current_files_dir), str(baseline_files_dir))
+                shutil.copytree(str(current_files_dir), str(baseline_files_dir))
 
         eval_utils.cleanup_combo(combo_dir)
 

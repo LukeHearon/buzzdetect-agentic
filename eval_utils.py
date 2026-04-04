@@ -128,17 +128,21 @@ def run_combo(
     ]
 
     t0 = time.time()
-    proc = subprocess.run(cmd, cwd=str(REPO_ROOT), stderr=subprocess.PIPE, text=True)
+    stderr_lines: list[str] = []
+    with subprocess.Popen(cmd, cwd=str(REPO_ROOT), stderr=subprocess.PIPE, text=True) as proc:
+        for line in proc.stderr:
+            sys.stderr.write(line)
+            sys.stderr.flush()
+            stderr_lines.append(line)
+        proc.wait()
     elapsed = time.time() - t0
+    stderr_text = "".join(stderr_lines)
 
-    if proc.stderr:
-        sys.stderr.write(proc.stderr)
-
-    oom     = proc.returncode != 0 and stderr_has_oom(proc.stderr or "")
+    oom     = proc.returncode != 0 and stderr_has_oom(stderr_text)
     success = proc.returncode == 0
 
     if not success:
         tag = "OOM" if oom else f"EXIT {proc.returncode}"
-        (out_dir / "ERROR").write_text(f"{tag}\n{proc.stderr or ''}")
+        (out_dir / "ERROR").write_text(f"{tag}\n{stderr_text}")
 
     return {"success": success, "oom": oom, "elapsed": elapsed}

@@ -1,0 +1,12 @@
+{
+  "modelname": "model_general_v3_xla",
+  "chunklength": 100,
+  "n_streamers": 8,
+  "stream_buffer_depth": 16,
+  "analyzers_gpu": 1,
+  "analyzers_cpu": 0,
+  "classes_out": [
+    "ins_buzz"
+  ],
+  "framehop_prop": 1.0
+}

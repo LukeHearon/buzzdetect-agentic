@@ -85,8 +85,7 @@ class ModelGeneralV3XLA(BaseModel):
         chunklength_rounded = setup_chunklength(chunklength, framelength_s, self.embedder.digits_time)
         if chunklength_rounded != chunklength:
             print(f"precompile: chunklength {chunklength}s rounded to {chunklength_rounded}s (nearest frame boundary)")
-        n_frames = round(chunklength_rounded / framelength_s)
-        n_samples = int(n_frames * framelength_s * samplerate)
+        n_samples = int(chunklength_rounded * samplerate)
 
         device_key = device.upper()
 
@@ -98,7 +97,8 @@ class ModelGeneralV3XLA(BaseModel):
             data = {}
 
         if n_samples in data.get(device_key, []):
-            return  # already compiled
+            print(f"precompile: already precompiled for chunklength {chunklength_rounded}")
+            return
 
         device_tf = '/GPU:0' if device_key == 'GPU' else '/CPU:0'
         dummy = np.zeros(n_samples, dtype=np.float32)
@@ -125,6 +125,4 @@ class ModelGeneralV3XLA(BaseModel):
             return self._predict_tf(audiosamples)
 
         result = self._predict_xla(audiosamples)
-        # Force GPU sync: prevents pipeline starvation and write-thread overhead
-        # that made 09_xla_per_worker SLOWER (+7.4%)
-        return result.numpy()
+        return result
