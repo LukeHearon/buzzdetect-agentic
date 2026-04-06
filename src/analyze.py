@@ -275,11 +275,8 @@ class Analyzer:
             self.coordinator.q_log.put(AssignLog(message='', level_str='INFO', terminate=True))
             return
 
-        # Ensure a compiled XLA signature exists for this chunklength before
-        # workers start. On first use of a new chunklength this builds/updates
-        # the compiled_signatures SavedModel (one-time cost). Subsequent runs
-        # skip instantly. Workers find _compiled_module already loaded via the
-        # class-level attribute and dispatch through it immediately.
+        # Warm the XLA kernel before workers start so the first real chunk
+        # doesn't pay the compilation cost.
         if hasattr(self.model, 'precompile'):
             self.model.initialize()
             self.model.precompile(self.chunklength)

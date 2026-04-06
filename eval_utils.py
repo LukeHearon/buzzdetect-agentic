@@ -28,18 +28,15 @@ def read_overall_time(profile_path: Path):
 
 
 def ensure_xla_precompiled(model_name: str, chunklengths: list):
-    """Ensure compiled_signatures exist for all chunklengths.
+    """Warm the XLA kernel for all chunklengths before combo subprocesses start.
 
     Runs in a subprocess so TF's CUDA context is fully released before any
-    combo subprocess starts. For shapes already present in compiled_shapes.json
-    this is a near-instant no-op. New shapes trigger a one-time SavedModel
-    rebuild; after that every future run — including independent user runs —
-    dispatches through the stable-named SavedModel function and gets reliable
-    XLA persistent cache hits.
+    combo subprocess starts, freeing VRAM for the combo workers.
+    Compilation is in-memory only; there is no persistent disk cache.
     """
     if model_name != "model_general_v3_xla":
         return
-    print(f"\nChecking XLA compiled signatures for {len(chunklengths)} chunklength(s)...")
+    print(f"\nWarming XLA kernel for {len(chunklengths)} chunklength(s)...")
     script = (
         "import sys; sys.path.insert(0, '.');"
         "from src.inference.models import load_model;"
@@ -58,7 +55,7 @@ def ensure_xla_precompiled(model_name: str, chunklengths: list):
     if proc.returncode != 0:
         sys.stderr.write(proc.stderr)
         raise RuntimeError(f"XLA precompilation failed (exit {proc.returncode})")
-    print("XLA compiled signatures ready.")
+    print("XLA kernel warmed.")
 
 
 def stderr_has_oom(text: str) -> bool:
