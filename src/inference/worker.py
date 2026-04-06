@@ -9,13 +9,11 @@ from src.utils import Timer
 class WorkerInferer:
     def __init__(self,
                  id_analyzer,
-                 processor: str,
                  modelname: str,
                  framehop_prop: float,
                  coordinator: Coordinator, ):
 
         self.id_analyzer = id_analyzer
-        self.processor = processor
         self.coordinator = coordinator
 
         self.model = load_model(modelname, framehop_prop, initialize=False)
@@ -23,34 +21,8 @@ class WorkerInferer:
         self.timer_bottleneck = Timer()
         self._bottleneck_skipped_first = False
 
-
     def __call__(self):
         self.run()
-
-    def log(self, msg, level_str):
-        self.coordinator.q_log.put(AssignLog(message=f'analyzer {self.id_analyzer}: {msg}', level_str=level_str))
-
-    def _managememory(self):
-        import tensorflow as tf
-        if self.processor == 'CPU':
-            tf.config.set_visible_devices([], 'GPU')
-            visible_devices = tf.config.get_visible_devices()
-            for device in visible_devices:
-                assert device.device_type != 'GPU'
-        elif self.processor == 'GPU':
-            # let memory grow when processing on GPU
-            gpus = tf.config.experimental.list_physical_devices('GPU')
-            if not gpus:
-                self.log("GPU not found; using CPU", 'WARNING')
-                self.processor = 'CPU'
-            else:
-                for gpu in gpus:
-                    tf.config.experimental.set_memory_growth(gpu, True)
-
-            if len(gpus) > 1:
-                self.log("Use of multiple GPUs is untested", 'WARNING')
-
-        self.log(f"processing on {self.processor}", 'INFO')
 
 
     def report_rate(self, a_chunk: AssignChunk):
@@ -80,7 +52,6 @@ class WorkerInferer:
     def run(self):
         self.log('launching', 'INFO')
         try:
-            self._managememory()
             self.model.initialize()
 
             self.timer_bottleneck.restart()

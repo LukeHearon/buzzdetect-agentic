@@ -227,7 +227,6 @@ class Analyzer:
                 kwargs={
                     'workerclass': WorkerInferer,
                     'id_analyzer': f'cpu {a}',
-                    'processor': 'CPU',
                     'modelname': self.modelname,
                     'framehop_prop': self.framehop_prop,
                     'coordinator': self.coordinator,
@@ -243,7 +242,6 @@ class Analyzer:
                 kwargs={
                     'workerclass': WorkerInferer,
                     'id_analyzer': f'gpu {a}',
-                    'processor': 'GPU',
                     'modelname': self.modelname,
                     'framehop_prop': self.framehop_prop,
                     'coordinator': self.coordinator,
