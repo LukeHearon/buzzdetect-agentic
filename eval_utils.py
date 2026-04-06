@@ -5,6 +5,7 @@ import csv
 import json
 import subprocess
 import sys
+import threading
 import time
 from pathlib import Path
 
@@ -27,21 +28,47 @@ def read_overall_time(profile_path: Path):
 
 
 def ensure_xla_precompiled(model_name: str, chunklengths: list, device: str = "GPU"):
-    """Precompile XLA for all chunklengths if model is model_general_v3_xla."""
+    """Precompile XLA for all chunklengths if model is model_general_v3_xla.
+
+    Runs in a subprocess so TF's CUDA context is fully released before any
+    combo subprocess starts — otherwise the parent's TF session holds ~3 GB
+    of VRAM, leaving combo subprocesses with only the remainder.
+    """
     if model_name != "model_general_v3_xla":
         return
-    from src.inference.models import load_model
     print(f"\nChecking XLA precompilation for {len(chunklengths)} chunklength(s) on {device}...")
-    model = load_model(model_name, framehop_prop=1.0, initialize=True)
-    for cl in chunklengths:
-        print(f"  Precompiling chunklength={cl}s on {device}...", end=" ", flush=True)
-        model.precompile(cl, device=device)
-        print("done")
+    script = (
+        "import sys; sys.path.insert(0, '.');"
+        "from src.inference.models import load_model;"
+        f"m = load_model({model_name!r}, framehop_prop=1.0, initialize=True);"
+        + "".join(
+            f"print('  Precompiling chunklength={cl}s on {device}...', end=' ', flush=True);"
+            f"m.precompile({cl}, device={device!r});"
+            f"print('done');"
+            for cl in chunklengths
+        )
+    )
+    proc = subprocess.run(
+        [PYTHON, "-c", script],
+        cwd=str(REPO_ROOT),
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    if proc.returncode != 0:
+        sys.stderr.write(proc.stderr)
+        raise RuntimeError(f"XLA precompilation failed (exit {proc.returncode})")
+    print("XLA precompilation complete.")
 
 
 def stderr_has_oom(text: str) -> bool:
     t = text.lower()
-    return "out of memory" in t or "resource exhausted" in t or "oom" in t
+    return (
+        "out of memory" in t
+        or "resource exhausted" in t
+        or "oom" in t
+        or "no valid config found" in t      # cuDNN autotuning failure (GPU too small)
+        or "autotuning failed" in t
+    )
 
 
 def cleanup_combo(out_dir: Path) -> None:
@@ -89,10 +116,12 @@ def run_combo(
     verbosity_print: str = "PROGRESS",
     verbosity_log: str = "DEBUG",
     log_progress: bool = True,
+    timeout: int = 2400,
 ) -> dict:
-    """Run one combo via buzzdetect_cli.py subprocess. Returns {success, oom, elapsed}.
+    """Run one combo via buzzdetect_cli.py subprocess. Returns {success, oom, timed_out, elapsed}.
 
     Writes settings.json to out_dir. Does NOT clean up — caller is responsible.
+    Kills the subprocess if it hasn't exited within `timeout` seconds (default 2400).
     """
     out_dir.mkdir(parents=True, exist_ok=True)
     analysis_out = out_dir / "files"
@@ -129,20 +158,40 @@ def run_combo(
 
     t0 = time.time()
     stderr_lines: list[str] = []
+    timed_out = False
+
     with subprocess.Popen(cmd, cwd=str(REPO_ROOT), stderr=subprocess.PIPE, text=True) as proc:
-        for line in proc.stderr:
-            sys.stderr.write(line)
+        def _drain():
+            for line in proc.stderr:
+                sys.stderr.write(line)
+                sys.stderr.flush()
+                stderr_lines.append(line)
+
+        reader = threading.Thread(target=_drain, daemon=True)
+        reader.start()
+        try:
+            proc.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            sys.stderr.write(f"\n[run_combo] timeout ({timeout}s) — killing subprocess\n")
             sys.stderr.flush()
-            stderr_lines.append(line)
-        proc.wait()
+            proc.kill()
+            proc.wait()
+        reader.join(timeout=5)
+
     elapsed = time.time() - t0
     stderr_text = "".join(stderr_lines)
 
-    oom     = proc.returncode != 0 and stderr_has_oom(stderr_text)
-    success = proc.returncode == 0
+    oom     = (proc.returncode != 0 or timed_out) and stderr_has_oom(stderr_text)
+    success = proc.returncode == 0 and not timed_out
 
     if not success:
-        tag = "OOM" if oom else f"EXIT {proc.returncode}"
+        if oom:
+            tag = "OOM"
+        elif timed_out:
+            tag = "TIMEOUT"
+        else:
+            tag = f"EXIT {proc.returncode}"
         (out_dir / "ERROR").write_text(f"{tag}\n{stderr_text}")
 
-    return {"success": success, "oom": oom, "elapsed": elapsed}
+    return {"success": success, "oom": oom, "timed_out": timed_out, "elapsed": elapsed}

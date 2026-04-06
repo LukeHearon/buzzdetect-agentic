@@ -104,7 +104,7 @@ def _run_combo(model: str, chunklength: int, n_streamers: int, n_gpu: int, buffe
 
     cleanup_combo(out_dir)
 
-    tag = "OK" if result["success"] else ("OOM" if result["oom"] else f"EXIT")
+    tag = "OK" if result["success"] else ("OOM" if result["oom"] else ("TIMEOUT" if result["timed_out"] else "EXIT"))
     overall = read_overall_time(out_dir / "profile.csv")
     time_str = f"{overall:.1f}s overall" if overall is not None else f"{result['elapsed']:.1f}s elapsed"
     print(f"\n  [{tag}] {name}  {time_str}\n")

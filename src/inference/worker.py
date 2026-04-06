@@ -75,6 +75,7 @@ class WorkerInferer:
         with self.coordinator.profiler.phase('inference'):
             a_chunk.results = self.model.predict(a_chunk.samples)
 
+        a_chunk.samples = None  # release GPU tensor before it sits in the write queue
         self.coordinator.q_write.put(a_chunk)
         self.report_rate(a_chunk)
 
