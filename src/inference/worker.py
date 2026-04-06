@@ -24,6 +24,8 @@ class WorkerInferer:
     def __call__(self):
         self.run()
 
+    def log(self, msg, level_str):
+        self.coordinator.q_log.put(AssignLog(message=f'analyzer {self.id_analyzer}: {msg}', level_str=level_str))
 
     def report_rate(self, a_chunk: AssignChunk):
         chunk_duration = a_chunk.chunk[1] - a_chunk.chunk[0]
