@@ -104,7 +104,7 @@ class ModelGeneralV3XLA(BaseModel):
         if ModelGeneralV3XLA._compiled_module is None and _COMPILED_SIGS_DIR.exists():
             ModelGeneralV3XLA._compiled_module = tf.saved_model.load(str(_COMPILED_SIGS_DIR))
 
-    def precompile(self, chunklength, device='GPU'):
+    def precompile(self, chunklength):
         """Ensure a compiled signature exists for this chunklength.
 
         On first call for a given chunklength, rebuilds the compiled_signatures
@@ -118,7 +118,6 @@ class ModelGeneralV3XLA(BaseModel):
 
         Args:
             chunklength: Audio chunk length in seconds.
-            device: unused; kept for API compatibility.
         """
         import tensorflow as tf
 
@@ -131,15 +130,17 @@ class ModelGeneralV3XLA(BaseModel):
         n_samples = int(chunklength_rounded * samplerate)
 
         if n_samples in _get_compiled_shapes():
-            print(f"  Compiled signature for {chunklength_rounded}s already exists, skipping.")
             return
 
-        print(f"  Compiling signature for {chunklength_rounded}s ({n_samples} samples)...")
+        print(
+            f"New chunk length {chunklength_rounded}s — building compiled XLA signature "
+            f"(one-time cost, will be cached for all future runs)..."
+        )
         _save_compiled_signatures(self.embedder.model, self.model, _get_compiled_shapes() | {n_samples})
 
         # Reload so predict() can use the new signature in this process too.
         ModelGeneralV3XLA._compiled_module = tf.saved_model.load(str(_COMPILED_SIGS_DIR))
-        print(f"  Done. Compiled shapes: {sorted(_get_compiled_shapes())}")
+        print("Compiled signature saved.")
 
     def predict(self, audiosamples):
         import tensorflow as tf

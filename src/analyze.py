@@ -237,7 +237,6 @@ class Analyzer:
             self.threads_analyzers.append(analyzer)
 
         for a in range(self.coordinator.analyzers_gpu):
-            os.environ['TF_GPU_ALLOCATOR'] = 'cuda_malloc_async'
             analyzer = threading.Thread(
                 target=run_worker,
                 name=f"analyzer_gpu_{a}",
@@ -277,6 +276,15 @@ class Analyzer:
         if self.coordinator.event_exitanalysis.is_set():
             self.coordinator.q_log.put(AssignLog(message='', level_str='INFO', terminate=True))
             return
+
+        # Ensure a compiled XLA signature exists for this chunklength before
+        # workers start. On first use of a new chunklength this builds/updates
+        # the compiled_signatures SavedModel (one-time cost). Subsequent runs
+        # skip instantly. Workers find _compiled_module already loaded via the
+        # class-level attribute and dispatch through it immediately.
+        if hasattr(self.model, 'precompile'):
+            self.model.initialize()
+            self.model.precompile(self.chunklength)
 
         self._launch_writer()
         self._launch_streamers()
