@@ -45,7 +45,7 @@ def ensure_xla_precompiled(model_name: str, chunklengths: list, device: str = "G
         "from src.inference.models import load_model;"
         f"m = load_model({model_name!r}, framehop_prop=1.0, initialize=True);"
         + "".join(
-            f"m.precompile({cl}, device={device!r});"
+            f"m.precompile({cl});"
             for cl in chunklengths
         )
     )
