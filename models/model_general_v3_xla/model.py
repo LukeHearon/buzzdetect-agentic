@@ -41,10 +41,17 @@ def _save_compiled_signatures(embedder_model, classifier_model, new_n_samples):
     import tensorflow as tf
 
     m = tf.Module()
+    # Track the new function's captured models so their variables are reachable
+    # from m's object graph (required by tf.saved_model.save).
+    m._embedder   = embedder_model
+    m._classifier = classifier_model
 
     # Preserve existing signatures verbatim so their HLO fingerprints stay stable.
     if _COMPILED_SIGS_DIR.exists():
         existing = tf.saved_model.load(str(_COMPILED_SIGS_DIR))
+        # Track the loaded module so its variables (captured by existing functions)
+        # are also reachable from m's object graph.
+        m._existing_sigs = existing
         for attr in dir(existing):
             if attr.startswith('predict_'):
                 setattr(m, attr, getattr(existing, attr))
