@@ -49,6 +49,8 @@ def _save_compiled_signatures(embedder_model, classifier_model, n_samples_set):
     import tensorflow as tf
 
     m = tf.Module()
+    m._embedder   = embedder_model
+    m._classifier = classifier_model
     for n in sorted(n_samples_set):
         setattr(m, f'predict_{n}', _build_predict_fn(embedder_model, classifier_model, n))
 
