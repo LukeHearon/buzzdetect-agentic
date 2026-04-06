@@ -28,23 +28,24 @@ def read_overall_time(profile_path: Path):
 
 
 def ensure_xla_precompiled(model_name: str, chunklengths: list, device: str = "GPU"):
-    """Precompile XLA for all chunklengths if model is model_general_v3_xla.
+    """Ensure compiled_signatures exist for all chunklengths.
 
     Runs in a subprocess so TF's CUDA context is fully released before any
-    combo subprocess starts — otherwise the parent's TF session holds ~3 GB
-    of VRAM, leaving combo subprocesses with only the remainder.
+    combo subprocess starts. For shapes already present in compiled_shapes.json
+    this is a near-instant no-op. New shapes trigger a one-time SavedModel
+    rebuild; after that every future run — including independent user runs —
+    dispatches through the stable-named SavedModel function and gets reliable
+    XLA persistent cache hits.
     """
     if model_name != "model_general_v3_xla":
         return
-    print(f"\nChecking XLA precompilation for {len(chunklengths)} chunklength(s) on {device}...")
+    print(f"\nChecking XLA compiled signatures for {len(chunklengths)} chunklength(s)...")
     script = (
         "import sys; sys.path.insert(0, '.');"
         "from src.inference.models import load_model;"
         f"m = load_model({model_name!r}, framehop_prop=1.0, initialize=True);"
         + "".join(
-            f"print('  Precompiling chunklength={cl}s on {device}...', end=' ', flush=True);"
             f"m.precompile({cl}, device={device!r});"
-            f"print('done');"
             for cl in chunklengths
         )
     )
@@ -57,7 +58,7 @@ def ensure_xla_precompiled(model_name: str, chunklengths: list, device: str = "G
     if proc.returncode != 0:
         sys.stderr.write(proc.stderr)
         raise RuntimeError(f"XLA precompilation failed (exit {proc.returncode})")
-    print("XLA precompilation complete.")
+    print("XLA compiled signatures ready.")
 
 
 def stderr_has_oom(text: str) -> bool:
@@ -177,6 +178,10 @@ def run_combo(
             sys.stderr.flush()
             proc.kill()
             proc.wait()
+        except KeyboardInterrupt:
+            proc.kill()
+            proc.wait()
+            raise
         reader.join(timeout=5)
 
     elapsed = time.time() - t0

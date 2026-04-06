@@ -1,27 +1,79 @@
 import json
 import os
+import shutil
+import tempfile
 from pathlib import Path
 
 from src.inference.models import BaseModel
 from src.utils import setup_chunklength
 
-# XLA compilation cache lives alongside this model
-_XLA_CACHE_DIR = Path(__file__).parent / 'xla_cache'
+_XLA_CACHE_DIR       = Path(__file__).parent / 'xla_cache'
+_COMPILED_SIGS_DIR   = Path(__file__).parent / 'compiled_signatures'
+_COMPILED_SHAPES_FILE = Path(__file__).parent / 'compiled_shapes.json'
 
 # Set before TF is imported so XLA finds the persistent cache on first compile.
-# worker.py previously imported TF at module level; we removed that import so
-# this module-level assignment now runs before TF initializes.
 os.environ['TF_XLA_FLAGS'] = f'--tf_xla_persistent_cache_directory={str(_XLA_CACHE_DIR)}'
+
+
+def _get_compiled_shapes() -> set:
+    """Return the set of sample counts that have a saved compiled signature."""
+    if _COMPILED_SHAPES_FILE.exists():
+        return set(json.loads(_COMPILED_SHAPES_FILE.read_text()))
+    return set()
+
+
+def _build_predict_fn(embedder_model, classifier_model, n_samples):
+    """Build a jit_compile=True tf.function for a fixed sample count."""
+    import tensorflow as tf
+
+    @tf.function(
+        jit_compile=True,
+        input_signature=[tf.TensorSpec(shape=[n_samples], dtype=tf.float32)],
+    )
+    def predict(samples):
+        emb = embedder_model(samples)['global_average_pooling2d']
+        return classifier_model(emb)['dense']
+
+    return predict
+
+
+def _save_compiled_signatures(embedder_model, classifier_model, n_samples_set):
+    """Build and save a tf.Module with one compiled signature per sample count.
+
+    Always rebuilds all signatures from scratch rather than merging into an
+    existing artifact. This guarantees clean serialization — the saved
+    function names derive from the SavedModel structure (not TF's internal
+    auto-increment counters), so the HLO hash is stable across process
+    boundaries and XLA's persistent cache hits on every subsequent run.
+    """
+    import tensorflow as tf
+
+    m = tf.Module()
+    for n in sorted(n_samples_set):
+        setattr(m, f'predict_{n}', _build_predict_fn(embedder_model, classifier_model, n))
+
+    with tempfile.TemporaryDirectory() as tmp:
+        tf.saved_model.save(m, tmp)
+        if _COMPILED_SIGS_DIR.exists():
+            shutil.rmtree(_COMPILED_SIGS_DIR)
+        shutil.move(tmp, str(_COMPILED_SIGS_DIR))
+
+    _COMPILED_SHAPES_FILE.write_text(json.dumps(sorted(n_samples_set)))
 
 
 class ModelGeneralV3XLA(BaseModel):
     modelname = "model_general_v3_xla"
     embeddername = 'yamnet_k2'
     digits_results = 2
+
+    # Class-level cache so multiple initialize() calls within one process
+    # share a single @tf.function object (and thus one XLA cache slot).
     _xla_fn_cache: dict = {}
 
+    # Loaded compiled_signatures SavedModel; shared across instances.
+    _compiled_module = None
+
     def initialize(self):
-        # Ensure XLA cache env var is set before any jit_compile=True call.
         os.environ['TF_XLA_FLAGS'] = (
             f'--tf_xla_persistent_cache_directory={str(_XLA_CACHE_DIR)}'
         )
@@ -34,53 +86,60 @@ class ModelGeneralV3XLA(BaseModel):
         dir_model = str(Path(__file__).parent)
         self.model = TFSMLayer(dir_model, call_endpoint='serving_default')
 
-        # Reuse a single @tf.function object across all initialize() calls so that
-        # all workers share one XLA cache slot per input shape rather than each
-        # creating their own (which would generate distinct cache keys and trigger
-        # redundant recompilations).
-        _embedder = self.embedder.model
+        # Fallback: raw @tf.function (process-local; used for shapes that
+        # haven't been compiled into the saved signatures yet).
+        _embedder  = self.embedder.model
         _classifier = self.model
-
         cache_key = (id(_embedder), id(_classifier))
         if cache_key not in ModelGeneralV3XLA._xla_fn_cache:
             @tf.function(jit_compile=True)
             def _predict_xla(samples):
-                embeddings = _embedder(samples)['global_average_pooling2d']
-                return _classifier(embeddings)['dense']
-
+                emb = _embedder(samples)['global_average_pooling2d']
+                return _classifier(emb)['dense']
             ModelGeneralV3XLA._xla_fn_cache[cache_key] = _predict_xla
-
         self._predict_xla = ModelGeneralV3XLA._xla_fn_cache[cache_key]
 
-    def precompile(self, chunklength, device='GPU'):
-        """Compile the XLA kernel for the given chunklength and device.
+        # Load the compiled signatures artifact if it exists and isn't
+        # already loaded in this process.
+        if ModelGeneralV3XLA._compiled_module is None and _COMPILED_SIGS_DIR.exists():
+            ModelGeneralV3XLA._compiled_module = tf.saved_model.load(str(_COMPILED_SIGS_DIR))
 
-        Requires initialize() to have been called first. Skips if this
-        (chunklength, device) combination is already recorded in
-        xla_cache/compiled.json. Writes/updates that file on completion.
+    def precompile(self, chunklength, device='GPU'):
+        """Ensure a compiled signature exists for this chunklength.
+
+        On first call for a given chunklength, rebuilds the compiled_signatures
+        SavedModel to include the new shape alongside all previously compiled
+        shapes. Subsequent calls (same or different process) see the shape in
+        compiled_shapes.json and skip immediately.
+
+        The one-time cost is paid here, not at analysis time. After this
+        returns, predict() will dispatch through the stable-named SavedModel
+        function, and XLA's persistent cache will hit on every future run.
 
         Args:
             chunklength: Audio chunk length in seconds.
-            device: 'GPU' or 'CPU'.
+            device: unused; kept for API compatibility.
         """
-        import numpy as np
         import tensorflow as tf
 
-        samplerate = self.embedder.samplerate
+        samplerate    = self.embedder.samplerate
         framelength_s = self.embedder.framelength_s
 
         chunklength_rounded = setup_chunklength(chunklength, framelength_s, self.embedder.digits_time)
         if chunklength_rounded != chunklength:
-            print(f"precompile: chunklength {chunklength}s rounded to {chunklength_rounded}s (nearest whole frame length)")
+            print(f"  precompile: {chunklength}s rounded to {chunklength_rounded}s")
         n_samples = int(chunklength_rounded * samplerate)
-        dummy = np.zeros(n_samples, dtype=np.float32)
-        self._predict_xla(tf.constant(dummy))
 
-        # device_key = device.upper()
-        #
-        # device_tf = '/GPU:0' if device_key == 'GPU' else '/CPU:0'
-        # with tf.device(device_tf):
-        #     _ = self._predict_xla(tf.constant(dummy))
+        if n_samples in _get_compiled_shapes():
+            print(f"  Compiled signature for {chunklength_rounded}s already exists, skipping.")
+            return
+
+        print(f"  Compiling signature for {chunklength_rounded}s ({n_samples} samples)...")
+        _save_compiled_signatures(self.embedder.model, self.model, _get_compiled_shapes() | {n_samples})
+
+        # Reload so predict() can use the new signature in this process too.
+        ModelGeneralV3XLA._compiled_module = tf.saved_model.load(str(_COMPILED_SIGS_DIR))
+        print(f"  Done. Compiled shapes: {sorted(_get_compiled_shapes())}")
 
     def predict(self, audiosamples):
         import tensorflow as tf
@@ -88,4 +147,12 @@ class ModelGeneralV3XLA(BaseModel):
         if not isinstance(audiosamples, tf.Tensor):
             audiosamples = tf.constant(audiosamples)
 
+        n = int(audiosamples.shape[0])
+        mod = ModelGeneralV3XLA._compiled_module
+        if mod is not None:
+            fn = getattr(mod, f'predict_{n}', None)
+            if fn is not None:
+                return fn(audiosamples)
+
+        # Shape not yet compiled — fall back to the process-local @tf.function.
         return self._predict_xla(audiosamples)
