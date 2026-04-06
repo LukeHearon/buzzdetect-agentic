@@ -1,6 +1,7 @@
 import importlib.util
 import json
 import os
+import sys
 from abc import ABC, abstractmethod
 from pathlib import Path
 
@@ -49,13 +50,21 @@ def load_model(modelname: str, framehop_prop: float, initialize: bool):
     if not model_path.exists():
         raise ValueError(f"model '{modelname}' not found in {cfg.DIR_MODELS}")
 
-    # Import the model module
-    spec = importlib.util.spec_from_file_location(
-        f"{modelname}_model",
-        model_path / "model.py"
-    )
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    # Import the model module, caching in sys.modules so that repeated calls
+    # within the same process reuse the same class object. This is required for
+    # the model's _xla_fn_cache (and any other class-level state) to work
+    # across multiple load_model() calls in a single process.
+    module_key = f"_buzzdetect_model_{modelname}"
+    if module_key in sys.modules:
+        module = sys.modules[module_key]
+    else:
+        spec = importlib.util.spec_from_file_location(
+            module_key,
+            model_path / "model.py"
+        )
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        sys.modules[module_key] = module
 
     # Find the model class (should inherit from Basemodel)
     model_class = None

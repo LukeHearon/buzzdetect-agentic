@@ -1,10 +1,8 @@
 from _queue import Empty
 
-import numpy as np
-
 from src.inference.models import load_model
 from src.pipeline.assignments import AssignChunk, AssignLog
-from src.pipeline.coordination import Coordinator
+from src.pipeline.coordination import Coordinator, ExitSignal
 from src.utils import Timer
 
 
@@ -79,38 +77,41 @@ class WorkerInferer:
         self.coordinator.q_write.put(a_chunk)
         self.report_rate(a_chunk)
 
-    def _prewarm_model(self):
-        """Run a dummy prediction to trigger TF graph compilation before timed inference."""
-        n_samples = int(self.model.embedder.framelength_s * self.model.embedder.samplerate)
-        dummy = np.zeros(n_samples, dtype=np.float32)
-        self.model.predict(dummy)
-
     def run(self):
         self.log('launching', 'INFO')
-        self.model.initialize()
-        self._prewarm_model()
+        try:
+            self._managememory()
+            self.model.initialize()
 
-        self.timer_bottleneck.restart()
-        while not self.coordinator.event_exitanalysis.is_set():
-            try:
-                a_chunk = self.coordinator.q_analyze.get(timeout=1)
-                self.timer_bottleneck.stop()
-                wait_s = self.timer_bottleneck.get_total(5)
-                if not self._bottleneck_skipped_first:
-                    self._bottleneck_skipped_first = True
-                else:
-                    self.coordinator.profiler.record('inference/emptyqueue', wait_s)
-                    if wait_s > 0.01:
-                        self.report_bottleneck()
-                self.process_chunk(a_chunk)
-                self.timer_bottleneck.restart()
-            except Empty:
-                # if the streamers are done, exit as usual
-                if self.coordinator.streamers_done.is_set():
-                    self.log('all streamers done; terminating', 'DEBUG')
-                    return
+            self.timer_bottleneck.restart()
+            while not self.coordinator.event_exitanalysis.is_set():
+                try:
+                    a_chunk = self.coordinator.q_analyze.get(timeout=1)
+                    self.timer_bottleneck.stop()
+                    wait_s = self.timer_bottleneck.get_total(5)
+                    if not self._bottleneck_skipped_first:
+                        self._bottleneck_skipped_first = True
+                    else:
+                        self.coordinator.profiler.record('inference/emptyqueue', wait_s)
+                        if wait_s > 0.01:
+                            self.report_bottleneck()
+                    self.process_chunk(a_chunk)
+                    self.timer_bottleneck.restart()
+                except Empty:
+                    # if the streamers are done, exit as usual
+                    if self.coordinator.streamers_done.is_set():
+                        self.log('all streamers done; terminating', 'DEBUG')
+                        return
 
-                # otherwise, try polling the queue again
-                pass
+                    # otherwise, try polling the queue again
+                    pass
 
-        self.log("exit event set, terminating", 'DEBUG')
+            self.log("exit event set, terminating", 'DEBUG')
+
+        except Exception as e:
+            self.log(f"fatal error: {e}", 'ERROR')
+            self.coordinator.exit_analysis(ExitSignal(
+                message=f"analyzer {self.id_analyzer} crashed: {e}",
+                level='ERROR',
+                end_reason='error',
+            ))

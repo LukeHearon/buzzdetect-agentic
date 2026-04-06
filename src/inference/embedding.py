@@ -1,4 +1,5 @@
 import importlib.util
+import sys
 from abc import ABC, abstractmethod
 from pathlib import Path
 
@@ -60,13 +61,19 @@ def load_embedder(embeddername: str, framehop_prop: float, initialize: bool):
     if not embedder_path.exists():
         raise ValueError(f"Embedder '{embeddername}' not found in {cfg.DIR_EMBEDDERS}")
 
-    # Import the embedder module
-    spec = importlib.util.spec_from_file_location(
-        f"{embeddername}_embedder",
-        embedder_path / "embedder.py"
-    )
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    # Import the embedder module, caching in sys.modules so repeated calls
+    # within the same process reuse the same class object.
+    module_key = f"_buzzdetect_embedder_{embeddername}"
+    if module_key in sys.modules:
+        module = sys.modules[module_key]
+    else:
+        spec = importlib.util.spec_from_file_location(
+            module_key,
+            embedder_path / "embedder.py"
+        )
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        sys.modules[module_key] = module
 
     # Find the embedder class (should inherit from BaseEmbedder)
     embedder_class = None
