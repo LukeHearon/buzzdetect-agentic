@@ -1,4 +1,3 @@
-import json
 import os
 import shutil
 import tempfile
@@ -7,19 +6,11 @@ from pathlib import Path
 from src.inference.models import BaseModel
 from src.utils import setup_chunklength
 
-_XLA_CACHE_DIR       = Path(__file__).parent / 'xla_cache'
-_COMPILED_SIGS_DIR   = Path(__file__).parent / 'compiled_signatures'
-_COMPILED_SHAPES_FILE = Path(__file__).parent / 'compiled_shapes.json'
+_XLA_CACHE_DIR     = Path(__file__).parent / 'xla_cache'
+_COMPILED_SIGS_DIR = Path(__file__).parent / 'compiled_signatures'
 
 # Set before TF is imported so XLA finds the persistent cache on first compile.
 os.environ['TF_XLA_FLAGS'] = f'--tf_xla_persistent_cache_directory={str(_XLA_CACHE_DIR)}'
-
-
-def _get_compiled_shapes() -> set:
-    """Return the set of sample counts that have a saved compiled signature."""
-    if _COMPILED_SHAPES_FILE.exists():
-        return set(json.loads(_COMPILED_SHAPES_FILE.read_text()))
-    return set()
 
 
 def _build_predict_fn(embedder_model, classifier_model, n_samples):
@@ -37,15 +28,15 @@ def _build_predict_fn(embedder_model, classifier_model, n_samples):
     return predict
 
 
-def _save_compiled_signatures(embedder_model, classifier_model, n_samples_set):
-    """Add any missing signatures to the compiled_signatures SavedModel.
+def _save_compiled_signatures(embedder_model, classifier_model, new_n_samples):
+    """Add a new signature to the compiled_signatures SavedModel.
 
     Existing signatures are loaded from the current artifact and re-saved
-    as-is, preserving the op names that were frozen into them at their
-    original trace time. Only genuinely new sample counts get a fresh trace.
-    This is critical: rebuilding an existing signature from scratch re-traces
-    it with new process-local op counters, changing its HLO fingerprint and
-    invalidating any xla_cache entries for that shape.
+    as-is, preserving the op names frozen into them at their original trace
+    time. Only new_n_samples gets a fresh trace. This is critical: rebuilding
+    an existing signature re-traces it with new process-local op counters,
+    changing its HLO fingerprint and invalidating xla_cache entries for that
+    shape.
     """
     import tensorflow as tf
 
@@ -58,10 +49,8 @@ def _save_compiled_signatures(embedder_model, classifier_model, n_samples_set):
             if attr.startswith('predict_'):
                 setattr(m, attr, getattr(existing, attr))
 
-    # Only build functions for sample counts not already present.
-    for n in sorted(n_samples_set):
-        if not hasattr(m, f'predict_{n}'):
-            setattr(m, f'predict_{n}', _build_predict_fn(embedder_model, classifier_model, n))
+    # Build the new signature.
+    setattr(m, f'predict_{new_n_samples}', _build_predict_fn(embedder_model, classifier_model, new_n_samples))
 
     with tempfile.TemporaryDirectory() as tmp:
         tf.saved_model.save(m, tmp)
@@ -69,7 +58,6 @@ def _save_compiled_signatures(embedder_model, classifier_model, n_samples_set):
             shutil.rmtree(_COMPILED_SIGS_DIR)
         shutil.move(tmp, str(_COMPILED_SIGS_DIR))
 
-    _COMPILED_SHAPES_FILE.write_text(json.dumps(sorted(n_samples_set)))
 
 
 class ModelGeneralV3XLA(BaseModel):
@@ -118,10 +106,10 @@ class ModelGeneralV3XLA(BaseModel):
     def precompile(self, chunklength):
         """Ensure a compiled signature exists for this chunklength.
 
-        On first call for a given chunklength, rebuilds the compiled_signatures
-        SavedModel to include the new shape alongside all previously compiled
-        shapes. Subsequent calls (same or different process) see the shape in
-        compiled_shapes.json and skip immediately.
+        On first call for a given chunklength, adds the new shape to the
+        compiled_signatures SavedModel. Subsequent calls (same or different
+        process) find the shape already present in the loaded module and skip
+        immediately.
 
         The one-time cost is paid here, not at analysis time. After this
         returns, predict() will dispatch through the stable-named SavedModel
@@ -140,14 +128,15 @@ class ModelGeneralV3XLA(BaseModel):
             print(f"  precompile: {chunklength}s rounded to {chunklength_rounded}s")
         n_samples = int(chunklength_rounded * samplerate)
 
-        if n_samples in _get_compiled_shapes():
+        mod = ModelGeneralV3XLA._compiled_module
+        if mod is not None and hasattr(mod, f'predict_{n_samples}'):
             return
 
         print(
             f"New chunk length {chunklength_rounded}s — building compiled XLA signature "
             f"(one-time cost, will be cached for all future runs)..."
         )
-        _save_compiled_signatures(self.embedder.model, self.model, _get_compiled_shapes() | {n_samples})
+        _save_compiled_signatures(self.embedder.model, self.model, n_samples)
 
         # Reload so predict() can use the new signature in this process too.
         ModelGeneralV3XLA._compiled_module = tf.saved_model.load(str(_COMPILED_SIGS_DIR))
