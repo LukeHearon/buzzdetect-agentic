@@ -27,7 +27,7 @@ def read_overall_time(profile_path: Path):
     return read_profile(profile_path).get("overall")
 
 
-def ensure_xla_precompiled(model_name: str, chunklengths: list, device: str = "GPU"):
+def ensure_xla_precompiled(model_name: str, chunklengths: list):
     """Ensure compiled_signatures exist for all chunklengths.
 
     Runs in a subprocess so TF's CUDA context is fully released before any

@@ -184,7 +184,7 @@ def _run_sweep(dir_out: Path, model: str, analyzers_cpu: int, gpu: bool,
     os.makedirs(dir_tuning, exist_ok=True)
 
     analyzers_gpu = 1 if gpu else 0
-    eval_utils.ensure_xla_precompiled(model, TUNE_GRID["chunklength"], device="GPU" if gpu else "CPU")
+    eval_utils.ensure_xla_precompiled(model, TUNE_GRID["chunklength"])
 
     keys = list(TUNE_GRID.keys())
     combos = list(itertools.product(*TUNE_GRID.values()))
