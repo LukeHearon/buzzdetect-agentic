@@ -38,21 +38,30 @@ def _build_predict_fn(embedder_model, classifier_model, n_samples):
 
 
 def _save_compiled_signatures(embedder_model, classifier_model, n_samples_set):
-    """Build and save a tf.Module with one compiled signature per sample count.
+    """Add any missing signatures to the compiled_signatures SavedModel.
 
-    Always rebuilds all signatures from scratch rather than merging into an
-    existing artifact. This guarantees clean serialization — the saved
-    function names derive from the SavedModel structure (not TF's internal
-    auto-increment counters), so the HLO hash is stable across process
-    boundaries and XLA's persistent cache hits on every subsequent run.
+    Existing signatures are loaded from the current artifact and re-saved
+    as-is, preserving the op names that were frozen into them at their
+    original trace time. Only genuinely new sample counts get a fresh trace.
+    This is critical: rebuilding an existing signature from scratch re-traces
+    it with new process-local op counters, changing its HLO fingerprint and
+    invalidating any xla_cache entries for that shape.
     """
     import tensorflow as tf
 
     m = tf.Module()
-    m._embedder   = embedder_model
-    m._classifier = classifier_model
+
+    # Preserve existing signatures verbatim so their HLO fingerprints stay stable.
+    if _COMPILED_SIGS_DIR.exists():
+        existing = tf.saved_model.load(str(_COMPILED_SIGS_DIR))
+        for attr in dir(existing):
+            if attr.startswith('predict_'):
+                setattr(m, attr, getattr(existing, attr))
+
+    # Only build functions for sample counts not already present.
     for n in sorted(n_samples_set):
-        setattr(m, f'predict_{n}', _build_predict_fn(embedder_model, classifier_model, n))
+        if not hasattr(m, f'predict_{n}'):
+            setattr(m, f'predict_{n}', _build_predict_fn(embedder_model, classifier_model, n))
 
     with tempfile.TemporaryDirectory() as tmp:
         tf.saved_model.save(m, tmp)
@@ -142,7 +151,16 @@ class ModelGeneralV3XLA(BaseModel):
 
         # Reload so predict() can use the new signature in this process too.
         ModelGeneralV3XLA._compiled_module = tf.saved_model.load(str(_COMPILED_SIGS_DIR))
-        print("Compiled signature saved.")
+
+        # Warm the xla_cache now. tf.saved_model.save/load only serializes the
+        # graph; XLA compilation (which writes to xla_cache) happens on first
+        # call. Doing it here means analysis workers start with a cache hit
+        # rather than paying the compile cost on the first real chunk.
+        import numpy as np
+        dummy = tf.constant(np.zeros(n_samples, dtype=np.float32))
+        getattr(ModelGeneralV3XLA._compiled_module, f'predict_{n_samples}')(dummy)
+
+        print("Compiled signature saved and XLA cache warmed.")
 
     def predict(self, audiosamples):
         import tensorflow as tf
