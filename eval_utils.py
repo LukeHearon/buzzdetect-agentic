@@ -28,34 +28,7 @@ def read_overall_time(profile_path: Path):
 
 
 def ensure_xla_precompiled(model_name: str, chunklengths: list):
-    """Warm the XLA kernel for all chunklengths before combo subprocesses start.
-
-    Runs in a subprocess so TF's CUDA context is fully released before any
-    combo subprocess starts, freeing VRAM for the combo workers.
-    Compilation is in-memory only; there is no persistent disk cache.
-    """
-    if model_name != "model_general_v3_xla":
-        return
-    print(f"\nWarming XLA kernel for {len(chunklengths)} chunklength(s)...")
-    script = (
-        "import sys; sys.path.insert(0, '.');"
-        "from src.inference.models import load_model;"
-        f"m = load_model({model_name!r}, framehop_prop=1.0, initialize=True);"
-        + "".join(
-            f"m.precompile({cl});"
-            for cl in chunklengths
-        )
-    )
-    proc = subprocess.run(
-        [PYTHON, "-c", script],
-        cwd=str(REPO_ROOT),
-        stderr=subprocess.PIPE,
-        text=True,
-    )
-    if proc.returncode != 0:
-        sys.stderr.write(proc.stderr)
-        raise RuntimeError(f"XLA precompilation failed (exit {proc.returncode})")
-    print("XLA kernel warmed.")
+    """No-op: XLA compiles in-process on first inference call."""
 
 
 def stderr_has_oom(text: str) -> bool:

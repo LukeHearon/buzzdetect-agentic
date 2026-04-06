@@ -275,12 +275,6 @@ class Analyzer:
             self.coordinator.q_log.put(AssignLog(message='', level_str='INFO', terminate=True))
             return
 
-        # Warm the XLA kernel before workers start so the first real chunk
-        # doesn't pay the compilation cost.
-        if hasattr(self.model, 'precompile'):
-            self.model.initialize()
-            self.model.precompile(self.chunklength)
-
         self._launch_writer()
         self._launch_streamers()
         self._launch_analyzers()

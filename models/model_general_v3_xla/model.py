@@ -1,7 +1,6 @@
 from pathlib import Path
 
 from src.inference.models import BaseModel
-from src.utils import setup_chunklength
 
 
 class ModelGeneralV3XLA(BaseModel):
@@ -34,22 +33,6 @@ class ModelGeneralV3XLA(BaseModel):
             ModelGeneralV3XLA._xla_fn_cache[cache_key] = _predict_xla
 
         self._predict_xla = ModelGeneralV3XLA._xla_fn_cache[cache_key]
-
-    def precompile(self, chunklength):
-        """Warm the XLA kernel for this chunklength (in-process, in-memory only).
-
-        Runs a dummy inference so XLA compiles before workers start.
-        No disk cache is written; compilation is per-process.
-        """
-        import numpy as np
-        import tensorflow as tf
-
-        samplerate = self.embedder.samplerate
-        framelength_s = self.embedder.framelength_s
-
-        chunklength_rounded = setup_chunklength(chunklength, framelength_s, self.embedder.digits_time)
-        n_samples = int(chunklength_rounded * samplerate)
-        self._predict_xla(tf.constant(np.zeros(n_samples, dtype=np.float32)))
 
     def predict(self, audiosamples):
         import tensorflow as tf
